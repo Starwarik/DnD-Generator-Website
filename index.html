@@ -1,35 +1,55 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<link rel="stylesheet" href="index.css">
+	</head>
 	<body>
-		<!--ЗАГОЛОВОК КАК ЯВЛЕНИЕ-->
-		<header>
-			<section class="title">
-				<h1>ГЕНЕРАТОР ПРИКЛЮЧЕНИЙ</h1>
+		<header id="ui">
+			<div id="account">
 				<img src="" />
-			</section>
-			<img src="">
-			<img src="">
-			<article class="download">
-				<section>
-					<h2>Нейросетевой генератор для НРИ</h2>
-					<p>Первый генератор одностраничных настольных ролевых приключений на русском языке</p>
-				</section>
-				<button type="button">Скачать</button>
-			</article>
+				<div class="account-name" id="an-1">
+					<img src="" />
+					<p>Alexey2006Ru</p>
+				</div>
+			</div>
+			<nav id="nav">
+					<div class="navline" id="line-1"></div>
+					<button class="navpoint" id="point-1"/>
+					<div class="navline" id="line-2"></div>
+					<img class="navpoint" id="point-2"/>
+					<div class="navline" id="line-3"></div>
+					<img class="navpoint" id="point-3"/>
+					<div class="navline" id="line-4"></div>
+					<img class="navpoint" id="point-4"/>
+					<div class="navline" id="line-5"></div>
+			</nav>
 		</header>
 		<main>
+			<header id="head">
+				<section class="title">
+					<h1>ГЕНЕРАТОР ПРИКЛЮЧЕНИЙ</h1>
+					<img src="" />
+				</section>
+				<img class="phone" id="phone-1" src="">
+				<img class="phone" id="phone-2" src="">
+				<article class="download" id="download-1">
+					<h2>Нейросетевой генератор для НРИ</h2>
+					<p>Первый генератор одностраничных настольных ролевых приключений на русском языке</p>
+					<button type="button">Скачать</button>
+				</article>
+			</header>
 			<section id="what-is">
-				<h2><span>ЧТО ТАКОЕ</span>ГЕНЕРАТОР ПРИКЛЮЧЕНИЙ</h2>
+				<h2><span class="pre-title">что такое</span>ГЕНЕРАТОР ПРИКЛЮЧЕНИЙ</h2>
 				<p>Мобильное приложение, генерирующее сюжетную составляющую для любой настольной ролевой игры,
 					в том числе: локации, персонажей, квесты и добычу, а также изображения описываемой территории.
 					Текст и изображения генерируются нейронными сетями на основе запроса пользователя</p>
 			</section>
-			<section id="advantages">
-				<h2><span>В ЧЁМ ПРЕИМУЩЕСТВО</span>ГЕНЕРАТОРА ПРИКЛЮЧЕНИЙ</h2>
+			<section id="our-advantage">
+				<h2><span class="pre-title">в чём преимущество</span>ГЕНЕРАТОРА ПРИКЛЮЧЕНИЙ</h2>
 				<aside>
-					<img src="" />
+					<img class="phone" id="phone-3" src="" />
 				</aside>
-				<dl>
+				<dl id="advantages">
 					<div class="description-item">
 						<dt>Генерация с использованием нейросетей</dt>
 						<dd>Нейросети генерируют текст и изображения
@@ -62,22 +82,22 @@
 				</dl>
 			</section>
 			<section id="buy-tokens">
-				<img src="" />
-				<h2><span>приобретите</span>ТОКЕНЫ<span>валюта для генерации</span></h2>
-				<form id="balance-main">
-					<article class="account">
+				<img id="horn" src="" />
+				<h2><span class="pre-title">приобретите</span>ТОКЕНЫ<span class="post-title">валюта для генерации</span></h2>
+				<form id="top-up">
+					<div class="account-name" id="an-2">
 						<img src="" />
 						<p>Alexey2006Ru</p>
-					</article>
+					</div>
 					<fieldset>
 						<legend>Счёт</legend>
-						<div>
+						<div class="current-amount" id="ca-1">
 							<label>Текущий счёт</label>
 							<p>1000 <span>ток.</span></p>
 						</div>
 						<div>
-							<label for="">Введите сумму от 100 р.</label>
-							<input type="number" placeholder="Ваша сумма">
+							<label for="amount">Введите сумму от 100 р.</label>
+							<input type="number" name="amount" placeholder="Ваша сумма">
 						</div>
 					</fieldset>
 					<p>Кол-во токенов: <span>1000</span></p>
@@ -90,42 +110,42 @@
 					<p>Минимальная стоимость пополнения — 1000 ток. / 100 ₽</p>
 				</aside>
 			</section>
-			<section id="download">
+			<section id="tail">
 				<section class="title">
 					<h1>ГЕНЕРАТОР ПРИКЛЮЧЕНИЙ</h1>
 					<img src="" />
 				</section>
 				<img src="">
-				<article class="download">
+				<article class="download" id="download-2">
 					<h2>Скачайте генератор и создайте свою историю</h2>
 					<button type="button">СКАЧАТЬ В APP STORE</button>
 					<button type="button">СКАЧАТЬ В GOOGLE PLAY</button>
 				</article>
 			</section>
-			<footer>
-				<div class="svg-wrapper">
-					<img src="" />
-					<img src="" />
-					<img src="" />
-					<img src="" />
-				</div>
-				<section id="contacts">
-					<h3>Контакты:</h3>
-					<p>руководитель Челышева Диана Антоновна</p>
-					<p>+7 (937) 255 12 10</p>
-					<p>diana.chelysheva.98@mail.ru</p>
-				</section>
-				<section id="company-data">
-					<h3>РЕКВИЗИТЫ:</h3>
-					<p>Организация: ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "ГЕНРОЛСЮЖЕТ"</p>
-					<p>ИНН организации: 6453174782</p>
-					<p>КПП организации: 645301001</p>
-					<p>Счёт: 40702810312940001426</p>
-					<p>Банк: ФИЛИАЛ "ЦЕНТРАЛЬНЫЙ" БАНКА ВТБ (ПАО)</p>
-					<p>Корр. счёт: 30101810145250000411</p>
-					<p>БИК: 044525411</p>
-				</section>
-			</footer>
 		</main>
+		<footer>
+			<div id="svg-wrapper">
+				<img src="" />
+				<img src="" />
+				<img src="" />
+				<img src="" />
+			</div>
+			<section id="contacts">
+				<h3>Контакты:</h3>
+				<p>руководитель Челышева Диана Антоновна</p>
+				<p>+7 (937) 255 12 10</p>
+				<p>diana.chelysheva.98@mail.ru</p>
+			</section>
+			<section id="company-data">
+				<h3>РЕКВИЗИТЫ:</h3>
+				<p>Организация: ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "ГЕНРОЛСЮЖЕТ"</p>
+				<p>ИНН организации: 6453174782</p>
+				<p>КПП организации: 645301001</p>
+				<p>Счёт: 40702810312940001426</p>
+				<p>Банк: ФИЛИАЛ "ЦЕНТРАЛЬНЫЙ" БАНКА ВТБ (ПАО)</p>
+				<p>Корр. счёт: 30101810145250000411</p>
+				<p>БИК: 044525411</p>
+			</section>
+		</footer>
 	</body>
 </html>
