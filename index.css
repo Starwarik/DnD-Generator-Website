@@ -18,7 +18,7 @@
 	position: inherit;
 	left: 95%;
 	top: 0vh;
-	width: 250px;
+	width: 2vw;
 	height: 100%;
 }
 
@@ -29,21 +29,26 @@
 	height: 20vh;
 }
 
-#line-2 {
+#line-2, #point-1 {
 	top: 20vh;
 }
 
-#line-3 {
+#line-3, #point-2 {
 	top: 40vh;
 }
 
-#line-4 {
+#line-4, #point-3 {
 	top: 60vh;
 }
 
-#line-5 {
+#line-5, #point-4 {
 	top: 80vh;
 }
+
+.navpoint {
+	position: inherit;
+	background-image: url("./images/star_active.svg");
+} 
 
 .account-name#an-1 {
 	position: inherit
