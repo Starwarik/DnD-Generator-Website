@@ -6,12 +6,30 @@
 
 :root {
     --highlited: #DD1144;
+    --main: #000000;
 }
 
 #what-is {
     min-height: 512px;
     max-width: 1018px;
     padding: 60px;
+}
+
+#what-is header {
+    animation-duration: 2s;
+    animation-name: slideheader;
+}
+
+@keyframes slideheader {
+    from {
+      translate: 0 -100%;
+      opacity: 0;
+    }
+  
+    to {
+      translate: 0 0;
+      opacity: 1;
+    }
 }
 
 #what-is header h2 {
@@ -44,12 +62,28 @@
     line-height: 30px;
 
     margin-top: 33px;
+
+    animation-duration: 2s;
+    animation-name: slidep;
+}
+
+@keyframes slidep {
+    from {
+      translate: 0 100%;
+      opacity: 0;
+    }
+  
+    to {
+      translate: 0 0;
+      opacity: 1;
+    }
 }
 
 .red-highlited {
-    color: var(--highlited);
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
-    font-weight: 600;
     font-style: normal;
+
+    color: var(--highlited);
+    font-weight: 600;
 }
