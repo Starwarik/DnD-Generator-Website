@@ -47,7 +47,7 @@
 
 .navpoint {
 	position: inherit;
-	background-image: url("images/star_active.svg");
+	background-image: url("./images/star_active.svg");
 } 
 
 .account-name#an-1 {
