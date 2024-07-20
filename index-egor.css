@@ -4,30 +4,52 @@
         url('https://media.uprock.school/fonts/Wremena/WremenaBold.otf') format('truetype');
 }
 
+:root {
+    --highlited: #DD1144;
+}
+
 #what-is {
     min-height: 512px;
-
-    font-family: "Raleway", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-style: normal;
+    max-width: 1018px;
+    padding: 60px;
 }
 
-#what-is header {
+#what-is header h2 {
     font-family: "Wremena Bold", sans-serif;
-    font-size: 64px;
+    font-size: 3.2rem;
     letter-spacing: 0.1em;
+    line-height: 3.2rem;
+
+    margin-top: 4px;
 }
 
-.pre-title {
+#what-is header .pre-title {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-weight: 600;
     font-style: normal;
-    font-size: 36px;
+    font-size: 1.8rem;
     letter-spacing: 0.06em;
+    line-height: 1.8rem;
+}
+
+#what-is p {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    line-height: 30px;
+
+    margin-top: 33px;
 }
 
 .red-highlited {
-    color: #DD1144;
+    color: var(--highlited);
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
 }
