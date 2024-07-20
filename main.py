@@ -13,11 +13,19 @@ from typing_extensions import Annotated
 
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 
+import smtplib
+from email.message import EmailMessage
+
 # to get a string like this run:
 # openssl rand -hex 32
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+URL_SMTP_SERV = ""
+OUR_EMAIL = ""
+SMTP_LOGIN = ""
+SMTP_PASS = ""
 
 DATABASE_URL = "sqlite:///database.db"  
 
@@ -39,12 +47,23 @@ class TokenData(BaseModel):
     username: Union[str, None] = None
 
 
+mail_server = None
 
 engine = create_engine(DATABASE_URL, echo=True)  
 
 
 def create_db_and_tables():  
     SQLModel.metadata.create_all(engine)  
+
+def initialize_mail_server():
+    global mail_server
+    mail_server = smtplib.SMTP(URL_SMTP_SERV, 587)
+    mail_server.starttls()
+    mail_server.login(EMAIL_LOGIN, EMAIL_PASS)
+
+def close_mail_serv():
+    global mail_server
+    mail_server.quit()
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -54,11 +73,23 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_db_and_tables()
+    initialize_mail_server()
     yield
+    close_mail_serv()
 
 
 app = FastAPI(lifespan=lifespan)
-    
+
+
+def send_reset_message(email: str, token: str):
+    msg = EmailMessage()
+    msg.set_content("Тестовое сообщение с токеном "+token)
+
+    msg["Subject"] = "ХУЯКУ СОСНИ ПИДРИЛА"
+    msg["From"] = OUR_EMAIL
+    msg["To"] = email
+    mail_server.send_message(msg)
+    pass
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -68,7 +99,7 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def get_user(username: str):
+def get_user_by_username(username: str):
     with Session(engine) as session:
         statement = select(User).where(User.username == username)
         results = session.exec(statement)
@@ -76,8 +107,18 @@ def get_user(username: str):
         return result
 
 
-def authenticate_user(username: str, password: str):
-    user = get_user(username)
+def get_user_by_email(email: str):
+    with Session(engine) as session:
+        statement = select(User).where(User.email == email)
+        results = session.exec(statement)
+        result = results.one()
+        return result
+
+
+def authenticate_user(username_or_email: str, password: str):
+    user_username = get_user_by_username(username_or_email)
+    user_email = get_user_by_email(username_or_email)
+    user = user_username or user_email
     if not user:
         return False
     if not verify_password(password, user.password):
@@ -110,7 +151,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
-    user = get_user(username=token_data.username)
+    user = get_user_by_username(username=token_data.username)
     if user is None:
         raise credentials_exception
     return user
@@ -146,11 +187,53 @@ def register(username: str, password: str, email: str):
         session.commit()
 
 
+@app.get("/reset_password")
+def reset_password(email: str):
+    user = get_user_by_email(email)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.username, "type":"reset"}, expires_delta=access_token_expires
+    )
+    send_reset_message(user.email, access_token)
+
+
+@app.post("/reset_password")
+def reset_password(new_password: str, token_reset: str):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token_reset, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str | None = payload.get("sub")
+        if username is None or payload.get("type") != "reset":
+            raise credentials_exception
+        token_data = TokenData(username=username)
+    except InvalidTokenError:
+        raise credentials_exception
+    user = get_user_by_username(username=token_data.username)
+    if user is None:
+        raise credentials_exception
+    with Session(engine) as session:
+        user.password = get_password_hash(new_password)
+        session.add(user)
+        session.commit()  
+        session.refresh(user)
+
+
 @app.get("/balance")
 def get_balance(
     current_user: Annotated[User, Depends(get_current_user)]
 ) -> float:
     return current_user.balance
+
 
 @app.post("/spend_balance")
 def spend_balance(
