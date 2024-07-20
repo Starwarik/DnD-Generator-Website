@@ -7,6 +7,8 @@
 :root {
     --highlited: #DD1144;
     --main: #000000;
+    --back: #F4F4F4;
+    --not-active: #737373;
 }
 
 #what-is {
@@ -86,4 +88,61 @@
 
     color: var(--highlited);
     font-weight: 600;
+}
+
+/*                   footer                   */
+
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 90px 60px 100px 60px;
+    background-color: var(--back);
+}
+
+@media (min-width: 426px) and (max-width: 767px) {
+    footer{
+        flex-direction: column;
+    }
+    #contacts {
+        margin-top: 50px;
+    }
+    #company-data {
+        margin-top: 50px;
+    }
+}
+
+#svg-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 23px;
+    row-gap: 63px;
+}
+
+#contacts {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.75rem;
+    letter-spacing: 0.06em;
+}
+
+#contacts .telephone {
+    font-family: "Inter", sans-serif;
+}
+
+#company-data {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.75rem;
+    letter-spacing: 0.06em;
+
+    color: var(--not-active);
 }
