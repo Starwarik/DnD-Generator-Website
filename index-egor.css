@@ -1,7 +1,33 @@
-#what-is {
-    min-height: 512px;
+@font-face {
+    font-family: 'Wremena Bold';
+    src:
+        url('https://media.uprock.school/fonts/Wremena/WremenaBold.otf') format('truetype');
 }
 
-.wrap {
-    
+#what-is {
+    min-height: 512px;
+
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+
+#what-is header {
+    font-family: "Wremena Bold", sans-serif;
+    font-size: 64px;
+    letter-spacing: 0.1em;
+}
+
+.pre-title {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 36px;
+    letter-spacing: 0.06em;
+}
+
+.red-highlited {
+    color: #DD1144;
 }
