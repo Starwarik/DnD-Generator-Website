@@ -359,23 +359,10 @@ form button {
 /*                   footer                   */
 
 footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 2fr 2fr 2fr;
     padding: 90px 60px 100px 60px;
     background-color: var(--back);
-}
-
-@media (min-width: 426px) and (max-width: 767px) {
-    footer{
-        flex-direction: column;
-    }
-    #contacts {
-        margin-top: 50px;
-    }
-    #company-data {
-        margin-top: 50px;
-    }
 }
 
 #svg-wrapper {
