@@ -348,19 +348,12 @@ form button {
     padding: 15.5px;
     border-radius: 22px;
 }
+
 #buy-tokens-container {
-    max-width: 900px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 3fr 2fr 1fr;
     align-items: center;
-    justify-content: space-between;
-}
-
-#buy-tokens-container form {
-    min-width: 403px;
-}
-
-#buy-tokens-container aside {
-    max-width: 403px;
+    column-gap: 45px;
 }
 
 /*                   footer                   */
