@@ -9,6 +9,7 @@
     --main: #000000;
     --back: #F4F4F4;
     --not-active: #737373;
+    --substrate2: #E3E3E3;
 }
 
 #what-is {
@@ -88,6 +89,278 @@
 
     color: var(--highlited);
     font-weight: 600;
+}
+
+/*                   form                   */
+
+#buy-tokens {
+    min-height: 512px;
+    width: 100%;
+    padding: 60px;
+    background-color: var(--back);
+}
+
+#buy-tokens h2 {
+    font-family: "Wremena Bold", sans-serif;
+    font-size: 3.2rem;
+    letter-spacing: 0.1em;
+    line-height: 3.2rem;
+}
+
+#buy-tokens .pre-title {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+
+    font-size: 1.8rem;
+    letter-spacing: 0.06em;
+    line-height: 1.8rem;
+}
+
+#buy-tokens .post-title {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    line-height: 1rem;
+
+    color: var(--not-active);
+}
+
+#an-2 p {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.07em;
+    line-height: 1rem;
+}
+
+fieldset legend {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+
+    font-size: 2rem;
+    letter-spacing: 0.06em;
+
+    color: var(--highlited);
+}
+
+fieldset div label {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    line-height: 1rem;
+
+    color: var(--not-active)
+}
+
+form p {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    line-height: 1rem;
+
+    color: var(--not-active)
+}
+
+form p span {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    line-height: 1rem;
+
+    color: var(--main)
+}
+
+#description {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+}
+
+#description p span {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+
+    color: var(--highlited);
+}
+
+form {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 22px;
+}
+
+#an-2 img, #an-2 p {
+    display: inline;
+}
+
+fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+}
+
+legend {
+    padding: 0;
+    margin: 0;
+}
+
+#ca-1 p span, #ca-1 p {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+
+    font-size: 1.2rem;
+    letter-spacing: 0.07em;
+    line-height: 1.2rem;
+
+    color: white;
+}
+
+#ca-1 p {
+    background-color: black;
+    padding: 8.5px 20px;
+    border-radius: 10px;
+}
+
+fieldset div input {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+
+    border-radius: 10px;
+    border-width: 0;
+    background-color: var(--substrate2);
+    padding: 8.5px 20px;
+
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    line-height: 1rem;
+
+    color: black;
+}
+
+input::placeholder {
+    color: black;
+}
+
+#an-2 p {
+    margin-left: 10px;
+}
+
+legend {
+    margin-top: 10px;
+}
+
+#ca-1 {
+    margin-top: 20px;
+}
+
+#ca-1 p {
+    margin-top: 10px;
+}
+
+fieldset div:nth-child(3) {
+    margin-top: 20px;
+}
+
+form p:nth-child(3) {
+    margin-top: 17px;
+    text-align: right;
+}
+
+form button {
+    margin-top: 20px;
+    padding: 20px 13.5px;
+
+    border-radius: 10px;
+    border-width: 0;
+
+    background-color: var(--highlited);
+    color: white;
+
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.07em;
+    line-height: 1rem;
+}
+
+#top-up {
+    margin-top: 62px;
+}
+
+#description {
+    background-color: white;
+}
+
+#description img {
+    margin: 0 auto;
+}
+
+#description p:nth-child(3) {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#description {
+    padding: 15.5px;
+    border-radius: 22px;
+}
+#buy-tokens-container {
+    max-width: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#buy-tokens-container form {
+    min-width: 403px;
+}
+
+#buy-tokens-container aside {
+    max-width: 403px;
 }
 
 /*                   footer                   */
