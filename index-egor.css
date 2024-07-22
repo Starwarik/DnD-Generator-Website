@@ -1,9 +1,3 @@
-@font-face {
-    font-family: 'Wremena Bold';
-    src:
-        url('https://media.uprock.school/fonts/Wremena/WremenaBold.otf') format('truetype');
-}
-
 #what-is {
     min-height: 512px;
     max-width: 1018px;

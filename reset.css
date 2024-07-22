@@ -1,3 +1,9 @@
+@font-face {
+    font-family: 'Wremena Bold';
+    src:
+        url('https://media.uprock.school/fonts/Wremena/WremenaBold.otf') format('truetype');
+}
+
 :root {
 	--main: #000000;
 	--back: #F4F4F4;
