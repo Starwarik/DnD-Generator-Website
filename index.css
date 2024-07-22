@@ -1,6 +1,6 @@
 .grid-pc {
 	display: grid;
-	grid-template-columns: repeat(6, auto);
+	grid-template-columns: repeat(6, 1fr);
 	gap: 0px 45px;
 	margin-left: 60px;
 	margin-right: 60px;
@@ -8,50 +8,89 @@
 
 .grid-mobile {
 	display: grid;
-	grid-template-columns: repeat(4, auto);
+	grid-template-columns: repeat(4, 1fr);
 	gap: 0px 20px;
 	margin-left: 32px;
 	margin-right: 32px;
 }
 
-#our-advantage h2 {
+/* ЗАГОЛОВОК */
+
+.overflow-wrapper {
 	grid-column: 1 / 6;
+	overflow: hidden;
 }
+
+.overflow-wrapper h2 {
+	font-family: "Wremena Bold", sans-serif;
+  font-size: 50px;
+  letter-spacing: 0.1em;
+  line-height: 3.2rem;
+	margin-bottom: 80px;
+	opacity: 1;
+}
+
+.pre-title {
+	display: block;
+	font-family: "Raleway", sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+  letter-spacing: 2px;
+  line-height: 45px;
+}
+
+/* STICKY ТЕЛЕФОН */
 
 #our-advantage aside {
 	grid-column: 1 / 3;
 }
 
-#our-advantage dl {
+img {
+	position: sticky;
+	left: 7%;
+	top: 130px;
+}
+
+/* ПЛАШКИ С ПРЕИМУЩЕСТВАМИ */
+
+#advantages {
 	display: flex;
 	grid-column: 3 / 6;
 	flex-direction: column;
-	row-gap: 120px;
+	align-items: center;
+	row-gap: 20px;
 }
 
 .description-item {
 	background-color: var(--accent);
 	color: var(--substrate);
 	border-radius: 22px;
-	max-width: 450px;
+	width: 65%;
 }
 
 .description-item dt {
 	padding-top: 80px;
-	padding-left: 42px;
+	padding-left: 10%;
 	font-family: 'Raleway', sans-serif;
-	font-weight: 600;
+	font-weight: 500;
 	font-size: 20px;
 	letter-spacing: 2px;
+	width: 95%;
 }
 
 .description-item dd {
-	opacity: 0%;
+	font-family: 'Raleway', sans-serif;
+	font-weight: 400;
+	font-size: 20px;
+	letter-spacing: 2px;
+	opacity: 0;
+	padding-left: 10%;
+	margin-top: -3%;
+	width: 95%;
+	height: 60px;
 }
 
 .see-more-arrow {
-	opacity: 100%;
-	padding-top: 6px;
-	padding-left: 42px;
-	padding-bottom: 28px;
+	padding-left: 10%;
+	padding-bottom: 5%;
 }
