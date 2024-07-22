@@ -4,14 +4,6 @@
         url('https://media.uprock.school/fonts/Wremena/WremenaBold.otf') format('truetype');
 }
 
-:root {
-    --highlited: #DD1144;
-    --main: #000000;
-    --back: #F4F4F4;
-    --not-active: #737373;
-    --substrate2: #E3E3E3;
-}
-
 #what-is {
     min-height: 512px;
     max-width: 1018px;
@@ -87,7 +79,7 @@
     font-optical-sizing: auto;
     font-style: normal;
 
-    color: var(--highlited);
+    color: var(--accent);
     font-weight: 600;
 }
 
@@ -151,7 +143,7 @@ fieldset legend {
     font-size: 2rem;
     letter-spacing: 0.06em;
 
-    color: var(--highlited);
+    color: var(--accent);
 }
 
 fieldset div label {
@@ -212,11 +204,11 @@ form p span {
     font-size: 1rem;
     letter-spacing: 0.06em;
 
-    color: var(--highlited);
+    color: var(--accent);
 }
 
 form {
-    background-color: white;
+    background-color: var(--substrate);
     padding: 30px 40px;
     border-radius: 22px;
 }
@@ -247,11 +239,11 @@ legend {
     letter-spacing: 0.07em;
     line-height: 1.2rem;
 
-    color: white;
+    color: var(--substrate);
 }
 
 #ca-1 p {
-    background-color: black;
+    background-color: var(--main);
     padding: 8.5px 20px;
     border-radius: 10px;
 }
@@ -275,11 +267,11 @@ fieldset div input {
     letter-spacing: 0.02em;
     line-height: 1rem;
 
-    color: black;
+    color: var(--main);
 }
 
 input::placeholder {
-    color: black;
+    color: var(--main);
 }
 
 #an-2 p {
@@ -315,7 +307,7 @@ form button {
     border-width: 0;
 
     background-color: var(--highlited);
-    color: white;
+    color: var(--substrate);
 
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
@@ -332,7 +324,7 @@ form button {
 }
 
 #description {
-    background-color: white;
+    background-color: var(--substrate);
 }
 
 #description img {

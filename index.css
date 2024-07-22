@@ -1,13 +1,3 @@
-:root {
-	--main: #000000;
-	--back: #F4F4F4;
-	--accent: #DD1144;
-	--substrate: #FFFFFF;
-	--not-active: #737373;
-	--not-active2: #B7B7B7;
-	--substrate2: #E3E3E3;
-}
-
 .grid-pc {
 	display: grid;
 	grid-template-columns: repeat(6, auto);
