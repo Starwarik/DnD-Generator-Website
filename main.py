@@ -135,7 +135,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     return user
 
 
-@app.post("/token")
+@app.post("/api/token")
 def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
@@ -153,7 +153,7 @@ def login_for_access_token(
     return Token(access_token=access_token, token_type="bearer")
 
 
-@app.post("/register")
+@app.post("/api/register")
 def register(username: str, password: str, email: str):
     user = User(
         username=username,
@@ -165,7 +165,7 @@ def register(username: str, password: str, email: str):
         session.commit()
 
 
-@app.get("/reset_password")
+@app.get("/api/reset_password")
 def reset_password(email: str):
     user = get_user_by_email(email)
     if not user:
@@ -181,7 +181,7 @@ def reset_password(email: str):
     send_reset_message(user.email, access_token)
 
 
-@app.post("/reset_password")
+@app.post("/api/reset_password")
 def reset_password(new_password: str, token_reset: str):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -206,14 +206,14 @@ def reset_password(new_password: str, token_reset: str):
         session.refresh(user)
 
 
-@app.get("/balance")
+@app.get("/api/balance")
 def get_balance(
     current_user: Annotated[User, Depends(get_current_user)]
 ) -> float:
     return current_user.balance
 
 
-@app.post("/spend_balance")
+@app.post("/api/spend_balance")
 def spend_balance(
     current_user: Annotated[User, Depends(get_current_user)],
     money: float
