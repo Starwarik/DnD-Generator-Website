@@ -12,20 +12,13 @@ from pydantic import BaseModel
 from typing_extensions import Annotated
 
 from sqlmodel import Field, SQLModel, create_engine, Session, select
-
-import smtplib
-from email.message import EmailMessage
+from smtp import DummyNorification
 
 # to get a string like this run:
 # openssl rand -hex 32
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-URL_SMTP_SERV = ""
-OUR_EMAIL = ""
-SMTP_LOGIN = ""
-SMTP_PASS = ""
 
 DATABASE_URL = "sqlite:///database.db"  
 
@@ -47,23 +40,13 @@ class TokenData(BaseModel):
     username: Union[str, None] = None
 
 
-mail_server = None
+mail_server = DummyNorification()
 
 engine = create_engine(DATABASE_URL, echo=True)  
 
 
 def create_db_and_tables():  
     SQLModel.metadata.create_all(engine)  
-
-def initialize_mail_server():
-    global mail_server
-    mail_server = smtplib.SMTP(URL_SMTP_SERV, 587)
-    mail_server.starttls()
-    mail_server.login(EMAIL_LOGIN, EMAIL_PASS)
-
-def close_mail_serv():
-    global mail_server
-    mail_server.quit()
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -72,24 +55,19 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    global mail_server
     create_db_and_tables()
-    initialize_mail_server()
+    mail_server.start()
     yield
-    close_mail_serv()
+    mail_server.stop()
 
 
 app = FastAPI(lifespan=lifespan)
 
 
 def send_reset_message(email: str, token: str):
-    msg = EmailMessage()
-    msg.set_content("Тестовое сообщение с токеном "+token)
-
-    msg["Subject"] = "ХУЯКУ СОСНИ ПИДРИЛА"
-    msg["From"] = OUR_EMAIL
-    msg["To"] = email
-    mail_server.send_message(msg)
-    pass
+    global mail_server
+    mail_server.send_refactory_notification(email, token)
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -157,7 +135,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     return user
 
 
-@app.post("/token")
+@app.post("/api/token")
 def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
@@ -175,7 +153,7 @@ def login_for_access_token(
     return Token(access_token=access_token, token_type="bearer")
 
 
-@app.post("/register")
+@app.post("/api/register")
 def register(username: str, password: str, email: str):
     user = User(
         username=username,
@@ -187,7 +165,7 @@ def register(username: str, password: str, email: str):
         session.commit()
 
 
-@app.get("/reset_password")
+@app.get("/api/reset_password")
 def reset_password(email: str):
     user = get_user_by_email(email)
     if not user:
@@ -203,7 +181,7 @@ def reset_password(email: str):
     send_reset_message(user.email, access_token)
 
 
-@app.post("/reset_password")
+@app.post("/api/reset_password")
 def reset_password(new_password: str, token_reset: str):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -228,14 +206,14 @@ def reset_password(new_password: str, token_reset: str):
         session.refresh(user)
 
 
-@app.get("/balance")
+@app.get("/api/balance")
 def get_balance(
     current_user: Annotated[User, Depends(get_current_user)]
 ) -> float:
     return current_user.balance
 
 
-@app.post("/spend_balance")
+@app.post("/api/spend_balance")
 def spend_balance(
     current_user: Annotated[User, Depends(get_current_user)],
     money: float
