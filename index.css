@@ -21,29 +21,39 @@
 	top: 0;
 	left: 0;
 	width: 90.6%;
-	height: max-content;
 }
 
 /* навигационная панель */
 
 #nav {
-	grid-column: 12 / 13;
+	display: flex;
+	flex-direction: column;
 	align-items: flex-end;
+	grid-column: 12 / 13;
+}
+
+.navmenu {
+	display: flex;
+	flex-direction: column;
+	width: fit-content;
 }
 
 .navline {
+	align-self: center;
 	background-color: var(--accent);
-	height: 12.3vh;
+	height: 11vh;
 	width: 2px;
+}
+
+.navline.bracket-line {
+	height: 21vh;
 }
 
 .navpoint {
 	width: fit-content;
-	height: fit-content
-}
-
-.navpoint img {
-	display: inline;
+	height: fit-content;
+	margin-top: -2px;
+	margin-bottom: -2px;
 }
 
 /* ПРЕИМУЩЕСТВА */
