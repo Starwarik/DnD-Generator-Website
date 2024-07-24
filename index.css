@@ -23,6 +23,10 @@
 	width: 90.6%;
 }
 
+#account {
+	grid-column: 1 / 5;
+}
+
 /* навигационная панель */
 
 #nav {
@@ -53,8 +57,10 @@
 	width: fit-content;
 	height: fit-content;
 	margin-top: -2px;
-	margin-bottom: -2px;
+	margin-bottom: -9px;
 }
+
+/* плашка с аккаунтом */
 
 /* ПРЕИМУЩЕСТВА */
 
@@ -89,7 +95,7 @@
 	grid-column: 1 / 5;
 }
 
-img {
+#phone-3 {
 	position: sticky;
 	left: 7%;
 	top: 130px;
