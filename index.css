@@ -25,6 +25,7 @@
 
 #account {
 	grid-column: 1 / 5;
+	height: fit-content;
 }
 
 /* навигационная панель */
