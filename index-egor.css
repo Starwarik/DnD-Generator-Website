@@ -284,7 +284,7 @@
     border-radius: 10px;
     border-width: 0;
 
-    background-color: var(--highlited);
+    background-color: var(--accent);
     color: var(--substrate);
 
     font-family: "Raleway", sans-serif;
@@ -335,7 +335,7 @@
 
 /*                   footer                   */
 
-.footer {
+/*.footer {
     display: grid;
     grid-template-columns: 2fr 2fr 2fr;
     padding: 90px 60px 100px 60px;
@@ -347,9 +347,50 @@
     grid-template-columns: 1fr 1fr;
     column-gap: 23px;
     row-gap: 63px;
+}*/
+
+.footer {
+    min-height: 512px;
+    width: 100%;
+    padding: 60px;
+    background-color: var(--back);
 }
 
-.footer__contacts {
+.footer_main-screen {
+    display: flex;
+    max-width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footer__name {
+    width: 328px;
+}
+
+.footer__name {
+    margin-bottom: 32px;
+}
+
+.footer__appstore, .footer__googleplay {
+    display: inline;
+}
+
+.footer__appstore {
+    margin-right: 21.52px;
+}
+
+.footer__fund {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 53px;
+}
+
+.footer__fund-img {
+    max-width: 173px;
+}
+
+.footer__fund-text {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -357,14 +398,20 @@
     font-weight: 600;
     font-size: 1rem;
     line-height: 1.75rem;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.02em;
+
+    max-width: 365px;
 }
 
-.footer__contacts__telephone {
-    font-family: "Inter", sans-serif;
+.footer__contacts {
+    margin-top: 32px;
 }
 
 .footer__company-data {
+    margin-top: 32px;
+}
+
+.footer__contacts, .footer__company-data {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -375,4 +422,21 @@
     letter-spacing: 0.06em;
 
     color: var(--not-active);
+}
+
+.footer__contacts__telephone {
+    font-family: "Inter", sans-serif;
+}
+
+.footer__socip {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.75rem;
+    letter-spacing: 0.02em;
+
+    margin-top: 32px;
 }
