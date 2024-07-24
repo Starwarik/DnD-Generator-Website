@@ -131,11 +131,11 @@
     border-radius: 22px;
 }
 
-.buy-tokens-form__account__user-image, .buy-tokens-form__account__username {
+.account-info-form__user-image, .account-info-form__username {
     display: inline;
 }
 
-.buy-tokens-form__account__username {
+.account-info-form__username {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-weight: 500;
@@ -160,7 +160,7 @@
     color: var(--accent);
 }
 
-.buy-tokens-form__fields__header__amount-panel__label, .buy-tokens-form__fields__header__input_balance__header {
+.form-label {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-weight: 600;
@@ -199,29 +199,6 @@
     color: var(--main)
 }
 
-.buy-tokens__description {
-    font-family: "Raleway", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-style: normal;
-
-    font-size: 1rem;
-    letter-spacing: 0.06em;
-}
-
-.buy-tokens__description p span {
-    font-family: "Raleway", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 600;
-    font-style: normal;
-
-    font-size: 1rem;
-    letter-spacing: 0.06em;
-
-    color: var(--accent);
-}
-
-
 .buy-tokens-form__fields {
     border: 0;
     padding: 0;
@@ -234,7 +211,7 @@
     margin: 0;
 }
 
-.buy-tokens-form__fields__header__amount-panel__balance span, .buy-tokens-form__fields__header__amount-panel__balance {
+.buy-tokens-form__fields__amount-panel__balance span, .buy-tokens-form__fields__amount-panel__balance {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-weight: 600;
@@ -247,13 +224,13 @@
     color: var(--substrate);
 }
 
-.buy-tokens-form__fields__header__amount-panel__balance {
+.buy-tokens-form__fields__amount-panel__balance {
     background-color: var(--main);
     padding: 8.5px 20px;
     border-radius: 10px;
 }
 
-.buy-tokens-form__fields__header__input_balance__field-amount {
+.form-input {
     display: block;
     width: 100%;
     margin-top: 10px;
@@ -275,7 +252,7 @@
     color: var(--main);
 }
 
-.buy-tokens-form__fields__header__input_balance__field-amount::placeholder {
+.form-input::placeholder {
     color: var(--main);
 }
 
@@ -283,15 +260,15 @@
     margin-top: 10px;
 }
 
-.buy-tokens-form__fields__header__amount-panel {
+.buy-tokens-form__fields__amount-panel {
     margin-top: 20px;
 }
 
-.buy-tokens-form__fields__header__amount-panel__balance {
+.buy-tokens-form__fields__amount-panel__balance {
     margin-top: 10px;
 }
 
-.buy-tokens-form__fields__header__input_balance {
+.buy-tokens-form__fields__input_balance {
     margin-top: 20px;
 }
 
@@ -320,22 +297,40 @@
     line-height: 1rem;
 }
 
-.buy-tokens__description {
+.tokens-description {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+
     background-color: var(--substrate);
+
+    padding: 15.5px;
+    border-radius: 22px;
 }
 
-.buy-tokens__description__star {
+.tokens-description p span {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+
+    color: var(--accent);
+}
+
+.tokens-description__star {
     margin: 0 auto;
 }
 
-.buy-tokens__description__middle-text {
+.tokens-description__middle-text {
     margin-top: 20px;
     margin-bottom: 20px;
-}
-
-.buy-tokens__description {
-    padding: 15.5px;
-    border-radius: 22px;
 }
 
 /*                   footer                   */
