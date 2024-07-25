@@ -1,3 +1,45 @@
+/* Account NavBar */
+
+.account-navbar {
+    position: sticky;
+    left: 60px;
+    top: 10px;
+
+    width: 411px;
+    z-index: 10;
+
+    padding: 12px;
+    border-radius: 11px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: black;
+}
+
+.account-navbar__acount-icon {
+    display: inline-block;
+}
+
+.account-navbar__acount-name {
+    display: inline-block;
+    
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 1rem;
+    letter-spacing: 0.07em;
+    line-height: 1rem;
+
+    margin-left: 10px;
+
+    color: var(--substrate);
+}
+
+/* Second screen */
+
 #what-is {
     min-height: 512px;
     max-width: 1018px;
