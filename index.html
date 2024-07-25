@@ -60,11 +60,95 @@
 		</header>-->
 		<div class="account-navbar">
 			<img src="images/company_name_white.svg" />
-			<div class="account-name">
-				<img class="account-navbar__acount-icon" src="images/user_icon_white.svg" />
-				<p class="account-navbar__acount-name">Alexey2006Ru</p>
+			<div>
+				<img class="account-navbar__icon" src="images/user_icon_white.svg" />
+				<p class="account-navbar__text account-navbar__clickable">Alexey2006Ru</p>
 			</div>
 		</div>
+		<!--<div class="account-navbar">
+			<img src="images/company_name_white.svg" />
+			<div>
+				<img class="account-navbar__icon" src="images/user_icon_white.svg" />
+				<p class="account-navbar__text">
+					<span class="account-navbar__clickable">Вход</span> / <span class="account-navbar__clickable">Регистрация</span>
+				</p>
+			</div>
+		</div>-->
+		<!--<dialog class="dialog-register" open>
+			<h2 class="dialog-register__header">Регистрация</h2>
+			<form class="dialog-register-form">
+				<fieldset>
+					<div>
+						<label class="form-label" for="email">Email</label>
+						<input class="form-input" type="email" name="email" placeholder="Email">
+					</div>
+					<div class="dialog-register-form__field">
+						<label class="form-label" for="login">Логин</label>
+						<input class="form-input" type="text" name="login" placeholder="Логин">
+					</div>
+					<div class="dialog-register-form__field">
+						<label class="form-label" for="password">Пароль</label>
+						<input class="form-input" type="text" name="password" placeholder="Пароль">
+					</div>
+					<div class="dialog-register-form__field">
+						<label class="form-label" for="password_repeat">Подтвердить пароль</label>
+						<input class="form-input" type="text" name="password_repeat" placeholder="Пароль">
+					</div>
+				</fieldset>
+				<div class="dialog-register-form__checkbox">
+					<input type="checkbox" id="horns" name="horns" />
+					<label for="agreement">Вы принимаете условия пользовательского соглашения</label>
+				</div>
+				<button class="form-submit dialog-register-form__submit" type="submit">Зарегистрироваться</button>
+				<p class="dialog-register-form__info">Уже зарегестрированы? <span class="dialog-register-form__info_higlited">Вход</span></p>
+			</form>
+		</dialog>-->
+		<!--<dialog class="dialog-register" open>
+			<h2 class="dialog-register__header">Вход в аккаунт</h2>
+			<form class="dialog-register-form">
+				<fieldset>
+					<div>
+						<label class="form-label" for="login">Login / Email</label>
+						<input class="form-input" type="text" name="login" placeholder="Login / Email">
+					</div>
+					<div class="dialog-register-form__field">
+						<label class="form-label" for="pass">Пароль</label>
+						<input class="form-input" type="text" name="pass" placeholder="Пароль">
+					</div>
+				</fieldset>
+				<p class="dialog-login-form__reset-password">Забыли пароль?</p>
+				<button class="form-submit dialog-register-form__submit" type="submit">Зарегистрироваться</button>
+				<p class="dialog-register-form__info">Нет аккаунты? <span class="dialog-register-form__info_higlited">Регистрация</span></p>
+			</form>
+		</dialog>-->
+		<!--<dialog class="dialog-register" open>
+			<h2 class="dialog-register__header">Смена пароля</h2>
+			<form class="dialog-register-form">
+				<fieldset>
+					<div>
+						<label class="form-label" for="email">Email</label>
+						<input class="form-input" type="email" name="email" placeholder="Email">
+					</div>
+				</fieldset>
+				<button class="form-submit dialog-register-form__submit" type="submit">Получить письмо</button>
+			</form>
+		</dialog>-->
+		<!--<dialog class="dialog-register" open>
+			<h2 class="dialog-register__header">Смена пароля</h2>
+			<form class="dialog-register-form">
+				<fieldset>
+					<div>
+						<label class="form-label" for="email">Пароль</label>
+						<input class="form-input" type="email" name="email" placeholder="Пароль">
+					</div>
+					<div class="dialog-register-form__field">
+						<label class="form-label" for="pass">Подтвердить пароль</label>
+						<input class="form-input" type="text" name="pass" placeholder="Пароль">
+					</div>
+				</fieldset>
+				<button class="form-submit dialog-register-form__submit" type="submit">Сменить</button>
+			</form>
+		</dialog>--> 
 		<main>
 			<header id="head">
 				<section class="title">
@@ -143,8 +227,8 @@
 							<img class="account-info-form__user-image" src="images/user_icon.svg" />
 							<p class="account-info-form__username">Alexey2006Ru</p>
 						</div>
-						<fieldset class="buy-tokens-form__fields">
-							<legend class="buy-tokens-form__fields__header">Счёт</legend>
+						<fieldset>
+							<legend class="form-legend">Счёт</legend>
 							<div class="buy-tokens-form__fields__amount-panel">
 								<label class="form-label">Текущий счёт</label>
 								<p class="buy-tokens-form__fields__amount-panel__balance">1000 <span>ток.</span></p>
@@ -155,7 +239,7 @@
 							</div>
 						</fieldset>
 						<p class="buy-tokens-form__tokens_count">Кол-во токенов: <span>1000</span></p>
-						<button class="buy-tokens-form__submit" type="submit">Пополнить счёт</button>
+						<button class="form-submit" type="submit">Пополнить счёт</button>
 					</form>
 					<aside class="tokens-description">
 						<img class="tokens-description__star" src="images/star_black.svg" />

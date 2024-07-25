@@ -18,11 +18,11 @@
     background-color: black;
 }
 
-.account-navbar__acount-icon {
+.account-navbar__icon {
     display: inline-block;
 }
 
-.account-navbar__acount-name {
+.account-navbar__text {
     display: inline-block;
     
     font-family: "Raleway", sans-serif;
@@ -36,6 +36,14 @@
     margin-left: 10px;
 
     color: var(--substrate);
+}
+
+.account-navbar__clickable {
+    transition: 0.3s;
+}
+
+.account-navbar__clickable:hover {
+    color: var(--accent);
 }
 
 /* Second screen */
@@ -190,7 +198,7 @@
     margin-left: 10px;
 }
 
-.buy-tokens-form__fields__header {
+.form-legend {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-weight: 700;
@@ -239,13 +247,6 @@
     line-height: 1rem;
 
     color: var(--main)
-}
-
-.buy-tokens-form__fields {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    min-width: 0;
 }
 
 .buy-tokens-form__fields__header {
@@ -319,7 +320,7 @@
     text-align: right;
 }
 
-.buy-tokens-form__submit {
+.form-submit {
     margin-top: 20px;
     padding: 20px 13.5px;
 
@@ -481,4 +482,102 @@
     letter-spacing: 0.02em;
 
     margin-top: 32px;
+}
+
+/* Dialog register */
+
+.dialog-register {
+    z-index: 20;
+    padding: 42px;
+    width: 404px;
+
+    position: sticky;
+    left: calc(50% - 202px);
+    top: 100px;
+}
+
+.dialog-register__header {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 3rem;
+    letter-spacing: 0.08em;
+
+    text-align: center;
+
+    margin-bottom: 40px;
+}
+
+.dialog-register-form__checkbox {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1rem;
+    letter-spacing: 0.05em;
+
+    margin-top: 20px;
+
+    display: flex;
+}
+
+.dialog-register-form__checkbox input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+
+    accent-color: var(--accent);
+    vertical-align: middle;
+
+    margin-right: 10px;
+}
+
+.dialog-register-form__checkbox label {
+    vertical-align: middle;
+}
+
+.dialog-register-form__field {
+    margin-top: 20px;
+}
+
+.dialog-register-form__submit {
+    width: 100%;
+}
+
+.dialog-register-form__info {
+    margin-top: 20px;
+
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1rem;
+    letter-spacing: 0.06em;
+
+    text-align: center;
+}
+
+.dialog-register-form__info_higlited {
+    color: var(--accent);
+}
+
+.dialog-login-form__reset-password {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1rem;
+    letter-spacing: 0.05em;
+
+    color: var(--accent);
+
+    margin-top: 9px;
 }

@@ -72,3 +72,15 @@ ul[role='list'],
 ol[role='list'] {
     list-style: none;
 }
+
+fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+}
+
+dialog {
+    border-radius: 22px;
+    border-width: 0;
+}
