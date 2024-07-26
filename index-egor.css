@@ -18,6 +18,10 @@
     z-index: 30;
 }
 
+.user-known {
+    display: none;
+}
+
 .account-navbar > div {
     display: flex;
     flex-direction: row;
