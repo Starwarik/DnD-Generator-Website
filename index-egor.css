@@ -1,21 +1,30 @@
 /* Account NavBar */
 
 .account-navbar {
-    position: fixed;
-    left: 60px;
-    top: 10px;
+    margin-top: 31px;
 
-    width: 411px;
-    z-index: 30;
+    height: fit-content;
+    grid-column: 1 / 5;
 
-    padding: 12px;
     border-radius: 11px;
 
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 
     background-color: black;
+    pointer-events: all;
+}
+
+.account-navbar > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 50px;
+}
+
+.known-user {
+    display: none;
 }
 
 .account-navbar__icon {
@@ -486,17 +495,17 @@
 
 /* Dialog register */
 
-.dialog {
+.dialog-register {
     z-index: 20;
     padding: 42px;
     width: 404px;
 
-    position: fixed;
+    position: sticky;
     left: calc(50% - 202px);
     top: 100px;
 }
 
-.dialog__header {
+.dialog-register__header {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -511,7 +520,7 @@
     margin-bottom: 40px;
 }
 
-.dialog-form__checkbox {
+.dialog-register-form__checkbox {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -526,7 +535,7 @@
     display: flex;
 }
 
-.dialog-form__checkbox input[type="checkbox"] {
+.dialog-register-form__checkbox input[type="checkbox"] {
     width: 15px;
     height: 15px;
 
@@ -536,19 +545,19 @@
     margin-right: 10px;
 }
 
-.dialog-form__checkbox label {
+.dialog-register-form__checkbox label {
     vertical-align: middle;
 }
 
-.dialog-form__field {
+.dialog-register-form__field {
     margin-top: 20px;
 }
 
-.dialog-form__submit {
+.dialog-register-form__submit {
     width: 100%;
 }
 
-.dialog-form__info {
+.dialog-register-form__info {
     margin-top: 20px;
 
     font-family: "Raleway", sans-serif;
@@ -563,7 +572,7 @@
     text-align: center;
 }
 
-.dialog-form__info_higlited {
+.dialog-register-form__info_higlited {
     color: var(--accent);
 }
 
