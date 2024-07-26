@@ -1,12 +1,12 @@
 /* Account NavBar */
 
 .account-navbar {
-    position: sticky;
+    position: fixed;
     left: 60px;
     top: 10px;
 
     width: 411px;
-    z-index: 10;
+    z-index: 30;
 
     padding: 12px;
     border-radius: 11px;
@@ -486,17 +486,17 @@
 
 /* Dialog register */
 
-.dialog-register {
+.dialog {
     z-index: 20;
     padding: 42px;
     width: 404px;
 
-    position: sticky;
+    position: fixed;
     left: calc(50% - 202px);
     top: 100px;
 }
 
-.dialog-register__header {
+.dialog__header {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -511,7 +511,7 @@
     margin-bottom: 40px;
 }
 
-.dialog-register-form__checkbox {
+.dialog-form__checkbox {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -526,7 +526,7 @@
     display: flex;
 }
 
-.dialog-register-form__checkbox input[type="checkbox"] {
+.dialog-form__checkbox input[type="checkbox"] {
     width: 15px;
     height: 15px;
 
@@ -536,19 +536,19 @@
     margin-right: 10px;
 }
 
-.dialog-register-form__checkbox label {
+.dialog-form__checkbox label {
     vertical-align: middle;
 }
 
-.dialog-register-form__field {
+.dialog-form__field {
     margin-top: 20px;
 }
 
-.dialog-register-form__submit {
+.dialog-form__submit {
     width: 100%;
 }
 
-.dialog-register-form__info {
+.dialog-form__info {
     margin-top: 20px;
 
     font-family: "Raleway", sans-serif;
@@ -563,7 +563,7 @@
     text-align: center;
 }
 
-.dialog-register-form__info_higlited {
+.dialog-form__info_higlited {
     color: var(--accent);
 }
 
