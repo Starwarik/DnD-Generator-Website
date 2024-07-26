@@ -63,7 +63,25 @@
 	margin-bottom: -9px;
 }
 
-/* плашка с аккаунтом */
+/* ОСНОВА САЙТА */
+
+main {
+	margin-top: 110px;
+}
+
+/* ЗАГОЛОВОК САЙТА */
+
+#head {
+	height: 1024px;
+}
+
+.title {
+	background-color: var(--accent);
+	border-radius: 41px;
+	margin-left: -101px;
+	grid-column: 1 / 12;
+}
+
 
 /* ПРЕИМУЩЕСТВА */
 
