@@ -13,6 +13,7 @@ from typing_extensions import Annotated
 
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 from smtp import DummyNorification
+from fastapi.middleware.cors import CORSMiddleware
 
 # to get a string like this run:
 # openssl rand -hex 32
@@ -63,6 +64,15 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 
 def send_reset_message(email: str, token: str):
