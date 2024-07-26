@@ -14,6 +14,12 @@
 	margin-right: 32px;
 }
 
+/* ОСНОВА САЙТА */
+
+main {
+	margin-top: 110px;
+}
+
 /* ИНТЕРФЕЙС */
 
 #ui {
@@ -21,7 +27,7 @@
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 90.6%;
+	right: 0;
 	pointer-events: none;
 }
 
@@ -63,16 +69,11 @@
 	margin-bottom: -9px;
 }
 
-/* ОСНОВА САЙТА */
-
-main {
-	margin-top: 110px;
-}
-
 /* ЗАГОЛОВОК САЙТА */
 
 #head {
 	height: 1024px;
+	background-color: var(--back);
 }
 
 .title {
@@ -80,8 +81,31 @@ main {
 	border-radius: 41px;
 	margin-left: -101px;
 	grid-column: 1 / 12;
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-end;
 }
 
+.title > img {
+	padding-right: 50px;
+}
+
+#phone-1 {
+	position: absolute;
+	grid-column: 1 / 5;
+}
+
+#phone-2 {
+	position: absolute;
+	grid-column: 2 / 6;
+}
+
+.download {
+	background-color: var(--substrate);
+	grid-column: 7 / 12;
+}
 
 /* ПРЕИМУЩЕСТВА */
 
@@ -164,4 +188,10 @@ main {
 .see-more-arrow {
 	padding-left: 10%;
 	padding-bottom: 5%;
+}
+
+/* ХВОСТОВОЙ ЗАГОЛОВОК */
+
+#tail {
+	height: 1024px;
 }
