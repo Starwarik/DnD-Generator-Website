@@ -1,21 +1,30 @@
 /* Account NavBar */
 
 .account-navbar {
-    position: sticky;
-    left: 60px;
-    top: 10px;
+    margin-top: 31px;
 
-    width: 411px;
-    z-index: 10;
+    height: fit-content;
+    grid-column: 1 / 5;
 
-    padding: 12px;
     border-radius: 11px;
 
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 
     background-color: black;
+    pointer-events: all;
+}
+
+.account-navbar > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 50px;
+}
+
+.known-user {
+    display: none;
 }
 
 .account-navbar__icon {

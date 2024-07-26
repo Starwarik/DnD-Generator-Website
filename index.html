@@ -11,12 +11,21 @@
 		<link rel="stylesheet" href="index-egor.css">
 	</head>
 	<body>
-		<!--<header class="grid-pc" id="ui">
-			<div id="account">
-				<img src="" />
-				<div class="account-name" id="an-1">
-					<img src="" />
-					<p>Alexey2006Ru</p>
+		<header class="grid-pc" id="ui">
+			<div class="account-navbar unknown-user">
+				<img src="images/company_name_white.svg" />
+				<div>
+					<img class="account-navbar__icon" src="images/user_icon_white.svg" />
+					<p class="account-navbar__text">
+						<span class="account-navbar__clickable" onclick="show_login()">Вход</span> / <span class="account-navbar__clickable" onclick="show_register()">Регистрация</span>
+					</p>
+				</div>
+			</div>
+			<div class="account-navbar known-user">
+				<img src="images/company_name_white.svg" />
+				<div>
+					<img class="account-navbar__icon" src="images/user_icon_white.svg" />
+					<p class="account-navbar__text account-navbar__clickable">Alexey2006Ru</p>
 				</div>
 			</div>
 			<nav id="nav">
@@ -57,27 +66,11 @@
 					</a>
 				</div>
 			</nav>
-		</header>-->
-		<!--<div class="account-navbar">
-			<img src="images/company_name_white.svg" />
-			<div>
-				<img class="account-navbar__icon" src="images/user_icon_white.svg" />
-				<p class="account-navbar__text account-navbar__clickable">Alexey2006Ru</p>
-			</div>
-		</div>-->
-		<div class="account-navbar">
-			<img src="images/company_name_white.svg" />
-			<div>
-				<img class="account-navbar__icon" src="images/user_icon_white.svg" />
-				<p class="account-navbar__text">
-					<span class="account-navbar__clickable" onclick="show_login()">Вход</span> / <span class="account-navbar__clickable" onclick="show_register()">Регистрация</span>
-				</p>
-			</div>
-		</div>
+		</header>
 		<dialog class="dialog-register" id="dialog-register">
-			<h2 class="dialog-register__header">Регистрация</h2>
 			<form class="dialog-register-form">
 				<fieldset>
+					<legend class="dialog-register__header">Регистрация</legend>
 					<div>
 						<label class="form-label" for="email">Email</label>
 						<input class="form-input" type="email" name="email" placeholder="Email">
