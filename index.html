@@ -25,7 +25,7 @@
 				<img src="images/company_name_white.svg" />
 				<div>
 					<img class="account-navbar__icon" src="images/user_icon_white.svg" />
-					<p class="account-navbar__text account-navbar__clickable">Alexey2006Ru</p>
+					<p class="account-navbar__text account-navbar__clickable" id="account-navbar-auth__login">Alexey2006Ru</p>
 				</div>
 			</div>
 			<nav id="nav">
@@ -69,7 +69,7 @@
 		</header>
 		<dialog class="dialog" id="dialog-register">
 			<div class="dialog-viewport">
-				<form class="dialog-form">
+				<form class="dialog-form" id="dialog-form-register">
 					<fieldset>
 						<legend class="dialog__header">Регистрация</legend>
 						<div>
@@ -82,11 +82,11 @@
 						</div>
 						<div class="dialog-form__field">
 							<label class="form-label">Пароль</label>
-							<input class="form-input" type="text" name="password" placeholder="Пароль">
+							<input class="form-input" type="text" name="pass" placeholder="Пароль">
 						</div>
 						<div class="dialog-form__field">
 							<label class="form-label">Подтвердить пароль</label>
-							<input class="form-input" type="text" name="password_repeat" placeholder="Пароль">
+							<input class="form-input" type="text" name="pass_repeat" placeholder="Пароль">
 						</div>
 					</fieldset>
 					<div class="dialog-form__checkbox">
