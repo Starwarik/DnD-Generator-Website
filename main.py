@@ -189,6 +189,7 @@ def reset_password(email: str):
         data={"sub": user.username, "type":"reset"}, expires_delta=access_token_expires
     )
     send_reset_message(user.email, access_token)
+    return access_token
 
 
 @app.post("/api/reset_password")
