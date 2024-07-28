@@ -32,6 +32,12 @@ class User(SQLModel, table=True):
     balance: float = Field(default=0.0)
 
 
+class UserRegisterForm(BaseModel):  
+    username: str  
+    password: str  
+    email: str
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -40,7 +46,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Union[str, None] = None
 
-#reset_token - reset token get href
+#reset_token
 mail_server = DummyNorification()
 
 engine = create_engine(DATABASE_URL, echo=True)  
@@ -74,10 +80,10 @@ app.add_middleware(
 )
 
 
-
 def send_reset_message(email: str, token: str):
     global mail_server
     mail_server.send_refactory_notification(email, token)
+
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -164,15 +170,16 @@ def login_for_access_token(
 
 
 @app.post("/api/register")
-def register(username: str, password: str, email: str):
+def register(user: UserRegisterForm):
     user = User(
-        username=username,
-        password=get_password_hash(password),
-        email=email
+        username=user.username,
+        password=get_password_hash(user.password),
+        email=user.email
     )
     with Session(engine) as session:
         session.add(user)
         session.commit()
+    return "Good"
 
 
 @app.get("/api/reset_password")
@@ -189,8 +196,16 @@ def reset_password(email: str):
         data={"sub": user.username, "type":"reset"}, expires_delta=access_token_expires
     )
     send_reset_message(user.email, access_token)
-    return access_token
 
+@app.get("/api/user_info")
+def get_user_info(
+    current_user: Annotated[User, Depends(get_current_user)]
+):
+    return {
+        'username': current_user.username,
+        'email': current_user.email,
+        'balance': current_user.balance
+    }
 
 @app.post("/api/reset_password")
 def reset_password(new_password: str, token_reset: str):
