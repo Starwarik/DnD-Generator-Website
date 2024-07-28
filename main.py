@@ -40,7 +40,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Union[str, None] = None
 
-
+#reset_token - reset token get href
 mail_server = DummyNorification()
 
 engine = create_engine(DATABASE_URL, echo=True)  

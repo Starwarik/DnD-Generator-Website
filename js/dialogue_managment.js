@@ -36,3 +36,8 @@ function show_reset_password() {
     close_all_dialogues();
     dialog_reset_password.showModal();
 }
+
+function show_reset_password_second() {
+    close_all_dialogues();
+    dialog_reset_password_second.showModal();
+}

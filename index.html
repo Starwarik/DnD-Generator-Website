@@ -94,7 +94,7 @@
 						<label>Вы принимаете условия пользовательского соглашения</label>
 					</div>
 					<button class="form-submit dialog-form__submit" type="submit">Зарегистрироваться</button>
-					<p class="dialog-form__info">Уже зарегестрированы? <span class="dialog-form__info_higlited">Вход</span></p>
+					<p class="dialog-form__info">Уже зарегестрированы? <span class="dialog-form__info_higlited" onclick="show_login()">Вход</span></p>
 				</form>
 			</div>
 		</dialog>
@@ -112,16 +112,16 @@
 							<input class="form-input" type="text" name="pass" placeholder="Пароль">
 						</div>
 					</fieldset>
-					<p class="dialog-login-form__reset-password">Забыли пароль?</p>
+					<p class="dialog-login-form__reset-password" onclick="show_reset_password()">Забыли пароль?</p>
 					<button class="form-submit dialog-form__submit" type="submit">Войти</button>
-					<p class="dialog-form__info">Нет аккаунты? <span class="dialog-form__info_higlited">Регистрация</span></p>
+					<p class="dialog-form__info">Нет аккаунты? <span class="dialog-form__info_higlited" onclick="show_register()">Регистрация</span></p>
 				</form>
 			</div>
 		</dialog>
 		<dialog class="dialog" id="dialog-reset-password">
 			<div class="dialog-viewport">
 				<h2 class="dialog__header">Смена пароля</h2>
-				<form class="dialog-form">
+				<form class="dialog-form" id="dialog-form-reset-password">
 					<fieldset>
 						<div>
 							<label class="form-label">Email</label>
@@ -135,15 +135,15 @@
 		<dialog class="dialog" id="dialog-reset-password-second">
 			<div class="dialog-viewport">
 				<h2 class="dialog__header">Смена пароля</h2>
-				<form class="dialog-form">
+				<form class="dialog-form" id="dialog-form-reset-password-second">
 					<fieldset>
 						<div>
 							<label class="form-label">Пароль</label>
-							<input class="form-input" type="text" name="email" placeholder="Пароль">
+							<input class="form-input" type="text" name="pass" placeholder="Пароль">
 						</div>
 						<div class="dialog-form__field">
 							<label class="form-label">Подтвердить пароль</label>
-							<input class="form-input" type="text" name="pass" placeholder="Пароль">
+							<input class="form-input" type="text" name="pass_repeat" placeholder="Пароль">
 						</div>
 					</fieldset>
 					<button class="form-submit dialog-form__submit" type="submit">Сменить</button>
@@ -298,6 +298,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 		<script src="./js/animations.js"></script>
+		<script src="./js/reset_password.js"></script>
 		<script src="./js/cookie.js"></script>
 		<script src="./js/api.js"></script>
 		<script src="./js/account.js"></script>
