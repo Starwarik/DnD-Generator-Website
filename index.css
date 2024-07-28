@@ -16,10 +16,6 @@
 
 /* ОСНОВА САЙТА */
 
-main {
-	margin-top: 110px;
-}
-
 /* ИНТЕРФЕЙС */
 
 #ui {
@@ -73,7 +69,14 @@ main {
 
 #head {
 	height: 1024px;
+	padding-top: 190px;
+}
+
+.head-coloriser {
 	background-color: var(--back);
+	border-radius: 80px;
+	margin-top: -80px;
+	height: 1114px;
 }
 
 .title {
