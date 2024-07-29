@@ -96,7 +96,7 @@ def get_user_by_username(username: str):
     with Session(engine) as session:
         statement = select(User).where(User.username == username)
         results = session.exec(statement)
-        result = results.one()
+        result = results.first()
         return result
 
 
@@ -104,7 +104,7 @@ def get_user_by_email(email: str):
     with Session(engine) as session:
         statement = select(User).where(User.email == email)
         results = session.exec(statement)
-        result = results.one()
+        result = results.first()
         return result
 
 
