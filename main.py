@@ -46,7 +46,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Union[str, None] = None
 
-#reset_token
+
 mail_server = DummyNorification()
 
 engine = create_engine(DATABASE_URL, echo=True)  
@@ -83,7 +83,6 @@ app.add_middleware(
 def send_reset_message(email: str, token: str):
     global mail_server
     mail_server.send_refactory_notification(email, token)
-
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
