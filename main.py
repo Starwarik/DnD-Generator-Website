@@ -46,7 +46,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Union[str, None] = None
 
-#reset_token
+
 mail_server = DummyNorification()
 
 engine = create_engine(DATABASE_URL, echo=True)  
@@ -84,7 +84,6 @@ def send_reset_message(email: str, token: str):
     global mail_server
     mail_server.send_refactory_notification(email, token)
 
-
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -97,7 +96,7 @@ def get_user_by_username(username: str):
     with Session(engine) as session:
         statement = select(User).where(User.username == username)
         results = session.exec(statement)
-        result = results.one()
+        result = results.first()
         return result
 
 
@@ -105,7 +104,7 @@ def get_user_by_email(email: str):
     with Session(engine) as session:
         statement = select(User).where(User.email == email)
         results = session.exec(statement)
-        result = results.one()
+        result = results.first()
         return result
 
 
