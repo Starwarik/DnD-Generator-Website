@@ -1,5 +1,23 @@
 gsap.registerPlugin(ScrollTrigger);
 
+// АНИМАЦИЯ ИНТЕРФЕЙСА
+// Анимация навбара
+
+
+
+gsap.to("#point-1 object svg .anchor", {
+	scrollTrigger: {
+		trigger: "#head",
+		start: "50% 50%",
+		toggleActions: "restart none none reverse"
+	},
+	fill: "#DD1144",
+	stroke: "#DD1144"
+});
+
+// АНИМАЦИЯ ЭКРАНА ПРЕИМУЩЕСТВ
+// Триггер при прокрутке
+
 advantagesAnim = gsap.timeline( {
 	scrollTrigger: {
 		trigger: "#our-advantage",
@@ -10,6 +28,8 @@ advantagesAnim.from(".overflow-wrapper h2", { yPercent: -100, opacity: 0, durati
 advantagesAnim.to("#advantages", { rowGap: 120, duration: 0.7 }, "<");
 advantagesAnim.to(".description-item:nth-child(even)", { xPercent: 27, duration: 0.7 }, "<");
 advantagesAnim.to(".description-item:nth-child(odd)", { xPercent: -27, duration: 0.7 }, "<");
+
+// Анимация плашек с описаниями
 
 gsap.utils.toArray(".description-item").forEach(description => {
 	let header = description.querySelector("dt"),

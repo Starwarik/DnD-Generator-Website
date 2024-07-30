@@ -16,6 +16,10 @@
 
 /* ОСНОВА САЙТА */
 
+main {
+	background-color: var(--substrate);
+}
+
 /* ИНТЕРФЕЙС */
 
 #ui {
@@ -68,7 +72,8 @@
 /* ЗАГОЛОВОК САЙТА */
 
 #head {
-	height: 1024px;
+	min-height: 700px;
+	height: 100%;
 	padding-top: 190px;
 }
 
@@ -76,14 +81,15 @@
 	background-color: var(--back);
 	border-radius: 80px;
 	margin-top: -80px;
-	height: 1114px;
+	height: 115vh;
 }
 
 .title {
 	background-color: var(--accent);
-	border-radius: 41px;
+	border-radius: 30px;
 	margin-left: -101px;
 	grid-column: 1 / 12;
+	height: 100%;
 
 	display: flex;
 	flex-direction: row;
@@ -92,22 +98,74 @@
 }
 
 .title > img {
-	padding-right: 50px;
+	width: 48.8vw;
+	padding-right: 3%;
+	padding-left: 3%;
+}
+
+.phone-wrapper {
+	grid-column: 1 / 6;
+	position: relative;
+	left: 0;
 }
 
 #phone-1 {
 	position: absolute;
-	grid-column: 1 / 5;
+	width: 85%;
+	top: -260px;
 }
 
 #phone-2 {
 	position: absolute;
-	grid-column: 2 / 6;
+	right: 0; 
+	width: 74%;
+
 }
 
 .download {
-	background-color: var(--substrate);
 	grid-column: 7 / 12;
+	height: fit-content;
+	margin-top: 40px;
+}
+
+.download-description {
+	background-color: var(--substrate);
+	border-radius: 22px;
+}
+
+.download-description > h2 {
+	font-family: 'Raleway', sans-serif;
+	font-size: 40px;
+	letter-spacing: 3px;
+	font-weight: bold;
+	padding-left: 40px;
+	padding-top: 40px;
+	padding-right: 40px;
+}
+
+.download-description > p {
+	font-family: 'Raleway', sans-serif;
+	font-size: 20px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	padding-top: 20px;
+	padding-bottom: 30px;
+	padding-left: 40px;
+}
+
+.download button {
+	border: none;
+	border-radius: 10px;
+	margin-top: 40px;
+	margin-bottom: 0px;
+	background-color: var(--accent);
+	color: var(--back);
+	font-family: 'Raleway', sans-serif;
+	font-size: 24px;
+	font-weight: 500;
+	letter-spacing: 2px;
+	width: 100%;
+	height: 61px;
 }
 
 /* ПРЕИМУЩЕСТВА */
