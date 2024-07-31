@@ -498,12 +498,16 @@
 /* Dialog register */
 
 .dialog {
-    padding: 42px;
     width: 404px;
+    padding: 0;
 
     position: fixed;
     left: calc(50% - 202px);
     top: 100px;
+}
+
+.dialog-viewport {
+    padding: 42px;
 }
 
 .dialog__header {
