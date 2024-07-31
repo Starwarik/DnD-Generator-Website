@@ -361,6 +361,10 @@
     line-height: 1rem;
 }
 
+form-submit:hover {
+    cursor: pointer;
+}
+
 .tokens-description {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
