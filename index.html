@@ -28,14 +28,14 @@
 					<p class="account-navbar__text account-navbar__clickable" id="account-navbar-auth__login" onclick="toggle_navbar_menu()">...</p>
 				</div>
 			</div>
-			<div class="account-navbar-menu no-seen" id="account-navbar-menu">
+			<div class="account-navbar-menu" id="account-navbar-menu">
 				<p class="account-navbar-menu__text">Login: <span class="account-navbar-menu__info" id="account-navbar-menu__login">...</span> </p>
 				<p class="account-navbar-menu__text">Email: <span class="account-navbar-menu__info" id="account-navbar-menu__email">...</span></p>
 				<div class="buy-tokens-form__fields__amount-panel">
 					<label class="form-label">Текущий счёт</label>
 					<p class="buy-tokens-form__fields__amount-panel__balance"><span id="account-navbar-menu__balance">...</span> ток.</p>
 				</div>
-				<button class="form-submit">Пополнить счет</button>
+				<a class="form-submit" href="#buy-tokens" onclick="hide_navbar_menu()">Пополнить счет</a>
 				<div class="account-navbar-menu__exit-menu" onclick="logout()">
 					<img src="images/exit_icon.svg">
 					<p>Выйти</p>
@@ -241,7 +241,7 @@
 					</div>
 				</dl>
 			</section>
-			<section class="buy-tokens">
+			<section class="buy-tokens" id="buy-tokens">
 				<img id="horn" src="" />
 				<h2 class="buy-tokens__title buy-tokens__title_pre-title">приобретите</h2>
 				<h2 class="buy-tokens__title">ТОКЕНЫ</h2>

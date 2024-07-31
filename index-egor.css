@@ -359,6 +359,10 @@
     font-size: 1rem;
     letter-spacing: 0.07em;
     line-height: 1rem;
+
+    text-decoration: none;
+
+    display: inline-block;
 }
 
 form-submit:hover {
