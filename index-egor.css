@@ -498,6 +498,8 @@
     left: 50%;
     margin-left: -202px;
     top: 100px;
+
+    z-index: 100;
 }
 
 .dialog-viewport {
@@ -593,4 +595,28 @@
 .dialog-login-form__reset-password:hover {
     cursor: pointer;
     user-select: none;
+}
+
+#dialog-reset-password-letter {
+    background-color: var(--accent);
+    color: white;
+    top: 200px;
+}
+
+#dialog-reset-password-letter h1 {
+    text-align: left;
+}
+
+#dialog-reset-password-letter h2 {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    letter-spacing: 0.06em;
+
+    text-align: left;
+    margin-bottom: 0;
 }

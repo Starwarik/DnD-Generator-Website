@@ -39,7 +39,7 @@ dialog_form_reset_password.addEventListener('submit', async (e) => {
     const email = formData.get('email');
 
     sendResetLetter(email);
-    location.reload();
+    show_reset_password_letter();
 });
 
 dialog_form_reset_password_second.addEventListener('submit', async (e) => {
