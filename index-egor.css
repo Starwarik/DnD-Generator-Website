@@ -47,6 +47,9 @@
     margin-left: 10px;
 
     color: var(--substrate);
+
+    cursor: pointer;
+    user-select: none;
 }
 
 .account-navbar__clickable {
@@ -619,4 +622,57 @@
 
     text-align: left;
     margin-bottom: 0;
+}
+
+/* Account Navbar menu */
+
+.account-navbar-menu {
+    margin-top: 16px;
+    padding: 31px 42px;
+
+    height: fit-content;
+    grid-column: 1 / 6;
+
+    border-radius: 11px;
+
+    background-color: white;
+    pointer-events: all;
+
+    z-index: 30;
+}
+
+.account-navbar-menu__text {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.3rem;
+    letter-spacing: 0.07em;
+
+    color: var(--not-active);
+}
+
+.account-navbar-menu__info {
+    font-weight: 500;
+    color: black;
+}
+
+.account-navbar-menu__exit-menu {
+    margin-top: 20px;
+
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+
+    color: var(--accent);
 }
