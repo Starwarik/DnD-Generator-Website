@@ -389,20 +389,6 @@
 
 /*                   footer                   */
 
-/*.footer {
-    display: grid;
-    grid-template-columns: 2fr 2fr 2fr;
-    padding: 90px 60px 100px 60px;
-    background-color: var(--back);
-}
-
-.footer__svg-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 23px;
-    row-gap: 63px;
-}*/
-
 .footer {
     min-height: 512px;
     width: 100%;
