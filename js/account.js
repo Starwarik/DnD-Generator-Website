@@ -10,6 +10,11 @@ async function setUserInfo(token) {
     document.getElementById('account-navbar-menu__balance').textContent = user_info.balance;
 }
 
+function logout() {
+    eraseCookie('access_token');
+    location.reload();
+}
+
 const token = getCookie('access_token');
 if (!token) {
     account_navbar_noname.classList.remove('no-seen');
