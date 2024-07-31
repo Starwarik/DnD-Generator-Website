@@ -38,7 +38,7 @@ dialog_form_reset_password.addEventListener('submit', async (e) => {
 
     const email = formData.get('email');
 
-    sendResetLetter(email);
+    await sendResetLetter(email);
     show_reset_password_letter();
 });
 
