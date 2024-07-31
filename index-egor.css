@@ -308,6 +308,8 @@
     line-height: 1rem;
 
     color: var(--not-active);
+
+    resize: none;
 }
 
 .form-input::placeholder {
