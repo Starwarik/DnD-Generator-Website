@@ -680,3 +680,7 @@ form-submit:hover {
 
     color: var(--accent);
 }
+
+.account-navbar-menu__exit-menu:hover {
+    cursor: pointer;
+}
