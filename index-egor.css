@@ -55,6 +55,7 @@
 
 .account-navbar__clickable:hover {
     color: var(--accent);
+    cursor: pointer;
 }
 
 /* Second screen */
@@ -291,7 +292,7 @@
 
     border-radius: 10px;
     border-width: 0;
-    background-color: var(--substrate2);
+    background-color: var(--back);
     padding: 8.5px 20px;
 
     font-family: "Raleway", sans-serif;
@@ -303,11 +304,17 @@
     letter-spacing: 0.02em;
     line-height: 1rem;
 
-    color: var(--main);
+    color: var(--not-active);
 }
 
 .form-input::placeholder {
+    color: var(--not-active);
+}
+
+.form-input:focus {
+    outline: none;
     color: var(--main);
+    background-color: var(--substrate2);
 }
 
 .buy-tokens-form__fields__header {
@@ -488,7 +495,8 @@
     padding: 0;
 
     position: fixed;
-    left: calc(50% - 202px);
+    left: 50%;
+    margin-left: -202px;
     top: 100px;
 }
 
@@ -580,4 +588,9 @@
     color: var(--accent);
 
     margin-top: 9px;
+}
+
+.dialog-login-form__reset-password:hover {
+    cursor: pointer;
+    user-select: none;
 }

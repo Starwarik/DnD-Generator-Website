@@ -74,23 +74,23 @@
 						<legend class="dialog__header">Регистрация</legend>
 						<div>
 							<label class="form-label">Email</label>
-							<input class="form-input" type="email" name="email" placeholder="Email">
+							<input class="form-input" type="email" name="email" placeholder="Email" required>
 						</div>
 						<div class="dialog-form__field">
 							<label class="form-label">Логин</label>
-							<input class="form-input" type="text" name="login" placeholder="Логин">
+							<input class="form-input" type="text" name="login" placeholder="Логин" required>
 						</div>
 						<div class="dialog-form__field">
 							<label class="form-label">Пароль</label>
-							<input class="form-input" type="text" name="pass" placeholder="Пароль">
+							<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
 						</div>
 						<div class="dialog-form__field">
 							<label class="form-label">Подтвердить пароль</label>
-							<input class="form-input" type="text" name="pass_repeat" placeholder="Пароль">
+							<input class="form-input" type="password" name="pass_repeat" placeholder="Пароль" required>
 						</div>
 					</fieldset>
 					<div class="dialog-form__checkbox">
-						<input type="checkbox" id="horns" name="horns" />
+						<input type="checkbox" id="horns" name="horns" required />
 						<label>Вы принимаете условия пользовательского соглашения</label>
 					</div>
 					<button class="form-submit dialog-form__submit" type="submit">Зарегистрироваться</button>
@@ -105,11 +105,11 @@
 					<fieldset>
 						<div>
 							<label class="form-label">Login / Email</label>
-							<input class="form-input" type="text" name="login" placeholder="Login / Email">
+							<input class="form-input" type="text" name="login" placeholder="Login / Email" required>
 						</div>
 						<div class="dialog-form__field">
 							<label class="form-label">Пароль</label>
-							<input class="form-input" type="text" name="pass" placeholder="Пароль">
+							<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
 						</div>
 					</fieldset>
 					<p class="dialog-login-form__reset-password" onclick="show_reset_password()">Забыли пароль?</p>
@@ -125,7 +125,7 @@
 					<fieldset>
 						<div>
 							<label class="form-label">Email</label>
-							<input class="form-input" type="email" name="email" placeholder="Email">
+							<input class="form-input" type="email" name="email" placeholder="Email" required>
 						</div>
 					</fieldset>
 					<button class="form-submit dialog-form__submit" type="submit">Получить письмо</button>
@@ -139,11 +139,11 @@
 					<fieldset>
 						<div>
 							<label class="form-label">Пароль</label>
-							<input class="form-input" type="text" name="pass" placeholder="Пароль">
+							<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
 						</div>
 						<div class="dialog-form__field">
 							<label class="form-label">Подтвердить пароль</label>
-							<input class="form-input" type="text" name="pass_repeat" placeholder="Пароль">
+							<input class="form-input" type="password" name="pass_repeat" placeholder="Пароль" required>
 						</div>
 					</fieldset>
 					<button class="form-submit dialog-form__submit" type="submit">Сменить</button>
@@ -241,7 +241,7 @@
 							</div>
 							<div class="buy-tokens-form__fields__input_balance">
 								<label class="form-label">Сумма от 100 р.</label>
-								<input class="form-input" type="number" name="amount" placeholder="Ваша сумма">
+								<input class="form-input" type="number" name="amount" placeholder="Ваша сумма" required>
 							</div>
 						</fieldset>
 						<p class="buy-tokens-form__tokens_count">Кол-во токенов: <span>1000</span></p>

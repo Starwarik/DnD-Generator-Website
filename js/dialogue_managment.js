@@ -3,16 +3,16 @@ const dialog_login = document.getElementById('dialog-login');
 const dialog_reset_password = document.getElementById('dialog-reset-password');
 const dialog_reset_password_second = document.getElementById('dialog-reset-password-second');
 
-dialog_register.addEventListener('click', () => dialog_register.close());
-dialog_login.addEventListener('click', () => dialog_login.close());
-dialog_reset_password.addEventListener('click', () => dialog_reset_password.close());
-dialog_reset_password_second.addEventListener('click', () => dialog_reset_password_second.close());
+dialog_register.addEventListener('mousedown', () => dialog_register.close());
+dialog_login.addEventListener('mousedown', () => dialog_login.close());
+dialog_reset_password.addEventListener('mousedown', () => dialog_reset_password.close());
+dialog_reset_password_second.addEventListener('mousedown', () => dialog_reset_password_second.close());
 
 
 let dialog_viewports = document.getElementsByClassName("dialog-viewport");
 
 for (let i = 0; i < dialog_viewports.length; i++) {
-    dialog_viewports[i].addEventListener('click', (event) => event.stopPropagation());
+    dialog_viewports[i].addEventListener('mousedown', (event) => event.stopPropagation());
 }
 
 function close_all_dialogues() {
