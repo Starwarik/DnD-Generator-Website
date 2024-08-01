@@ -31,8 +31,8 @@ headHidePhonesAnim = gsap.timeline({
 		toggleActions: "restart none reverse none"
 	}
 })
-headHidePhonesAnim.to("#phone-1", { xPercent: -150, ease: "expo.in", duration: 0.5 });
-headHidePhonesAnim.to("#phone-2", { xPercent: -150, ease: "expo.in", duration: 0.5 }, "<");
+headHidePhonesAnim.to("#phone-1", { xPercent: -160, ease: "expo.in", duration: 0.5 });
+headHidePhonesAnim.to("#phone-2", { xPercent: -160, ease: "expo.in", duration: 0.5 }, "<");
 
 // АНИМАЦИЯ ЭКРАНА ПРЕИМУЩЕСТВ
 // Анимация секции при прокрутке
@@ -86,7 +86,6 @@ tailHidePhoneAnim = gsap.timeline({
 		trigger: "#tail",
 		start: "50% 70%",
 		end: "50% 70%",
-		markers: true,
 		toggleActions: "reverse none restart none"
 	}
 });
