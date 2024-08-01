@@ -17,11 +17,22 @@ gsap.to("#point-1 object svg .anchor", {
 
 // АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА
 
-headAnim = gsap.timeline({ delay: 0.7 });
-headAnim.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
-headAnim.from("#phone-2", { yPercent: 150, ease: "expo.out", duration: 1.07 }, "<");
-headAnim.from("#head-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
-headAnim.from("#download-1", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+headOnStartAnim = gsap.timeline({ delay: 0.7 });
+headOnStartAnim.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
+headOnStartAnim.from("#phone-2", { yPercent: 150, ease: "expo.out", duration: 1.07 }, "<");
+headOnStartAnim.from("#head-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
+headOnStartAnim.from("#download-1", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+
+headHidePhonesAnim = gsap.timeline({
+	scrollTrigger: {
+		trigger: "#head",
+		start: "80% 10%",
+		end: "80% 10%",
+		toggleActions: "restart none reverse none"
+	}
+})
+headHidePhonesAnim.to("#phone-1", { xPercent: -150, ease: "expo.in", duration: 0.5 });
+headHidePhonesAnim.to("#phone-2", { xPercent: -150, ease: "expo.in", duration: 0.5 }, "<");
 
 // АНИМАЦИЯ ЭКРАНА ПРЕИМУЩЕСТВ
 // Анимация секции при прокрутке
@@ -60,12 +71,23 @@ gsap.utils.toArray(".description-item").forEach(description => {
 
 // АНИМАЦИЯ ХВОСТОВОГО ЗАГОЛОВКА
 
-headAnim = gsap.timeline({ 
+tailOnScrollAnim = gsap.timeline({ 
 	scrollTrigger: {
 		trigger: ".tail-coloriser",
 		start: "30% 10%"
 	}
  });
-headAnim.from("#phone-4", { yPercent: 110, ease: "expo.out", duration: 1 });
-headAnim.from("#tail-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
-headAnim.from("#download-2", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+tailOnScrollAnim.from("#phone-4", { yPercent: 110, ease: "expo.out", duration: 1 });
+tailOnScrollAnim.from("#tail-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
+tailOnScrollAnim.from("#download-2", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+
+tailHidePhoneAnim = gsap.timeline({
+	scrollTrigger: {
+		trigger: "#tail",
+		start: "50% 70%",
+		end: "50% 70%",
+		markers: true,
+		toggleActions: "reverse none restart none"
+	}
+});
+tailHidePhoneAnim.to("#phone-4", { xPercent: -150, ease: "expo.in", duration: 0.5 });
