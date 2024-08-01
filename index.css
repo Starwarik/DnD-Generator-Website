@@ -74,12 +74,19 @@ main {
 	margin-bottom: -9px;
 }
 
-/* ЗАГОЛОВОК САЙТА */
+/* ЗАГОЛОВОК САЙТА (И ХВОСТ) */
 
 #head {
-	height: 100%;
 	padding-top: 190px;
 	height: 1024px;
+}
+
+#tail {
+	height: 1024px;
+}
+
+.tail-coloriser {
+	background-color: var(--back);
 }
 
 .head-coloriser {
@@ -141,9 +148,13 @@ main {
 	border-radius: 22px;
 }
 
-.download-description > h2 {
+#download-2 {
+	background-color: var(--substrate);
+}
+
+.download h2 {
 	font-family: 'Raleway', sans-serif;
-	font-size: 29px; /*40px*/
+	font-size: 40px; /*40px*/
 	letter-spacing: 3px;
 	font-weight: bold;
 	padding-left: 40px;
@@ -153,7 +164,7 @@ main {
 
 .download-description > p {
 	font-family: 'Raleway', sans-serif;
-	font-size: 18px; /*20px*/
+	font-size: 20px; /*20px*/
 	font-weight: 600;
 	letter-spacing: 1px;
 	padding-top: 20px;
