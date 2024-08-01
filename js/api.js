@@ -47,9 +47,8 @@ async function getUserInfo(token) {
 async function sendResetLetter(email) {
     let reset_token = await fetch(domain+'api/reset_password?email='+email, {
         method: 'GET', 
-    });
+    }).then(response => response.text());
     console.log(reset_token);
-    alert(reset_token);
 }
 
 async function resetPassword(token_reset, new_password) {
