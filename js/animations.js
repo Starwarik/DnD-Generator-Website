@@ -22,6 +22,7 @@ headAnim = gsap.timeline({ delay: 0.7 });
 headAnim.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
 headAnim.from("#phone-2", { yPercent: 150, ease: "expo.out", duration: 1.07 }, "<");
 headAnim.from("#head-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
+headAnim.from("#download-1", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
 
 // АНИМАЦИЯ ЭКРАНА ПРЕИМУЩЕСТВ
 // Триггер при прокрутке
