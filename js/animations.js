@@ -19,8 +19,8 @@ gsap.to("#point-1 object svg .anchor", {
 // Анимация телефонов
 
 headAnim = gsap.timeline({ delay: 0.7 });
-headAnim.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 2 });
-headAnim.from("#phone-2", { yPercent: 150, ease: "expo.out", duration: 2 }, "<");
+headAnim.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
+headAnim.from("#phone-2", { yPercent: 150, ease: "expo.out", duration: 1.3 }, "<");
 
 
 // АНИМАЦИЯ ЭКРАНА ПРЕИМУЩЕСТВ
