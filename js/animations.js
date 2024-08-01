@@ -19,7 +19,7 @@ gsap.to("#point-1 object svg .anchor", {
 // Анимация телефонов
 
 headAnim = gsap.timeline();
-headAnim.from("#phone-1", { yPercent: 120, ease: "expo.out", duration: 1.5 });
+headAnim.from("#phone-1", { yPercent: 75, ease: "expo.out", duration: 1.5 });
 headAnim.from("#phone-2", { yPercent: 100, ease: "expo.out", duration: 1.5 }, "<");
 
 
