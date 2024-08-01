@@ -16,7 +16,6 @@ gsap.to("#point-1 object svg .anchor", {
 });
 
 // АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА
-// Анимация телефонов
 
 headAnim = gsap.timeline({ delay: 0.7 });
 headAnim.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
@@ -25,7 +24,7 @@ headAnim.from("#head-title", { xPercent: -100, ease: "expo.out", duration: 1.07 
 headAnim.from("#download-1", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
 
 // АНИМАЦИЯ ЭКРАНА ПРЕИМУЩЕСТВ
-// Триггер при прокрутке
+// Анимация секции при прокрутке
 
 advantagesAnim = gsap.timeline( {
 	scrollTrigger: {
@@ -58,3 +57,15 @@ gsap.utils.toArray(".description-item").forEach(description => {
 		tl.timeScale(1).reverse());
 
 });
+
+// АНИМАЦИЯ ХВОСТОВОГО ЗАГОЛОВКА
+
+headAnim = gsap.timeline({ 
+	scrollTrigger: {
+		trigger: ".tail-coloriser",
+		start: "30% 10%"
+	}
+ });
+headAnim.from("#phone-4", { yPercent: 110, ease: "expo.out", duration: 1 });
+headAnim.from("#tail-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
+headAnim.from("#download-2", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
