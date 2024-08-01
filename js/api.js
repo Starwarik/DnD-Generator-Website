@@ -57,7 +57,7 @@ async function resetPassword(token_reset, new_password) {
         token_reset: token_reset
     };
       
-    await fetch(domain+'api/register', {
+    await fetch(domain+'api/reset_password', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
