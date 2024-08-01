@@ -44,7 +44,7 @@ dialog_form_reset_password.addEventListener('submit', async (e) => {
 
 dialog_form_reset_password_second.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const formData = new FormData(dialog_form_reset_password);
+    const formData = new FormData(dialog_form_reset_password_second);
 
     const pass = formData.get('pass');
     const pass_repeat = formData.get('pass_repeat');
