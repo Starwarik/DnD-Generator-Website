@@ -104,6 +104,18 @@ gsap.utils.toArray(".description-item").forEach(description => {
 
 });
 
+// АНИМАЦИЯ РОГА
+
+gsap.from("#horn", {
+	scrollTrigger: {
+		trigger: "#horn",
+		start: "top 70%"
+	},
+	yPercent: 150,
+	duration: 0.7,
+	ease: "power4.out"
+});
+
 // АНИМАЦИЯ ХВОСТОВОГО ЗАГОЛОВКА
 
 tailOnScrollAnim = gsap.timeline({ 

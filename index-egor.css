@@ -145,10 +145,13 @@
 /*                   form                   */
 
 .buy-tokens {
+    position: relative;
+    left: 0px;
     min-height: 512px;
     width: 100%;
     padding: 60px;
     background-color: var(--back);
+    z-index: 1;
 }
 
 .buy-tokens__title {
