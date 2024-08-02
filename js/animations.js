@@ -3,17 +3,52 @@ gsap.registerPlugin(ScrollTrigger);
 // АНИМАЦИЯ ИНТЕРФЕЙСА
 // Анимация навбара
 
+let navMenus = gsap.utils.toArray(".navmenu");
+let sections = [
+	"head",
+	"what-is",
+	"our-advantage",
+	"buy-tokens",
+	"tail",
+	"footer"];
+let lineType = "";
+let lineHeight = "";
 
-
-gsap.to("#point-1 object svg .anchor", {
-	scrollTrigger: {
-		trigger: "#head",
-		start: "50% 50%",
-		toggleActions: "restart none none reverse"
-	},
-	fill: "#DD1144",
-	stroke: "#DD1144"
-});
+for (let i = 0; i < navMenus.length; i++) {
+	switch (i) {
+		case 0:
+			lineType = "bracket";
+			lineHeight = "21vh";
+			break;
+		case 5:
+			lineType = "bracket";
+			lineHeight = "21vh";
+			break;
+		default:
+			lineType = "middle";
+			lineHeight = "13vh";
+			break;
+	}
+	let navmenu = navMenus[i];
+	let svgObj = navmenu.querySelector(".navpoint .navstar");
+	let navMenuAnim = gsap.timeline({
+		scrollTrigger: {
+			trigger: `#${sections[i]}`,
+			start: "500px 70%",
+			toggleActions: "restart none none reverse"
+		},
+	});
+	navMenuAnim.to(`#nav-${sections[i]} .${lineType}-line`, { borderTopWidth: `${lineHeight}` });
+	try {
+		svgObj.addEventListener("load", () => {
+			var svgDoc = svgObj.contentDocument;
+			var svgImage = svgDoc.querySelector(".anchor");
+			navMenuAnim.to(svgImage, { fill: "#DD1144", stroke: "#DD1144" }, "<");
+		});
+	} catch {
+		
+	}
+}
 
 // АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА
 
