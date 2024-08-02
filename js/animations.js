@@ -43,7 +43,7 @@ for (let i = 0; i < navMenus.length; i++) {
 		svgObj.addEventListener("load", () => {
 			var svgDoc = svgObj.contentDocument;
 			var svgImage = svgDoc.querySelector(".anchor");
-			navMenuAnim.to(svgImage, { fill: "#DD1144", stroke: "#DD1144" }, "<");
+			navMenuAnim.to(svgImage, { fill: "#DD1144", stroke: "#DD1144" });
 		});
 	} catch {
 		
