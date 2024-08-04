@@ -38,13 +38,13 @@ dialog_form_reset_password.addEventListener('submit', async (e) => {
 
     const email = formData.get('email');
 
-    sendResetLetter(email);
-    location.reload();
+    await sendResetLetter(email);
+    show_reset_password_letter();
 });
 
 dialog_form_reset_password_second.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const formData = new FormData(dialog_form_reset_password);
+    const formData = new FormData(dialog_form_reset_password_second);
 
     const pass = formData.get('pass');
     const pass_repeat = formData.get('pass_repeat');

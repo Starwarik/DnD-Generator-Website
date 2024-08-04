@@ -47,6 +47,9 @@
     margin-left: 10px;
 
     color: var(--substrate);
+
+    cursor: pointer;
+    user-select: none;
 }
 
 .account-navbar__clickable {
@@ -55,6 +58,7 @@
 
 .account-navbar__clickable:hover {
     color: var(--accent);
+    cursor: pointer;
 }
 
 /* Second screen */
@@ -141,10 +145,13 @@
 /*                   form                   */
 
 .buy-tokens {
+    position: relative;
+    left: 0px;
     min-height: 512px;
     width: 100%;
     padding: 60px;
     background-color: var(--back);
+    z-index: 1;
 }
 
 .buy-tokens__title {
@@ -291,7 +298,7 @@
 
     border-radius: 10px;
     border-width: 0;
-    background-color: var(--substrate2);
+    background-color: var(--back);
     padding: 8.5px 20px;
 
     font-family: "Raleway", sans-serif;
@@ -303,11 +310,19 @@
     letter-spacing: 0.02em;
     line-height: 1rem;
 
-    color: var(--main);
+    color: var(--not-active);
+
+    resize: none;
 }
 
 .form-input::placeholder {
+    color: var(--not-active);
+}
+
+.form-input:focus {
+    outline: none;
     color: var(--main);
+    background-color: var(--substrate2);
 }
 
 .buy-tokens-form__fields__header {
@@ -349,6 +364,14 @@
     font-size: 1rem;
     letter-spacing: 0.07em;
     line-height: 1rem;
+
+    text-decoration: none;
+
+    display: inline-block;
+}
+
+form-submit:hover {
+    cursor: pointer;
 }
 
 .tokens-description {
@@ -388,20 +411,6 @@
 }
 
 /*                   footer                   */
-
-/*.footer {
-    display: grid;
-    grid-template-columns: 2fr 2fr 2fr;
-    padding: 90px 60px 100px 60px;
-    background-color: var(--back);
-}
-
-.footer__svg-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 23px;
-    row-gap: 63px;
-}*/
 
 .footer {
     min-height: 512px;
@@ -498,12 +507,19 @@
 /* Dialog register */
 
 .dialog {
-    padding: 42px;
     width: 404px;
+    padding: 0;
 
     position: fixed;
-    left: calc(50% - 202px);
+    left: 50%;
+    margin-left: -202px;
     top: 100px;
+
+    z-index: 100;
+}
+
+.dialog-viewport {
+    padding: 42px;
 }
 
 .dialog__header {
@@ -590,4 +606,90 @@
     color: var(--accent);
 
     margin-top: 9px;
+}
+
+.dialog-login-form__reset-password:hover {
+    cursor: pointer;
+    user-select: none;
+}
+
+#dialog-reset-password-letter {
+    background-color: var(--accent);
+    color: white;
+    top: 200px;
+}
+
+#dialog-reset-password-letter h1 {
+    text-align: left;
+}
+
+#dialog-reset-password-letter h2 {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    letter-spacing: 0.06em;
+
+    text-align: left;
+    margin-bottom: 0;
+}
+
+/* Account Navbar menu */
+
+.account-navbar-menu {
+    margin-top: 16px;
+    padding: 31px 42px;
+
+    height: fit-content;
+    grid-column: 1 / 6;
+
+    border-radius: 11px;
+
+    background-color: white;
+    pointer-events: all;
+
+    z-index: 30;
+}
+
+.account-navbar-menu__text {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.3rem;
+    letter-spacing: 0.07em;
+
+    color: var(--not-active);
+}
+
+.account-navbar-menu__info {
+    font-weight: 500;
+    color: black;
+}
+
+.account-navbar-menu__exit-menu {
+    margin-top: 20px;
+
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+
+    color: var(--accent);
+}
+
+.account-navbar-menu__exit-menu:hover {
+    cursor: pointer;
 }

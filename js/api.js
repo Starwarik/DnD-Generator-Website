@@ -47,9 +47,8 @@ async function getUserInfo(token) {
 async function sendResetLetter(email) {
     let reset_token = await fetch(domain+'api/reset_password?email='+email, {
         method: 'GET', 
-    });
+    }).then(response => response.text());
     console.log(reset_token);
-    alert(reset_token);
 }
 
 async function resetPassword(token_reset, new_password) {
@@ -58,7 +57,7 @@ async function resetPassword(token_reset, new_password) {
         token_reset: token_reset
     };
       
-    await fetch(domain+'api/register', {
+    await fetch(domain+'api/reset_password', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'

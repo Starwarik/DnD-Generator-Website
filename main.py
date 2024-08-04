@@ -37,6 +37,10 @@ class UserRegisterForm(BaseModel):
     password: str  
     email: str
 
+class RestPasswordForm(BaseModel):  
+    new_password: str  
+    token_reset: str  
+
 
 class Token(BaseModel):
     access_token: str
@@ -195,6 +199,7 @@ def reset_password(email: str):
         data={"sub": user.username, "type":"reset"}, expires_delta=access_token_expires
     )
     send_reset_message(user.email, access_token)
+    return access_token
 
 @app.get("/api/user_info")
 def get_user_info(
@@ -207,14 +212,14 @@ def get_user_info(
     }
 
 @app.post("/api/reset_password")
-def reset_password(new_password: str, token_reset: str):
+def reset_password(reset_form: RestPasswordForm):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token_reset, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(reset_form.token_reset, SECRET_KEY, algorithms=[ALGORITHM])
         username: str | None = payload.get("sub")
         if username is None or payload.get("type") != "reset":
             raise credentials_exception
@@ -225,7 +230,7 @@ def reset_password(new_password: str, token_reset: str):
     if user is None:
         raise credentials_exception
     with Session(engine) as session:
-        user.password = get_password_hash(new_password)
+        user.password = get_password_hash(reset_form.new_password)
         session.add(user)
         session.commit()  
         session.refresh(user)
