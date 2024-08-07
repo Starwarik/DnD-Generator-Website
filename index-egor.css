@@ -64,48 +64,21 @@
 /* Second screen */
 
 #what-is {
-    min-height: 512px;
-    max-width: 1018px;
-    padding: 60px;
+    height: 100vh;
+    grid-template-rows: 40% auto;
 }
 
-#what-is header {
-    animation-duration: 2s;
-    animation-name: slideheader;
-}
-
-@keyframes slideheader {
-    from {
-      translate: 0 -100%;
-      opacity: 0;
-    }
-  
-    to {
-      translate: 0 0;
-      opacity: 1;
-    }
-}
-
-#what-is header h2 {
+#what-is h2 {
+    grid-column: 1 / 11;
     font-family: "Wremena Bold", sans-serif;
-    font-size: 3.2rem;
+    font-size: 50px;
     letter-spacing: 0.1em;
     line-height: 3.2rem;
-
-    margin-top: 4px;
-}
-
-#what-is header .pre-title {
-    font-family: "Raleway", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 600;
-    font-style: normal;
-    font-size: 1.8rem;
-    letter-spacing: 0.06em;
-    line-height: 1.8rem;
+    align-self: end;
 }
 
 #what-is p {
+    grid-column: 1 / 10;
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-weight: 500;
@@ -116,22 +89,8 @@
     line-height: 30px;
 
     margin-top: 33px;
-
-    animation-duration: 2s;
-    animation-name: slidep;
 }
 
-@keyframes slidep {
-    from {
-      translate: 0 100%;
-      opacity: 0;
-    }
-  
-    to {
-      translate: 0 0;
-      opacity: 1;
-    }
-}
 
 .red-highlited {
     font-family: "Raleway", sans-serif;
@@ -146,33 +105,25 @@
 
 .buy-tokens {
     position: relative;
+    grid-template-rows: 20% auto;
     left: 0px;
-    min-height: 512px;
-    width: 100%;
-    padding: 60px;
+    height: 100vh;
     background-color: var(--back);
     z-index: 1;
 }
 
 .buy-tokens__title {
+    display: block;
+    align-self: end;
+    grid-column: 1 / 5;
     font-family: "Wremena Bold", sans-serif;
     font-size: 3.2rem;
     letter-spacing: 0.1em;
     line-height: 3.2rem;
 }
 
-.buy-tokens__title_pre-title {
-    font-family: "Raleway", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 600;
-    font-style: normal;
-
-    font-size: 1.8rem;
-    letter-spacing: 0.06em;
-    line-height: 1.8rem;
-}
-
 .buy-tokens__title_post-title {
+    display: block;
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-weight: 600;
@@ -183,20 +134,16 @@
     line-height: 1rem;
 
     color: var(--not-active);
-}
-
-.buy-tokens-container {
-    display: grid;
-    grid-template-columns: 3fr 2fr 1fr;
-    align-items: center;
-    column-gap: 45px;
+    padding-left: 10px;
 }
 
 .buy-tokens-form {
+    grid-column: 1 / 7;
     background-color: var(--substrate);
-    margin-top: 62px;
-    padding: 30px 40px;
+    margin-top: 50px;
+    padding: 30px;
     border-radius: 22px;
+    height: fit-content;
 }
 
 .account-info-form__user-image, .account-info-form__username {
@@ -375,6 +322,7 @@ form-submit:hover {
 }
 
 .tokens-description {
+    grid-column: 7 / 11;
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-weight: 500;
@@ -384,8 +332,10 @@ form-submit:hover {
     letter-spacing: 0.06em;
 
     background-color: var(--substrate);
+    padding: 25px 10px 25px 10px;
+    margin-top: 120px;
+    height: fit-content;
 
-    padding: 15.5px;
     border-radius: 22px;
 }
 
@@ -402,7 +352,7 @@ form-submit:hover {
 }
 
 .tokens-description__star {
-    margin: 0 auto;
+    margin: 0 auto 10px auto;
 }
 
 .tokens-description__middle-text {
@@ -413,36 +363,47 @@ form-submit:hover {
 /*                   footer                   */
 
 .footer {
-    min-height: 512px;
-    width: 100%;
-    padding: 60px;
+    height: fit-content;
+    padding-bottom: 30px;
+}
+
+.coloriser {
     background-color: var(--back);
 }
 
 .footer_main-screen {
+    grid-column: 1 / 11;
     display: flex;
     max-width: 100%;
     align-items: center;
     justify-content: space-between;
 }
 
-.footer__name {
-    width: 328px;
+.footer__name-market {
+    grid-column: 1 / 5;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .footer__name {
+    width: 328px;
     margin-bottom: 32px;
+}
+
+.footer__market {
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .footer__appstore, .footer__googleplay {
     display: inline;
 }
 
-.footer__appstore {
-    margin-right: 21.52px;
-}
-
 .footer__fund {
+    grid-column: 5 / 11;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -467,10 +428,12 @@ form-submit:hover {
 }
 
 .footer__contacts {
+    grid-column: 1 / 5;
     margin-top: 32px;
 }
 
 .footer__company-data {
+    grid-column: 1 / 5;
     margin-top: 32px;
 }
 
@@ -492,6 +455,7 @@ form-submit:hover {
 }
 
 .footer__socip {
+    grid-column: 1 / 8;
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;

@@ -188,11 +188,8 @@
 					</article>
 				</header>
 			</div>
-			<section id="what-is">
-				<header>
-					<h2 class="pre-title">что такое</h2>
-					<h2>ГЕНЕРАТОР ПРИКЛЮЧЕНИЙ</h2>
-				</header>
+			<section class="grid-pc" id="what-is">
+				<h2><span class="pre-title">что такое</span>ГЕНЕРАТОР ПРИКЛЮЧЕНИЙ</h2>
 				<p><span class="red-highlited">Мобильное приложение,</span> генерирующее сюжетную составляющую для любой настольной ролевой игры,
 					в том числе: локации, персонажей, квесты и добычу, а также изображения описываемой территории.
 					<span class="red-highlited">Текст и изображения генерируются нейронными сетями</span> на основе запроса пользователя</p>
@@ -242,11 +239,13 @@
 				</dl>
 			</section>
 			<img id="horn" src="./images/horn.svg" />
-			<section class="buy-tokens" id="buy-tokens">
-				<h2 class="buy-tokens__title buy-tokens__title_pre-title">приобретите</h2>
-				<h2 class="buy-tokens__title">ТОКЕНЫ</h2>
-				<h2 class="buy-tokens__title buy-tokens__title_post-title">валюта для генерации</h2>
-				<div class="buy-tokens-container">
+			<div class="coloriser">
+				<section class="buy-tokens grid-pc" id="buy-tokens">
+					<h2 class="buy-tokens__title">
+						<span class="pre-title">приобретите</span>
+						ТОКЕНЫ
+						<span class="buy-tokens__title_post-title">валюта для генерации</span>
+					</h2>
 					<form class="buy-tokens-form">
 						<div class="account-info-form">
 							<img class="account-info-form__user-image" src="images/user_icon.svg" />
@@ -272,8 +271,8 @@
 						<p class="tokens-description__middle-text">Минимальная стоимость одного приключения — <span>x ток.</span</p>
 						<p>Минимальная стоимость пополнения — <span>1000 ток. / 100 ₽</span></p>
 					</aside>
-				</div>
-			</section>
+				</section>
+			</div>
 			<div class="tail-coloriser">
 				<section class="grid-pc" id="tail">
 					<section class="title" id="tail-title">
@@ -290,36 +289,38 @@
 				</section>
 			</div>
 		</main>
-		<footer class="footer" id="footer">
-			<div class="footer_main-screen">
+		<div class="coloriser">
+			<footer class="footer grid-pc" id="footer">
 				<div class="footer__name-market">
 					<img class="footer__name" src="images/footer_1.svg" />
-					<img class="footer__appstore" src="images/footer_3.svg" />
-					<img class="footer__googleplay" src="images/footer_4.svg" />
+					<div class="footer__market">
+						<img class="footer__appstore" src="images/footer_3.svg" />
+						<img class="footer__googleplay" src="images/footer_4.svg" />
+					</div>
 				</div>
 				<div class="footer__fund">
 					<img class="footer__fund-img" src="images/footer_2.svg" />
 					<p class="footer__fund-text">Проект поддержан Фондом  содействия инновациям в рамках программы “Студенческий стартап” федерального проекта “Платформа университетского технологического предпринимательства”</p>
 				</div>
-			</div>
-			<section class="footer__contacts">
-				<p>Контакты:</p>
-				<p>руководитель Челышева Диана Антоновна</p>
-				<p class="footer__contacts__telephone">+7 (937) 255 12 10</p>
-				<p>diana.chelysheva.98@mail.ru</p>
-			</section>
-			<section class="footer__company-data">
-				<p>РЕКВИЗИТЫ:</p>
-				<p>Организация: ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "ГЕНРОЛСЮЖЕТ"</p>
-				<p>ИНН организации: 6453174782</p>
-				<p>КПП организации: 645301001</p>
-				<p>Счёт: 40702810312940001426</p>
-				<p>Банк: ФИЛИАЛ "ЦЕНТРАЛЬНЫЙ" БАНКА ВТБ (ПАО)</p>
-				<p>Корр. счёт: 30101810145250000411</p>
-				<p>БИК: 044525411</p>
-			</section>
-			<p class="footer__socip">Сайт разработан в Саратовском Областном Центре Интренет Проектов (СОЦИП)</p>
-		</footer>
+				<section class="footer__contacts">
+					<p>Контакты:</p>
+					<p>руководитель Челышева Диана Антоновна</p>
+					<p class="footer__contacts__telephone">+7 (937) 255 12 10</p>
+					<p>diana.chelysheva.98@mail.ru</p>
+				</section>
+				<section class="footer__company-data">
+					<p>РЕКВИЗИТЫ:</p>
+					<p>Организация: ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "ГЕНРОЛСЮЖЕТ"</p>
+					<p>ИНН организации: 6453174782</p>
+					<p>КПП организации: 645301001</p>
+					<p>Счёт: 40702810312940001426</p>
+					<p>Банк: ФИЛИАЛ "ЦЕНТРАЛЬНЫЙ" БАНКА ВТБ (ПАО)</p>
+					<p>Корр. счёт: 30101810145250000411</p>
+					<p>БИК: 044525411</p>
+				</section>
+				<p class="footer__socip">Сайт разработан в Саратовском Областном Центре Интренет Проектов (СОЦИП)</p>
+			</footer>
+		</div>
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 		<script src="./js/animations.js"></script>
