@@ -9,12 +9,13 @@
 		<link rel="stylesheet" href="reset.css">
 		<link rel="stylesheet" href="index.css">
 		<link rel="stylesheet" href="index-egor.css">
+		<link rel="stylesheet" href="media.css">
 	</head>
 	<body>
-		<header class="grid-pc" id="ui">
+		<header class="grid" id="ui">
 			<div class="account-navbar no-seen" id="account-navbar-noname">
-				<img src="images/company_name_white.svg" />
-				<div>
+				<img class="account-navbar__image" src="images/company_name_white.svg" />
+				<div class="account-wrapper">
 					<img class="account-navbar__icon" src="images/user_icon_white.svg" />
 					<p class="account-navbar__text">
 						<span class="account-navbar__clickable" onclick="show_login()">Вход</span> / <span class="account-navbar__clickable" onclick="show_register()">Регистрация</span>
@@ -22,8 +23,8 @@
 				</div>
 			</div>
 			<div class="account-navbar no-seen" id="account-navbar-auth">
-				<img src="images/company_name_white.svg" />
-				<div>
+				<img class="account-navbar__image" src="images/company_name_white.svg" />
+				<div class="account-wrapper">
 					<img class="account-navbar__icon" src="images/user_icon_white.svg" />
 					<p class="account-navbar__text account-navbar__clickable" id="account-navbar-auth__login" onclick="toggle_navbar_menu()">...</p>
 				</div>
@@ -171,7 +172,7 @@
 		</dialog>
 		<main>
 			<div class="head-coloriser">
-				<header class="grid-pc grid-pc-title" id="head">
+				<header class="grid" id="head">
 					<section class="title" id="head-title">
 						<img src="./images/title.svg" />
 					</section>
@@ -188,13 +189,13 @@
 					</article>
 				</header>
 			</div>
-			<section class="grid-pc" id="what-is">
+			<section class="grid" id="what-is">
 				<h2><span class="pre-title">что такое</span>ГЕНЕРАТОР ПРИКЛЮЧЕНИЙ</h2>
 				<p><span class="red-highlited">Мобильное приложение,</span> генерирующее сюжетную составляющую для любой настольной ролевой игры,
 					в том числе: локации, персонажей, квесты и добычу, а также изображения описываемой территории.
 					<span class="red-highlited">Текст и изображения генерируются нейронными сетями</span> на основе запроса пользователя</p>
 			</section>
-			<section class="grid-pc" id="our-advantage">
+			<section class="grid" id="our-advantage">
 				<div class="overflow-wrapper">
 					<h2><span class="pre-title">в чём преимущество</span>ГЕНЕРАТОРА ПРИКЛЮЧЕНИЙ</h2>
 				</div>
@@ -240,7 +241,7 @@
 			</section>
 			<img id="horn" src="./images/horn.svg" />
 			<div class="coloriser">
-				<section class="buy-tokens grid-pc" id="buy-tokens">
+				<section class="buy-tokens grid" id="buy-tokens">
 					<h2 class="buy-tokens__title">
 						<span class="pre-title">приобретите</span>
 						ТОКЕНЫ
@@ -274,7 +275,7 @@
 				</section>
 			</div>
 			<div class="tail-coloriser">
-				<section class="grid-pc" id="tail">
+				<section class="grid" id="tail">
 					<section class="title" id="tail-title">
 						<img src="./images/title.svg" />
 					</section>
@@ -290,7 +291,7 @@
 			</div>
 		</main>
 		<div class="coloriser">
-			<footer class="footer grid-pc" id="footer">
+			<footer class="footer grid" id="footer">
 				<div class="footer__name-market">
 					<img class="footer__name" src="images/footer_1.svg" />
 					<div class="footer__market">

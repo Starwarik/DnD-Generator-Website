@@ -1,22 +1,9 @@
-.grid-pc {
+.grid {
 	display: grid;
 	grid-template-columns: repeat(12, 1fr);
 	gap: 0px 45px;
 	margin-left: 60px;
 	margin-right: 60px;
-}
-
-.grid-pc-title {
-	grid-template-rows: auto auto;
-	grid-auto-flow: column;
-}
-
-.grid-mobile {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 0px 20px;
-	margin-left: 32px;
-	margin-right: 32px;
 }
 
 /* ОСНОВА САЙТА */
@@ -91,6 +78,8 @@ main {
 #head {
 	padding-top: 190px;
 	height: 1024px;
+	grid-template-rows: auto auto;
+	grid-auto-flow: column;
 }
 
 #tail {
