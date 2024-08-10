@@ -18,6 +18,10 @@
     z-index: 30;
 }
 
+.partitions-image {
+    display: none;
+}
+
 .no-seen {
     display: none;
 }
