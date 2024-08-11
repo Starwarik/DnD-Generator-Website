@@ -18,7 +18,7 @@ class NotificationRefactory(ABC):
         pass
 
 
-class DummyNorification(NotificationRefactory):
+class DummyNotification(NotificationRefactory):
     def start(self):
         pass
 
@@ -29,7 +29,7 @@ class DummyNorification(NotificationRefactory):
         pass
 
 
-class SMTPNorification(NotificationRefactory):
+class SMTPNotification(NotificationRefactory):
     def __init__(
         self,
         server_url: str,

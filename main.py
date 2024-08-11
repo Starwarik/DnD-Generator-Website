@@ -19,7 +19,7 @@ from sqlmodel import Field, SQLModel, create_engine, Session, select, or_
 from sqlalchemy.sql.schema import Column
 from sqlalchemy import String
 
-from smtp import DummyNorification
+from smtp import DummyNotification
 
 # to get a string like this run:
 # openssl rand -hex 32
@@ -59,7 +59,7 @@ class TokenData(BaseModel):
     username: Union[str, None] = None
 
 
-mail_server = DummyNorification()
+mail_server = DummyNotification()
 
 engine = create_engine(DATABASE_URL, echo=True)
 
