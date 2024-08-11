@@ -5,15 +5,21 @@ from typing import Union
 
 import jwt
 from jwt.exceptions import InvalidTokenError
+
+import bcrypt
+
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from passlib.context import CryptContext
+from fastapi.middleware.cors import CORSMiddleware
+
 from pydantic import BaseModel
 from typing_extensions import Annotated
 
-from sqlmodel import Field, SQLModel, create_engine, Session, select
+from sqlmodel import Field, SQLModel, create_engine, Session, select, or_
+from sqlalchemy.sql.schema import Column
+from sqlalchemy import String
+
 from smtp import DummyNorification
-from fastapi.middleware.cors import CORSMiddleware
 
 # to get a string like this run:
 # openssl rand -hex 32
@@ -26,9 +32,9 @@ DATABASE_URL = "sqlite:///database.db"
 
 class User(SQLModel, table=True):  
     id: int | None = Field(default=None, primary_key=True)  
-    username: str  
+    username: str = Field(sa_column=Column("username", String, unique=True))
     password: str  
-    email: str | None
+    email: str = Field(sa_column=Column("email", String, unique=True))
     balance: float = Field(default=0.0)
 
 
@@ -53,14 +59,16 @@ class TokenData(BaseModel):
 
 mail_server = DummyNorification()
 
-engine = create_engine(DATABASE_URL, echo=True)  
+engine = create_engine(DATABASE_URL, echo=True)
+
+def get_session():
+    with Session(engine) as session:
+        yield session
 
 
 def create_db_and_tables():  
     SQLModel.metadata.create_all(engine)  
 
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -88,38 +96,44 @@ def send_reset_message(email: str, token: str):
     global mail_server
     mail_server.send_refactory_notification(email, token)
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
+
+def get_password_hash(password: str) -> str:
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+def get_user_by_id(id: str, session: Session) -> User | None:
+    statement = select(User).where(User.id == id)
+    results = session.exec(statement)
+    result = results.first()
+    return result
+
+def get_user_by_username(username: str, session: Session) -> User | None:
+    statement = select(User).where(User.username == username)
+    results = session.exec(statement)
+    result = results.first()
+    return result
+
+def get_user_by_email(email: str, session: Session) -> User | None:
+    statement = select(User).where(User.email == email)
+    results = session.exec(statement)
+    result = results.first()
+    return result
+
+def get_user_by_email_or_username(email_or_username: str, session: Session) -> User | None:
+    statement = select(User).where(or_(User.email == email_or_username, User.username == email_or_username))
+    results = session.exec(statement)
+    result = results.first()
+    return result
 
 
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-
-def get_user_by_username(username: str):
-    with Session(engine) as session:
-        statement = select(User).where(User.username == username)
-        results = session.exec(statement)
-        result = results.first()
-        return result
-
-
-def get_user_by_email(email: str):
-    with Session(engine) as session:
-        statement = select(User).where(User.email == email)
-        results = session.exec(statement)
-        result = results.first()
-        return result
-
-
-def authenticate_user(username_or_email: str, password: str):
-    user_username = get_user_by_username(username_or_email)
-    user_email = get_user_by_email(username_or_email)
-    user = user_username or user_email
-    if not user:
-        return False
+def authenticate_user(username_or_email: str, password: str, session: Session) -> User | None:
+    user = get_user_by_email_or_username(username_or_email, session)
+    if user is None:
+        return None
     if not verify_password(password, user.password):
-        return False
+        return None
     return user
 
 
@@ -134,7 +148,8 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     return encoded_jwt
 
 
-def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+def get_current_user(token: Annotated[str, Depends(oauth2_scheme)],
+                     session: Session = Depends(get_session)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -142,61 +157,74 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str | None = payload.get("sub")
-        if username is None:
+        user_id: str | None = payload.get("sub")
+        if user_id is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
-    user = get_user_by_username(username=token_data.username)
+    user = get_user_by_id(user_id, session)
     if user is None:
         raise credentials_exception
     return user
 
 
 @app.post("/api/token")
+@app.post("/token")
 def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    session: Session = Depends(get_session)
 ) -> Token:
-    user = authenticate_user(form_data.username, form_data.password)
-    if not user:
+    user = authenticate_user(form_data.username, form_data.password, session)
+    if user is None:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.id}, expires_delta=access_token_expires
     )
     return Token(access_token=access_token, token_type="bearer")
 
 
 @app.post("/api/register")
-def register(user: UserRegisterForm):
-    user = User(
-        username=user.username,
-        password=get_password_hash(user.password),
-        email=user.email
-    )
-    with Session(engine) as session:
+def register(user: UserRegisterForm, session: Session = Depends(get_session)):
+    user_username = get_user_by_username(user.username, session)
+    user_email = get_user_by_email(user.email, session)
+    current_user = user_username or user_email
+    if not (current_user is None):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={'status': False},
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    try:
+        user = User(
+            username=user.username,
+            password=get_password_hash(user.password),
+            email=user.email
+        )
         session.add(user)
         session.commit()
-    return "Good"
+        session.refresh(user)
+        return {'status': True}
+    except Exception:
+        return {'status': False}
 
 
 @app.get("/api/reset_password")
-def reset_password(email: str):
-    user = get_user_by_email(email)
+def reset_password(email: str, session: Session = Depends(get_session)):
+    user = get_user_by_email(email, session)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Неправильный пароль",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username, "type":"reset"}, expires_delta=access_token_expires
+        data={"sub": user.id, "type":"reset"}, expires_delta=access_token_expires
     )
     send_reset_message(user.email, access_token)
     return access_token
@@ -212,28 +240,28 @@ def get_user_info(
     }
 
 @app.post("/api/reset_password")
-def reset_password(reset_form: RestPasswordForm):
+def reset_password(reset_form: RestPasswordForm, session: Session = Depends(get_session)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail={'status': False},
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
         payload = jwt.decode(reset_form.token_reset, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str | None = payload.get("sub")
-        if username is None or payload.get("type") != "reset":
+        user_id: str | None = payload.get("sub")
+        if user_id is None or payload.get("type") != "reset":
             raise credentials_exception
-        token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
-    user = get_user_by_username(username=token_data.username)
+    user = get_user_by_id(user_id, session)
     if user is None:
         raise credentials_exception
-    with Session(engine) as session:
-        user.password = get_password_hash(reset_form.new_password)
-        session.add(user)
-        session.commit()  
-        session.refresh(user)
+
+    user.password = get_password_hash(reset_form.new_password)
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return {'status': True}
 
 
 @app.get("/api/balance")
@@ -245,8 +273,9 @@ def get_balance(
 
 @app.post("/api/spend_balance")
 def spend_balance(
+    money: float,
     current_user: Annotated[User, Depends(get_current_user)],
-    money: float
+    session: Session = Depends(get_session)
 ) -> float:
     if money < 0:
         raise HTTPException(
@@ -260,9 +289,19 @@ def spend_balance(
             detail="You don't have enough money to pay",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    with Session(engine) as session:
-        current_user.balance -= money
-        session.add(current_user)
-        session.commit()  
-        session.refresh(current_user)
+    current_user.balance -= money
+    session.add(current_user)
+    session.commit()  
+    session.refresh(current_user)
     return current_user.balance
+
+'''
+Debug function
+
+@app.get("/api/get_users")
+def get_all_users(session: Session = Depends(get_session)):
+    statement = select(User)
+    results = session.exec(statement)
+    result = results.all()
+    return result
+'''
