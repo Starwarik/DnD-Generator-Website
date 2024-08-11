@@ -10,7 +10,9 @@ async function setUserInfo(token) {
         document.getElementById('account-navbar-menu__email').textContent = user_info.email;
         document.getElementById('account-navbar-menu__balance').textContent = user_info.balance;
     } else {
-        logout();
+        deleteCookie('access_token');
+        account_navbar_auth.classList.add('no-seen');
+        account_navbar_noname.classList.remove('no-seen');
     }
 }
 
