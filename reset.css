@@ -57,6 +57,26 @@ img, picture, video, canvas, svg {
 input, button, textarea, select {
     font: inherit;
 }
+
+/*
+    Reset number field to be without increment buttons
+*/
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Для Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Для IE и Edge */
+input[type="number"]::-ms-clear {
+  display: none;
+}
 /*
     7. Avoid text overflows
 */
