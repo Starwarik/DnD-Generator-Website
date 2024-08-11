@@ -3,18 +3,20 @@ from email.message import EmailMessage
 
 from abc import ABC, abstractmethod
 
+
 class NotificationRefactory(ABC):
     @abstractmethod
     def start(self):
         pass
-    
+
     @abstractmethod
     def send_refactory_notification(self, recciver_email, token):
         pass
-    
+
     @abstractmethod
     def stop(self):
         pass
+
 
 class DummyNorification(NotificationRefactory):
     def start(self):
@@ -26,8 +28,18 @@ class DummyNorification(NotificationRefactory):
     def stop(self):
         pass
 
+
 class SMTPNorification(NotificationRefactory):
-    def __init__(self, server_url: str, server_port: int, sender_email:str, login: str, password: str, template_subject: str, template_message: str):
+    def __init__(
+        self,
+        server_url: str,
+        server_port: int,
+        sender_email: str,
+        login: str,
+        password: str,
+        template_subject: str,
+        template_message: str,
+    ):
         self.server_url = server_url
         self.server_port = server_port
         self.sender_email = sender_email
