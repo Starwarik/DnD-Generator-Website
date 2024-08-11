@@ -32,16 +32,20 @@ async function getToken(username, password) {
 }
 
 async function getUserInfo(token) {
-    let message = fetch(domain+'api/user_info', {
+    let request = await fetch(domain+'api/user_info', {
         method: 'GET',
         headers: new Headers({
             'Authorization': 'Bearer '+token, 
         }), 
-    }).then(
-        response => response.json()
-    );
+    })
 
-    return message;
+    if (request.ok) {
+        return request.json();
+    }
+
+    return {
+        status: false
+    };
 }
 
 async function sendResetLetter(email) {
