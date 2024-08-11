@@ -3,8 +3,10 @@ from email.message import EmailMessage
 
 from abc import ABC, abstractmethod
 
+from .config import SMTPData, NotificationServiceChoice
 
-class NotificationRefactory(ABC):
+
+class NotificationService(ABC):
     @abstractmethod
     def start(self):
         pass
@@ -18,7 +20,7 @@ class NotificationRefactory(ABC):
         pass
 
 
-class DummyNotification(NotificationRefactory):
+class DummyNotification(NotificationService):
     def start(self):
         pass
 
@@ -28,41 +30,36 @@ class DummyNotification(NotificationRefactory):
     def stop(self):
         pass
 
-
-class SMTPNotification(NotificationRefactory):
-    def __init__(
-        self,
-        server_url: str,
-        server_port: int,
-        sender_email: str,
-        login: str,
-        password: str,
-        template_subject: str,
-        template_message: str,
-    ):
-        self.server_url = server_url
-        self.server_port = server_port
-        self.sender_email = sender_email
-        self.login = login
-        self.password = password
-        self.template_subject = template_subject
-        self.template_message = template_message
+class SMTPNotification(NotificationService):
+    def __init__(self, smtp_data: SMTPData):
+        self.smtp_data = smtp_data
 
         self.mail_server = None
 
     def start(self):
-        self.mail_server = smtplib.SMTP(self.server_url, self.server_port)
+        self.mail_server = smtplib.SMTP(
+            self.smtp_data.server_url, self.smtp_data.server_port
+        )
         self.mail_server.starttls()
-        self.mail_server.login(self.login, self.password)
+        self.mail_server.login(self.smtp_data.login, self.smtp_data.password)
 
     def send_refactory_notification(self, recciver_email, token):
         msg = EmailMessage()
-        msg.set_content(self.template_message.format(token=token))
+        msg.set_content(self.smtp_data.template_message.format(token=token))
 
-        msg["Subject"] = self.template_subject.format(token=token)
-        msg["From"] = self.sender_email
+        msg["Subject"] = self.smtp_data.template_subject.format(token=token)
+        msg["From"] = self.smtp_data.sender_email
         msg["To"] = recciver_email
         self.mail_server.send_message(msg)
 
     def stop(self):
         self.mail_server.quit()
+
+
+def create_notification_service(
+    notification_choice: NotificationServiceChoice, smtp_data: SMTPData = None
+) -> NotificationService:
+    if notification_choice == NotificationServiceChoice.dummy_notification:
+        return DummyNotification()
+    elif notification_choice == NotificationServiceChoice.smtp_notification:
+        return SMTPNotification(smtp_data)

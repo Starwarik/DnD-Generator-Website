@@ -19,15 +19,8 @@ from sqlmodel import Field, SQLModel, create_engine, Session, select, or_
 from sqlalchemy.sql.schema import Column
 from sqlalchemy import String
 
-from smtp import DummyNotification
-
-# to get a string like this run:
-# openssl rand -hex 32
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-DATABASE_URL = "sqlite:///database.db"
+from .smtp import *
+from .config import settings, smtp_settings
 
 
 class User(SQLModel, table=True):
@@ -59,9 +52,11 @@ class TokenData(BaseModel):
     username: Union[str, None] = None
 
 
-mail_server = DummyNotification()
+mail_server = create_notification_service(
+    settings.notification_service, smtp_data=smtp_settings
+)
 
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(settings.database_url, echo=True)
 
 
 def get_session():
@@ -103,6 +98,18 @@ def send_reset_message(email: str, token: str):
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
+
+
+def jwt_encode(content):
+    return jwt.encode(
+        content, settings.secret_key_jwt, algorithm=settings.algorithm_jwt
+    )
+
+
+def jwt_decode(content):
+    return jwt.decode(
+        content, settings.secret_key_jwt, algorithm=settings.algorithm_jwt
+    )
 
 
 def get_password_hash(password: str) -> str:
@@ -159,7 +166,7 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt_encode(to_encode)
     return encoded_jwt
 
 
@@ -173,7 +180,7 @@ def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt_decode(token)
         user_id: str | None = payload.get("sub")
         if user_id is None:
             raise credentials_exception
@@ -198,7 +205,7 @@ def login_for_access_token(
             detail={"status": False},
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes=token_expire_minutes)
     access_token = create_access_token(
         data={"sub": user.id}, expires_delta=access_token_expires
     )
@@ -239,7 +246,7 @@ def reset_password(email: str, session: Session = Depends(get_session)):
             detail={"status": False},
             headers={"WWW-Authenticate": "Bearer"},
         )
-    reset_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    reset_token_expires = timedelta(minutes=token_expire_minutes)
     reset_token = create_access_token(
         data={"sub": user.id, "type": "reset"}, expires_delta=reset_token_expires
     )
@@ -267,7 +274,7 @@ def reset_password(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(reset_form.token_reset, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt_decode(reset_form.token_reset)
         user_id: str | None = payload.get("sub")
         if user_id is None or payload.get("type") != "reset":
             raise credentials_exception

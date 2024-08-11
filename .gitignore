@@ -123,6 +123,7 @@ celerybeat.pid
 
 # Environments
 .env
+.envsmtp
 .venv
 env/
 venv/
@@ -163,5 +164,7 @@ cython_debug/
 forms.html
 
 #Ignore sqlite database
-
 database.db
+
+#Ignore vscode start
+launch.json
