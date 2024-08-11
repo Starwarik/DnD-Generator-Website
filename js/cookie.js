@@ -1,4 +1,4 @@
-unction setCookie(name, value, attributes = {}) {
+function setCookie(name, value, attributes = {}) {
 
     attributes = {
       path: '/',
