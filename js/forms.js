@@ -10,7 +10,7 @@ dialog_form_login.addEventListener('submit', async (e) => {
     const login = formData.get('login');
     const password = formData.get('pass');
     const token = await getToken(login, password);
-    setCookie('access_token', token, 1);
+    setCookie('access_token', token, {secure: true, 'max-age': 3600, samesite: 'strict'});
     location.reload();
 });
 
@@ -27,7 +27,7 @@ dialog_form_register.addEventListener('submit', async (e) => {
         await register(login, password, email);
 
         const token = await getToken(login, password);
-        setCookie('access_token', token, 1);
+        setCookie('access_token', token, {secure: true, 'max-age': 3600, samesite: 'strict'});
         location.reload();
     }
 });

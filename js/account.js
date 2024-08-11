@@ -11,7 +11,7 @@ async function setUserInfo(token) {
 }
 
 function logout() {
-    eraseCookie('access_token');
+    deleteCookie('access_token');
     location.reload();
 }
 
