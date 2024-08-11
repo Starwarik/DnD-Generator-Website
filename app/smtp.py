@@ -37,7 +37,7 @@ class SMTPNotification(NotificationService):
         self.mail_server = None
 
     def start(self):
-        self.mail_server = smtplib.SMTP_SSL(self.smtp_data.server_url, self.smtp_data.port)
+        self.mail_server = smtplib.SMTP_SSL(self.smtp_data.server_url, self.smtp_data.server_port)
         self.mail_server.set_debuglevel(1)
         self.mail_server.ehlo(self.smtp_data.login)
         self.mail_server.login(self.smtp_data.login, self.smtp_data.password)
