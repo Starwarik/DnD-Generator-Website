@@ -49,6 +49,7 @@ class RestPasswordForm(BaseModel):
 
 
 class Token(BaseModel):
+    status: bool = True
     access_token: str
     token_type: str
 
@@ -152,7 +153,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)],
                      session: Session = Depends(get_session)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail={'status': False},
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
@@ -178,7 +179,7 @@ def login_for_access_token(
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect username or password",
+            detail={'status': False},
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -219,21 +220,22 @@ def reset_password(email: str, session: Session = Depends(get_session)):
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Неправильный пароль",
+            detail={'status': False},
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.id, "type":"reset"}, expires_delta=access_token_expires
+    reset_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    reset_token = create_access_token(
+        data={"sub": user.id, "type":"reset"}, expires_delta=reset_token_expires
     )
-    send_reset_message(user.email, access_token)
-    return access_token
+    send_reset_message(user.email, reset_token)
+    return {'status': True, 'reset_token': reset_token}
 
 @app.get("/api/user_info")
 def get_user_info(
     current_user: Annotated[User, Depends(get_current_user)]
 ):
     return {
+        'status': True,
         'username': current_user.username,
         'email': current_user.email,
         'balance': current_user.balance
@@ -264,13 +266,6 @@ def reset_password(reset_form: RestPasswordForm, session: Session = Depends(get_
     return {'status': True}
 
 
-@app.get("/api/balance")
-def get_balance(
-    current_user: Annotated[User, Depends(get_current_user)]
-) -> float:
-    return current_user.balance
-
-
 @app.post("/api/spend_balance")
 def spend_balance(
     money: float,
@@ -280,13 +275,13 @@ def spend_balance(
     if money < 0:
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail="You can't spend negative money",
+            detail={'status': False},
             headers={"WWW-Authenticate": "Bearer"},
         )
     if money - current_user.balance > 0:
         raise HTTPException(
             status_code=status.HTTP_402_PAYMENT_REQUIRED,
-            detail="You don't have enough money to pay",
+            detail={'status': False},
             headers={"WWW-Authenticate": "Bearer"},
         )
     current_user.balance -= money
