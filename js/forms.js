@@ -51,6 +51,6 @@ dialog_form_reset_password_second.addEventListener('submit', async (e) => {
 
     if (pass == pass_repeat) {
         await resetPassword(reset_token, pass_repeat);
-        //location.reload();
+        location.href = domain;
     }
 });
