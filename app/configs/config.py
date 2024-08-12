@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     database_url: str
 
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(env_file="configs/.env")
 
 
 class SMTPData(BaseSettings):
@@ -29,7 +29,7 @@ class SMTPData(BaseSettings):
     template_subject: str
     template_message: str
 
-    model_config = SettingsConfigDict(env_file=".envsmtp")
+    model_config = SettingsConfigDict(env_file="configs/.envsmtp")
 
 
 settings = Settings()

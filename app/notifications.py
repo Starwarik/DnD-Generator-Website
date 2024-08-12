@@ -3,7 +3,7 @@ from email.message import EmailMessage
 
 from abc import ABC, abstractmethod
 
-from .config import SMTPData, NotificationServiceChoice, settings, smtp_settings
+from .configs.config import SMTPData, NotificationServiceChoice, settings, smtp_settings
 
 
 class NotificationService(ABC):
