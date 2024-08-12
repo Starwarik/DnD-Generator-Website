@@ -15,12 +15,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing_extensions import Annotated
 
-from sqlmodel import Field, SQLModel, create_engine, Session, select, or_
+from sqlmodel import Field, SQLModel, Session, select, or_
 from sqlalchemy.sql.schema import Column
 from sqlalchemy import String
 
-from .smtp import *
-from .config import settings, smtp_settings
+from .notifications import notification_service
+from .config import settings
+from .database import engine, create_db_and_tables
 
 
 class User(SQLModel, table=True):
@@ -52,20 +53,9 @@ class TokenData(BaseModel):
     username: Union[str, None] = None
 
 
-mail_server = create_notification_service(
-    settings.notification_service, smtp_data=smtp_settings
-)
-
-engine = create_engine(settings.database_url, echo=True)
-
-
 def get_session():
     with Session(engine) as session:
         yield session
-
-
-def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -73,11 +63,11 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global mail_server
+    global notification_service
     create_db_and_tables()
-    mail_server.start()
+    notification_service.start()
     yield
-    mail_server.stop()
+    notification_service.stop()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -89,11 +79,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-def send_reset_message(email: str, token: str):
-    global mail_server
-    mail_server.send_refactory_notification(email, token)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -192,8 +177,7 @@ def get_current_user(
     return user
 
 
-@app.post("/api/token")
-@app.post("/token")
+@app.post("/api/token", tags=["auth"])
 def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     session: Session = Depends(get_session),
@@ -205,14 +189,14 @@ def login_for_access_token(
             detail={"status": False},
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(minutes=token_expire_minutes)
+    access_token_expires = timedelta(minutes=settings.token_expire_minutes)
     access_token = create_access_token(
         data={"sub": user.id}, expires_delta=access_token_expires
     )
     return Token(access_token=access_token, token_type="bearer")
 
 
-@app.post("/api/register")
+@app.post("/api/register", tags=["auth"])
 def register(user: UserRegisterForm, session: Session = Depends(get_session)):
     user_username = get_user_by_username(user.username, session)
     user_email = get_user_by_email(user.email, session)
@@ -237,7 +221,7 @@ def register(user: UserRegisterForm, session: Session = Depends(get_session)):
         return {"status": False}
 
 
-@app.get("/api/reset_password")
+@app.get("/api/reset_password", tags=["auth"])
 def reset_password(email: str, session: Session = Depends(get_session)):
     user = get_user_by_email(email, session)
     if not user:
@@ -246,15 +230,15 @@ def reset_password(email: str, session: Session = Depends(get_session)):
             detail={"status": False},
             headers={"WWW-Authenticate": "Bearer"},
         )
-    reset_token_expires = timedelta(minutes=token_expire_minutes)
+    reset_token_expires = timedelta(minutes=settings.token_expire_minutes)
     reset_token = create_access_token(
         data={"sub": user.id, "type": "reset"}, expires_delta=reset_token_expires
     )
-    send_reset_message(user.email, reset_token)
+    notification_service.send_refactory_notification(user.email, reset_token)
     return {"status": True, "reset_token": reset_token}
 
 
-@app.get("/api/user_info")
+@app.get("/api/user_info", tags=["user"])
 def get_user_info(current_user: Annotated[User, Depends(get_current_user)]):
     return {
         "status": True,
@@ -264,7 +248,7 @@ def get_user_info(current_user: Annotated[User, Depends(get_current_user)]):
     }
 
 
-@app.post("/api/reset_password")
+@app.post("/api/reset_password", tags=["auth"])
 def reset_password(
     reset_form: RestPasswordForm, session: Session = Depends(get_session)
 ):
@@ -291,7 +275,7 @@ def reset_password(
     return {"status": True}
 
 
-@app.post("/api/spend_balance")
+@app.post("/api/spend_balance", tags=["user"])
 def spend_balance(
     money: float,
     current_user: Annotated[User, Depends(get_current_user)],

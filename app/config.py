@@ -3,8 +3,9 @@ from enum import Enum
 
 
 class NotificationServiceChoice(Enum):
-    dummy_notification = 'dummy_notification'
-    smtp_notification = 'smtp_notification'
+    dummy_notification = "dummy_notification"
+    smtp_notification = "smtp_notification"
+
 
 class Settings(BaseSettings):
     notification_service: NotificationServiceChoice
@@ -18,6 +19,7 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env")
 
+
 class SMTPData(BaseSettings):
     server_url: str
     server_port: int
@@ -28,6 +30,7 @@ class SMTPData(BaseSettings):
     template_message: str
 
     model_config = SettingsConfigDict(env_file=".envsmtp")
+
 
 settings = Settings()
 smtp_settings = SMTPData()

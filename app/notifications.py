@@ -3,7 +3,7 @@ from email.message import EmailMessage
 
 from abc import ABC, abstractmethod
 
-from .config import SMTPData, NotificationServiceChoice
+from .config import SMTPData, NotificationServiceChoice, settings, smtp_settings
 
 
 class NotificationService(ABC):
@@ -30,6 +30,7 @@ class DummyNotification(NotificationService):
     def stop(self):
         pass
 
+
 class SMTPNotification(NotificationService):
     def __init__(self, smtp_data: SMTPData):
         self.smtp_data = smtp_data
@@ -37,7 +38,9 @@ class SMTPNotification(NotificationService):
         self.mail_server = None
 
     def start(self):
-        self.mail_server = smtplib.SMTP_SSL(self.smtp_data.server_url, self.smtp_data.server_port)
+        self.mail_server = smtplib.SMTP_SSL(
+            self.smtp_data.server_url, self.smtp_data.server_port
+        )
         self.mail_server.set_debuglevel(1)
         self.mail_server.ehlo(self.smtp_data.login)
         self.mail_server.login(self.smtp_data.login, self.smtp_data.password)
@@ -63,3 +66,8 @@ def create_notification_service(
         return DummyNotification()
     elif notification_choice == NotificationServiceChoice.smtp_notification:
         return SMTPNotification(smtp_data)
+
+
+notification_service = create_notification_service(
+    settings.notification_service, smtp_data=smtp_settings
+)
