@@ -1,7 +1,7 @@
 from sqlmodel import create_engine, SQLModel, Session
-from app.configs.config import settings
+from .config import db_setting
 
-engine = create_engine(settings.database_url, echo=True)
+engine = create_engine(db_setting.database_url, echo=True)
 
 
 def create_db_and_tables():

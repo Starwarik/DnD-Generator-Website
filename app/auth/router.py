@@ -5,10 +5,10 @@ from sqlmodel import Session
 from datetime import timedelta
 
 from app.database.database import get_session
-from app.configs.config import settings
 from app.database.crud import *
-from app.notifications import notification_service
+from app.notification.notifications import notification_service
 from .utils import *
+from .config import auth_setting
 
 from pydantic import BaseModel
 
@@ -38,6 +38,7 @@ class UserRegisterForm(BaseModel):
 auth_router = APIRouter(tags=["auth"])
 
 
+@auth_router.post("/token")
 @auth_router.post("/api/token")
 def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
@@ -50,12 +51,28 @@ def login_for_access_token(
             detail={"status": False},
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(minutes=settings.token_expire_minutes)
+    access_token_expires = timedelta(minutes=auth_setting.token_expire_minutes)
     access_token = create_access_token(
         data={"sub": user.id}, expires_delta=access_token_expires
     )
     return Token(access_token=access_token, token_type="bearer")
 
+
+@auth_router.get("/api/reset_token")
+def reset_password(email: str, session: Session = Depends(get_session)):
+    user = get_user_by_email(email, session)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"status": False},
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    reset_token_expires = timedelta(minutes=auth_setting.token_expire_minutes)
+    reset_token = create_access_token(
+        data={"sub": user.id, "type": "reset"}, expires_delta=reset_token_expires
+    )
+    notification_service.send_refactory_notification(user.email, reset_token)
+    return {"status": True, "reset_token": reset_token}
 
 @auth_router.post("/api/register")
 def register(user: UserRegisterForm, session: Session = Depends(get_session)):
@@ -70,30 +87,15 @@ def register(user: UserRegisterForm, session: Session = Depends(get_session)):
         )
     try:
         create_user(
-            username=user.username,
-            password=get_password_hash(user.password),
             email=user.email,
+            username=user.username,
+            password_hash=get_password_hash(user.password),
+            session=session,
         )
         return {"status": True}
-    except Exception:
+    except Exception as e:
+        print(e)
         return {"status": False}
-
-
-@auth_router.get("/api/reset_password")
-def reset_password(email: str, session: Session = Depends(get_session)):
-    user = get_user_by_email(email, session)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"status": False},
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    reset_token_expires = timedelta(minutes=settings.token_expire_minutes)
-    reset_token = create_access_token(
-        data={"sub": user.id, "type": "reset"}, expires_delta=reset_token_expires
-    )
-    notification_service.send_refactory_notification(user.email, reset_token)
-    return {"status": True, "reset_token": reset_token}
 
 
 @auth_router.post("/api/reset_password")

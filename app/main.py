@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
 
-from .notifications import notification_service
+from .notification.notifications import notification_service
 from .database.database import create_db_and_tables
 from .database.crud import *
 from .auth.router import auth_router

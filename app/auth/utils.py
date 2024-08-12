@@ -5,7 +5,7 @@ from typing import Union
 
 from datetime import datetime, timedelta, timezone
 
-from app.configs.config import settings
+from .config import auth_setting
 from app.database.crud import *
 
 
@@ -19,13 +19,13 @@ def get_password_hash(password: str) -> str:
 
 def jwt_encode(content):
     return jwt.encode(
-        content, settings.secret_key_jwt, algorithm=settings.algorithm_jwt
+        content, auth_setting.secret_key_jwt, algorithm=auth_setting.algorithm_jwt
     )
 
 
 def jwt_decode(content):
     return jwt.decode(
-        content, settings.secret_key_jwt, algorithm=settings.algorithm_jwt
+        content, auth_setting.secret_key_jwt, algorithms=[auth_setting.algorithm_jwt]
     )
 
 

@@ -10,10 +10,12 @@ from sqlmodel import Session
 
 from app.database.crud import change_balance_on_value
 
+from sqlmodel import select
+
 user_router = APIRouter(tags=["user"])
 
 
-@user_router.get("/api/user_info", tags=["user"])
+@user_router.get("/api/user_info")
 def get_user_info(current_user: Annotated[User, Depends(get_current_user)]):
     return {
         "status": True,
@@ -23,7 +25,7 @@ def get_user_info(current_user: Annotated[User, Depends(get_current_user)]):
     }
 
 
-@user_router.post("/api/spend_balance", tags=["user"])
+@user_router.post("/api/spend_balance")
 def spend_balance(
     money: float,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -45,13 +47,9 @@ def spend_balance(
     return current_user.balance - money
 
 
-"""
-Debug function
-
 @user_router.get("/api/get_users")
 def get_all_users(session: Session = Depends(get_session)):
     statement = select(User)
     results = session.exec(statement)
     result = results.all()
     return result
-"""
