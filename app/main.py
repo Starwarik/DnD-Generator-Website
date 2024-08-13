@@ -13,6 +13,7 @@ from .database.database import create_db_and_tables
 from .database.crud import *
 from .auth.router import auth_router
 from .user.router import user_router
+from .generation.router import generation_router
 
 
 class TokenData(BaseModel):
@@ -31,6 +32,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(auth_router)
 app.include_router(user_router)
+app.include_router(generation_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
