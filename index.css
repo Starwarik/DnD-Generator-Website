@@ -23,11 +23,6 @@ main {
 	pointer-events: none;
 }
 
-#account {
-	grid-column: 1 / 5;
-	height: fit-content;
-}
-
 /* навигационная панель */
 
 #nav {
@@ -94,7 +89,7 @@ main {
 	background-color: var(--back);
 	border-radius: 80px;
 	margin-top: -80px;
-	height: 1114px;
+	height: fit-content;
 	margin-bottom: 10vw;
 }
 
@@ -148,7 +143,11 @@ main {
 	top: 280px;
 }
 
-.download {
+#phones-mobile {
+	display: none;
+}
+
+.download-wrapper {
 	position: relative;
 	grid-column: 7 / 12;
 	height: fit-content;
