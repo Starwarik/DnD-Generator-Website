@@ -1,21 +1,17 @@
 from abc import ABC, abstractmethod
+from base64 import b64decode
+
+from app.image.schemas import ImageContainer
 
 from .config import generation_setting
 
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.chat_models.gigachat import GigaChat
 
-from pydantic import BaseModel
-
-
-class Image(BaseModel):
-    content_b64: str
-    media_type: str
-
 
 class ImageGeneration(ABC):
     @abstractmethod
-    def generate_image(self, system_prompt, user_prompt) -> Image:
+    def generate_image(self, system_prompt, user_prompt) -> ImageContainer:
         pass
 
 
@@ -28,7 +24,7 @@ class GigaChatImage(ImageGeneration):
 
     def generate_image(
         self, system_prompt: str | None, user_prompt: str | None
-    ) -> Image:
+    ) -> ImageContainer:
         messages = []
         if system_prompt:
             messages.append(SystemMessage(system_prompt))
@@ -37,5 +33,6 @@ class GigaChatImage(ImageGeneration):
         response = self.model(messages)
         image_uuid = response.additional_kwargs.get("image_uuid")
         image = self.model.get_file(image_uuid).content
-        image = Image(content_b64=image, media_type="image/png")
+        image = b64decode(image)
+        image = ImageContainer(content=image, media_type="image/png")
         return image

@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends
 
-from sqlmodel import Session, select
+from sqlmodel import Session
 from typing_extensions import Annotated
 
 from app.database.database import get_session
-from .models import Adventure
+from app.generation.service import generate_adventure_with_models
+from ..adventure.models import Adventure
 from app.user.models import User
 from app.auth.dependencies import get_current_user
 
@@ -13,35 +14,9 @@ generation_router = APIRouter(tags=["generation"])
 
 @generation_router.get("/api/generate")
 def generate_adventure(
+    background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
 ):
-    adventure = Adventure(user_id=current_user.id)
-    session.add(adventure)
-    session.commit()
-    session.refresh(adventure)
-
-
-@generation_router.get("/api/adventures")
-def get_user_adventure(
-    current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
-):
-    command = select(Adventure).where(Adventure.user_id == current_user.id)
-    results = session.exec(command)
-    return results.all()
-
-
-@generation_router.get("/api/adventures/{adventure_id}")
-def get_adventure(
-    current_user: Annotated[User, Depends(get_current_user)],
-    adventure_id: int,
-    session: Session = Depends(get_session),
-):
-    command = (
-        select(Adventure)
-        .where(Adventure.user_id == current_user.id)
-        .where(Adventure.id == adventure_id)
-    )
-    results = session.exec(command)
-    return results.first()
+    background_tasks.add_task(generate_adventure_with_models, current_user.id, session)
+    return "Zaeb'is"

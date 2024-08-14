@@ -14,6 +14,8 @@ from .database.crud import *
 from .auth.router import auth_router
 from .user.router import user_router
 from .generation.router import generation_router
+from .image.router import image_router
+from .adventure.router import adventure_router
 
 
 class TokenData(BaseModel):
@@ -33,6 +35,8 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(generation_router)
+app.include_router(adventure_router)
+app.include_router(image_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
