@@ -37,5 +37,5 @@ class GigaChatImage(ImageGeneration):
         response = self.model(messages)
         image_uuid = response.additional_kwargs.get("image_uuid")
         image = self.model.get_file(image_uuid).content
-        image = Image(content=image, media_type="image/png")
+        image = Image(content_b64=image, media_type="image/png")
         return image
