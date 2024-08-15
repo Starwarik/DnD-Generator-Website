@@ -61,14 +61,6 @@ headHidePhonesTriggerPC = ScrollTrigger.create({
 	onEnterBack: () => {headHidePhonesAnimPC.restart();}
 });
 
-headOnStartAnim = gsap.timeline();
-headOnStartAnim.add(headOnStartAnimPC);
-headOnStartAnim.addLabel("pc", "<");
-headOnStartAnim.add(headOnStartAnimMobile);
-headOnStartAnim.addLabel("mobile", "<");
-headOnStartAnim.addPause("mobile");
-headOnStartAnim.addPause(">");
-
 headOnStartAnimPC = gsap.timeline().pause();
 headOnStartAnimPC.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
 headOnStartAnimPC.from("#phone-2", { yPercent: 150, ease: "expo.out", duration: 1.07 }, "<");
@@ -89,8 +81,8 @@ headHidePhonesTriggerMobile = ScrollTrigger.create({
 
 headOnStartAnimMobile = gsap.timeline().pause();
 headOnStartAnimMobile.from("#phones-mobile", { yPercent: 100, ease: "expo.out", duration: 1 });
-headOnStartAnimMobile.from("#head-title", { xPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
-headOnStartAnimMobile.from("#download-1", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+headOnStartAnimMobile.fromTo("#head-title", { xPercent: 100, ease: "expo.out", duration: 1.07 }, { xPercent: 0, ease: "expo.out", duration: 1.07 }, "<");
+headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
 
 // АНИМАЦИЯ ЭКРАНА ПРЕИМУЩЕСТВ
 // Анимация секции при прокрутке
@@ -172,19 +164,14 @@ tailHidePhoneAnimPC.to("#phone-4", { xPercent: -150, ease: "expo.in", duration: 
 
 if (window.matchMedia('(min-width: 1024px)').matches) {
 	window.addEventListener('load', () => {
-		headOnStartAnim.seek("pc").restart();
+		headHidePhonesTriggerMobile.kill();
+		headOnStartAnimMobile.kill();
+		headOnStartAnimPC.restart();
 	});
 } else {
-	headHidePhonesTriggerPC.disable();
 	window.addEventListener('load', () => {
-		headOnStartAnim.seek("mobile").restart();
+		headHidePhonesTriggerPC.kill();
+		headOnStartAnimPC.kill();
+		headOnStartAnimMobile.restart();
 	});
 }
-
-window.addEventListener("resize", () => {
-	if (window.matchMedia('(min-width: 1024px)').matches) {
-		
-	} else {
-		
-	}
-});
