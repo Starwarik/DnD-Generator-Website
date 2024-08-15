@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from typing_extensions import Annotated
 
-from app.database.table import User
+from .models import User
 from app.database.database import get_session
 from app.auth.dependencies import get_current_user
 

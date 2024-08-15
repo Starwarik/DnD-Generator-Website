@@ -74,6 +74,7 @@ def reset_password(email: str, session: Session = Depends(get_session)):
     notification_service.send_refactory_notification(user.email, reset_token)
     return {"status": True, "reset_token": reset_token}
 
+
 @auth_router.post("/api/register")
 def register(user: UserRegisterForm, session: Session = Depends(get_session)):
     user_username = get_user_by_username(user.username, session)

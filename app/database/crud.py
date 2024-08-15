@@ -1,4 +1,4 @@
-from .table import User
+from app.user.models import User
 from sqlmodel import Session, select, or_
 
 # READ method

@@ -168,4 +168,5 @@ database.db
 
 #Ignore vscode start
 launch.json
+.vscode/
 start.bat

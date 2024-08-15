@@ -33,7 +33,7 @@ class DummyNotification(NotificationService):
 
 class SMTPNotification(NotificationService):
     def __init__(self):
-        self.mail_server = None
+        self.mail_server: smtplib.SMTP_SSL | None = None
 
     def start(self):
         self.mail_server = smtplib.SMTP_SSL(
@@ -41,7 +41,9 @@ class SMTPNotification(NotificationService):
         )
         self.mail_server.set_debuglevel(1)
         self.mail_server.ehlo(notification_setting.smtp_login)
-        self.mail_server.login(notification_setting.smtp_login, notification_setting.smtp_password)
+        self.mail_server.login(
+            notification_setting.smtp_login, notification_setting.smtp_password
+        )
         self.mail_server.auth_plain()
 
     def send_refactory_notification(self, recciver_email, token):
@@ -59,7 +61,13 @@ class SMTPNotification(NotificationService):
 
 notification_service = None
 
-if notification_setting.notification_service == NotificationServiceChoice.dummy_notification:
+if (
+    notification_setting.notification_service
+    == NotificationServiceChoice.dummy_notification
+):
     notification_service = DummyNotification()
-elif notification_setting.notification_service == NotificationServiceChoice.smtp_notification:
+elif (
+    notification_setting.notification_service
+    == NotificationServiceChoice.smtp_notification
+):
     notification_service = SMTPNotification()
