@@ -50,40 +50,59 @@ for (let i = 0; i < navMenus.length; i++) {
 	}
 }
 
-// АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА
 
-headOnStartAnim = gsap.timeline({ delay: 0.7 });
-headOnStartAnim.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
-headOnStartAnim.from("#phone-2", { yPercent: 150, ease: "expo.out", duration: 1.07 }, "<");
-headOnStartAnim.from("#head-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
-headOnStartAnim.from("#download-1", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+// АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА (PC)
 
-headHidePhonesAnim = gsap.timeline({
-	scrollTrigger: {
-		trigger: "#head",
-		start: "80% 10%",
-		end: "80% 10%",
-		toggleActions: "restart none reverse none"
-	}
-})
-headHidePhonesAnim.to("#phone-1", { xPercent: -160, ease: "expo.in", duration: 0.5 });
-headHidePhonesAnim.to("#phone-2", { xPercent: -160, ease: "expo.in", duration: 0.5 }, "<");
+headHidePhonesTriggerPC = ScrollTrigger.create({
+	trigger: "#head",
+	start: "80% 10%",
+	end: "80% 10%",
+	onEnter: () => {headHidePhonesAnimPC.reverse();},
+	onEnterBack: () => {headHidePhonesAnimPC.restart();}
+});
+
+
+headOnStartAnimPC = gsap.timeline().pause();
+headOnStartAnimPC.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
+headOnStartAnimPC.from("#phone-2", { yPercent: 150, ease: "expo.out", duration: 1.07 }, "<");
+headOnStartAnimPC.from("#head-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
+headOnStartAnimPC.from("#download-1", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+
+headHidePhonesAnimPC = gsap.timeline();
+headHidePhonesAnimPC.from("#phone-1", { xPercent: -160, ease: "expo.out", duration: 0.5 });
+headHidePhonesAnimPC.from("#phone-2", { xPercent: -160, ease: "expo.out", duration: 0.5 }, "<");
+
+// АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА (ТЕЛЕФОН)
+
+headHidePhonesTriggerMobile = ScrollTrigger.create({
+	trigger: "#head",
+	start: "80% 10%",
+	end: "80% 10%",
+	onEnter: () => {headHidePhonesAnimMobile.reverse();},
+	onEnterBack: () => {headHidePhonesAnimMobile.restart();}
+});
+
+headOnStartAnimMobile = gsap.timeline().pause();
+headOnStartAnimMobile.from("#phones-mobile", { yPercent: 100, ease: "expo.out", duration: 1 });
+headOnStartAnimMobile.from("#head-title", { xPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
+headOnStartAnimMobile.from("#download-1", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
 
 // АНИМАЦИЯ ЭКРАНА ПРЕИМУЩЕСТВ
 // Анимация секции при прокрутке
 
-advantagesAnim = gsap.timeline( {
-	scrollTrigger: {
-		trigger: "#our-advantage",
-		start: "top 30%"
-	}
+advantagesAnimTriggerPC = ScrollTrigger.create({
+	trigger: "#our-advantage",
+	start: "top 30%",
+	onEnter: () => {advantagesAnimPC.play();}
 });
-advantagesAnim.from(".overflow-wrapper h2", { yPercent: -100, opacity: 0, duration: 1 });
-advantagesAnim.to("#advantages", { rowGap: 120, duration: 0.7 }, "<");
-advantagesAnim.to(".description-item:nth-child(even)", { xPercent: 27, duration: 0.7 }, "<");
-advantagesAnim.to(".description-item:nth-child(odd)", { xPercent: -27, duration: 0.7 }, "<");
 
-// Анимация плашек с описаниями
+advantagesAnimPC = gsap.timeline();
+advantagesAnimPC.from(".overflow-wrapper h2", { yPercent: -100, opacity: 0, duration: 1 });
+advantagesAnimPC.to("#advantages", { rowGap: 120, duration: 0.7 }, "<");
+advantagesAnimPC.to(".description-item:nth-child(even)", { xPercent: 27, duration: 0.7 }, "<");
+advantagesAnimPC.to(".description-item:nth-child(odd)", { xPercent: -27, duration: 0.7 }, "<");
+
+// Анимация плашек с описаниями (PC)
 
 gsap.utils.toArray(".description-item").forEach(description => {
 	let header = description.querySelector("dt"),
@@ -97,43 +116,72 @@ gsap.utils.toArray(".description-item").forEach(description => {
 	tl.to(arrow, { opacity: 0 }, "<");
 
 	description.addEventListener("mouseenter", () =>
-	tl.timeScale(1).play());
-
+		tl.timeScale(1).play());
 	description.addEventListener("mouseleave", () =>
 		tl.timeScale(1).reverse());
-
 });
 
-// АНИМАЦИЯ РОГА
 
-gsap.from("#horn", {
-	scrollTrigger: {
-		trigger: "#horn",
-		start: "top 70%"
-	},
+// АНИМАЦИЯ РОГА
+hornAnimTriggerPC = ScrollTrigger.create({
+	trigger: "#horn",
+	start: "top 70%",
+	onEnter: () => {hornAnimPC.play();},
+	once: true
+});
+
+hornAnimPC = gsap.from("#horn", {
 	yPercent: 150,
 	duration: 0.7,
 	ease: "power4.out"
 });
 
-// АНИМАЦИЯ ХВОСТОВОГО ЗАГОЛОВКА
+// АНИМАЦИЯ ХВОСТОВОГО ЗАГОЛОВКА (PC)
 
-tailOnScrollAnim = gsap.timeline({ 
-	scrollTrigger: {
-		trigger: ".tail-coloriser",
-		start: "30% 10%"
-	}
- });
-tailOnScrollAnim.from("#phone-4", { yPercent: 110, ease: "expo.out", duration: 1 });
-tailOnScrollAnim.from("#tail-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
-tailOnScrollAnim.from("#download-2", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+tailOnScrollAnimTriggerPC = ScrollTrigger.create({
+	trigger: ".tail-coloriser",
+	start: "30% 10%",
+	onEnter: () => {tailOnScrollAnimPC.play();},
+	once: true
+});
 
-tailHidePhoneAnim = gsap.timeline({
-	scrollTrigger: {
-		trigger: "#tail",
-		start: "50% 70%",
-		end: "50% 70%",
-		toggleActions: "reverse none restart none"
+tailOnScrollAnimPC = gsap.timeline();
+tailOnScrollAnimPC.from("#phone-4", { yPercent: 110, ease: "expo.out", duration: 1 });
+tailOnScrollAnimPC.from("#tail-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
+tailOnScrollAnimPC.from("#download-2", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+
+tailHidePhoneTriggerPC = ScrollTrigger.create({
+	trigger: "#tail",
+	start: "50% 70%",
+	end: "50% 70%",
+	onEnter: () => {tailHidePhoneAnimPC.reverse();},
+	onEnterBack: () => {tailHidePhoneAnimPC.restart();}
+});
+
+tailHidePhoneAnimPC = gsap.timeline();
+tailHidePhoneAnimPC.to("#phone-4", { xPercent: -150, ease: "expo.in", duration: 0.5 });
+
+
+
+// УПРАВЛЕНИЕ РАЗРЕШЕНИЯМИ ЭКРАНОВ
+
+if (window.matchMedia('(min-width: 1024px)').matches) {
+	window.addEventListener('load', () => {
+		headOnStartAnimPC.restart();
+		headOnStartAnimMobile.kill();
+	});
+} else {
+	headHidePhonesTriggerPC.disable();
+	window.addEventListener('load', () => {
+		headOnStartAnimMobile.restart();
+		headOnStartAnimPC.kill();
+	});
+}
+
+window.addEventListener("resize", () => {
+	if (window.matchMedia('(min-width: 1024px)').matches) {
+		
+	} else {
+		
 	}
 });
-tailHidePhoneAnim.to("#phone-4", { xPercent: -150, ease: "expo.in", duration: 0.5 });

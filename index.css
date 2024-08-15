@@ -276,14 +276,23 @@ main {
 	row-gap: 20px;
 }
 
-.description-item {
+#advantages-mobile {
+	display: none;
+	row-gap: 20px;
+	align-items: center;
+	flex-direction: column;
+}
+
+.description-item,
+.description-item-mobile {
 	background-color: var(--accent);
 	color: var(--substrate);
 	border-radius: 22px;
 	width: 65%;
 }
 
-.description-item dt {
+.description-item dt,
+.description-item-mobile dt {
 	padding-top: 80px;
 	padding-left: 10%;
 	font-family: 'Raleway', sans-serif;
@@ -293,7 +302,8 @@ main {
 	width: 95%;
 }
 
-.description-item dd {
+.description-item dd,
+.description-item-mobile dd {
 	font-family: 'Raleway', sans-serif;
 	font-weight: 400;
 	font-size: 20px;
@@ -305,7 +315,8 @@ main {
 	height: 60px;
 }
 
-.see-more-arrow {
+.see-more-arrow,
+.see-more-arrow-mobile {
 	padding-left: 10%;
 	padding-bottom: 5%;
 }
