@@ -51,7 +51,7 @@ for (let i = 0; i < navMenus.length; i++) {
 }
 
 
-// АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА (PC)
+// АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА (PC/Phone)
 
 headHidePhonesTriggerPC = ScrollTrigger.create({
 	trigger: "#head",
@@ -61,6 +61,13 @@ headHidePhonesTriggerPC = ScrollTrigger.create({
 	onEnterBack: () => {headHidePhonesAnimPC.restart();}
 });
 
+headOnStartAnim = gsap.timeline();
+headOnStartAnim.add(headOnStartAnimPC);
+headOnStartAnim.addLabel("pc", "<");
+headOnStartAnim.add(headOnStartAnimMobile);
+headOnStartAnim.addLabel("mobile", "<");
+headOnStartAnim.addPause("mobile");
+headOnStartAnim.addPause(">");
 
 headOnStartAnimPC = gsap.timeline().pause();
 headOnStartAnimPC.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
@@ -71,8 +78,6 @@ headOnStartAnimPC.from("#download-1", { yPercent: 170, ease: "expo.out", duratio
 headHidePhonesAnimPC = gsap.timeline();
 headHidePhonesAnimPC.from("#phone-1", { xPercent: -160, ease: "expo.out", duration: 0.5 });
 headHidePhonesAnimPC.from("#phone-2", { xPercent: -160, ease: "expo.out", duration: 0.5 }, "<");
-
-// АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА (ТЕЛЕФОН)
 
 headHidePhonesTriggerMobile = ScrollTrigger.create({
 	trigger: "#head",
@@ -167,14 +172,12 @@ tailHidePhoneAnimPC.to("#phone-4", { xPercent: -150, ease: "expo.in", duration: 
 
 if (window.matchMedia('(min-width: 1024px)').matches) {
 	window.addEventListener('load', () => {
-		headOnStartAnimPC.restart();
-		headOnStartAnimMobile.kill();
+		headOnStartAnim.seek("pc").restart();
 	});
 } else {
 	headHidePhonesTriggerPC.disable();
 	window.addEventListener('load', () => {
-		headOnStartAnimMobile.restart();
-		headOnStartAnimPC.kill();
+		headOnStartAnim.seek("mobile").restart();
 	});
 }
 
