@@ -81,6 +81,10 @@
     align-self: end;
 }
 
+.phone__what-is__wrapper {
+    display: none;
+}
+
 #what-is p {
     grid-column: 1 / 10;
     font-family: "Raleway", sans-serif;

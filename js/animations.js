@@ -51,7 +51,7 @@ for (let i = 0; i < navMenus.length; i++) {
 }
 
 
-// АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА (PC)
+// АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА (PC/Phone)
 
 headHidePhonesTriggerPC = ScrollTrigger.create({
 	trigger: "#head",
@@ -60,7 +60,6 @@ headHidePhonesTriggerPC = ScrollTrigger.create({
 	onEnter: () => {headHidePhonesAnimPC.reverse();},
 	onEnterBack: () => {headHidePhonesAnimPC.restart();}
 });
-
 
 headOnStartAnimPC = gsap.timeline().pause();
 headOnStartAnimPC.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
@@ -72,8 +71,6 @@ headHidePhonesAnimPC = gsap.timeline();
 headHidePhonesAnimPC.from("#phone-1", { xPercent: -160, ease: "expo.out", duration: 0.5 });
 headHidePhonesAnimPC.from("#phone-2", { xPercent: -160, ease: "expo.out", duration: 0.5 }, "<");
 
-// АНИМАЦИЯ ГОЛОВНОГО ЭКРАНА (ТЕЛЕФОН)
-
 headHidePhonesTriggerMobile = ScrollTrigger.create({
 	trigger: "#head",
 	start: "80% 10%",
@@ -84,8 +81,8 @@ headHidePhonesTriggerMobile = ScrollTrigger.create({
 
 headOnStartAnimMobile = gsap.timeline().pause();
 headOnStartAnimMobile.from("#phones-mobile", { yPercent: 100, ease: "expo.out", duration: 1 });
-headOnStartAnimMobile.from("#head-title", { xPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
-headOnStartAnimMobile.from("#download-1", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+headOnStartAnimMobile.fromTo("#head-title", { xPercent: 100, ease: "expo.out", duration: 1.07 }, { xPercent: 0, ease: "expo.out", duration: 1.07 }, "<");
+headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
 
 // АНИМАЦИЯ ЭКРАНА ПРЕИМУЩЕСТВ
 // Анимация секции при прокрутке
@@ -167,21 +164,14 @@ tailHidePhoneAnimPC.to("#phone-4", { xPercent: -150, ease: "expo.in", duration: 
 
 if (window.matchMedia('(min-width: 1024px)').matches) {
 	window.addEventListener('load', () => {
-		headOnStartAnimPC.restart();
+		headHidePhonesTriggerMobile.kill();
 		headOnStartAnimMobile.kill();
+		headOnStartAnimPC.restart();
 	});
 } else {
-	headHidePhonesTriggerPC.disable();
 	window.addEventListener('load', () => {
-		headOnStartAnimMobile.restart();
+		headHidePhonesTriggerPC.kill();
 		headOnStartAnimPC.kill();
+		headOnStartAnimMobile.restart();
 	});
 }
-
-window.addEventListener("resize", () => {
-	if (window.matchMedia('(min-width: 1024px)').matches) {
-		
-	} else {
-		
-	}
-});

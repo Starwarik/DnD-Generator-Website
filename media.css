@@ -1,4 +1,5 @@
-@media (max-width: 1023px) {
+@media (min-width: 601px) and (max-width: 1023px) {
+
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
@@ -6,9 +7,6 @@
 		margin-left: 32px;
 		margin-right: 32px;
 	}
-}
-
-@media (min-width: 0px) and (max-width: 1023px) {
 
 	/* UI */
 
@@ -68,7 +66,7 @@
 	/* HEAD */
 
 	#head {
-		grid-template-rows: auto max-content max-content 0;
+		grid-template-rows: auto max-content max-content auto;
 		height: fit-content;
 		padding-top: 150px;
 	}
@@ -132,6 +130,31 @@
 	#horn {
 		display: none;
 	}
+
+	/* WHAT IS */
+
+	#what-is {
+		height: fit-content;
+		grid-template-rows: max-content max-content max-content;
+		margin-bottom: 100px;
+	}
+
+	#what-is h2 {
+		grid-column: 1 / 5;
+		grid-template-rows: max-content max-content max-content;
+	}
+
+	.phone__what-is__wrapper {
+		margin-top: 35px;
+		display: flex;
+		grid-column: 1 / 5;
+		justify-content: center;
+	}
+
+	#what-is p {
+		grid-column: 1 / 5;
+	}
+
 	/* ADVANTAGES */
 
 	#advantages {
@@ -246,4 +269,291 @@
 	.footer__socip {
 		grid-column: 1 / 5;
 	}
+}
+
+@media (max-width: 600px) {
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 0px 20px;
+		margin-left: 32px;
+		margin-right: 32px;
+	}
+	
+	/* UI */
+
+	#ui.grid {
+		width: 100vw;
+		height: 100vh;
+		margin: 0;
+	}
+
+	.account-navbar {
+		position: absolute;
+		grid-template-columns: repeat(4, 1fr);
+		justify-content: start;
+		gap: 0px 60px;
+		padding-left: 32px;
+		padding-right: 32px;
+		margin: 0;
+		width: 100%;
+		height: 80px;
+		left: 0;
+		border-radius: 0 0 11px 11px;
+	}
+
+	.account-navbar__image {
+		height: 52%;
+		width: 20vw;
+	}
+
+	.partitions-image {
+		width: 20vw;
+	}
+
+	.account-wrapper {
+		width: 20vw;
+	}
+
+	.account-navbar__icon {
+		height: 35%;
+		margin-bottom: 5px;
+	}
+
+	.partitions-image__wrapper {
+		justify-self: end;
+		margin-left: auto;
+	}
+
+	.partitions-image {
+		display: initial;
+		height: 60%;
+	}
+
+	#nav {
+		position: absolute;
+		right: 0;
+	}
+
+	/* HEAD */
+
+	#head {
+		grid-template-rows: auto max-content max-content auto;
+		height: fit-content;
+		padding-top: 150px;
+	}
+
+	.head-coloriser {
+		margin: 0;
+	}
+	
+	.title, .download-wrapper, .phone-wrapper {
+		grid-column: 1 / 5;
+	}
+
+	.title {
+		justify-content: flex-start;
+		grid-row: 1 / 2;
+		height: 30vw;
+		margin-left: 0;
+		margin-right: -32px;
+		border-radius: 45px 0 0 45px;
+	}
+
+	.title > img {
+		width: 50vw;
+		padding-left: 5%;
+		padding-right: 2%;
+	}
+
+	.phone-wrapper {
+		position: relative;
+		top: -7vh;
+		display: flex;
+		grid-row: 2 / 4;
+		z-index: 1;
+	}
+
+	#phone-1, #phone-2 {
+		display: none;
+	}
+
+	#phones-mobile {
+		display: block;
+		width: 100%;
+	}
+
+	.download-wrapper {
+		position: relative;
+		left: 0;
+		z-index: 1;
+		display: flex;
+		justify-content: center;
+		z-index: 1;
+		height:80%;
+		grid-row: 3 / 5;
+		background-color: var(--back);
+	}
+
+	.download-description {
+		height:max-content;
+	}
+
+	#horn {
+		display: none;
+	}
+
+	/* WHAT IS */
+
+	#what-is {
+		height: fit-content;
+		grid-template-rows: max-content max-content max-content;
+		margin-bottom: 100px;
+	}
+
+	#what-is h2 {
+		grid-column: 1 / 5;
+		grid-template-rows: max-content max-content max-content;
+	}
+
+	.phone__what-is__wrapper {
+		margin-top: 35px;
+		display: flex;
+		grid-column: 1 / 5;
+		justify-content: center;
+	}
+
+	#what-is p {
+		grid-column: 1 / 5;
+	}
+
+	/* ADVANTAGES */
+
+	#advantages {
+		display: none;
+	}
+
+	#our-advantage {
+		grid-template-rows: max-content max-content max-content;
+	}
+
+	#advantages-mobile {
+		display: flex;
+		grid-column: 1 / 5;
+		grid-row: 3 / 4;
+	}
+
+	#advantages {
+		grid-column: 1 / 5;
+	}
+
+	.description-item-mobile {
+		width: 100%;
+		height: fit-content;
+	}
+
+	.see-more-arrow-mobile {
+		display: none;
+	}
+
+	#advantages-mobile dt {
+		padding-top: 10%;
+		padding-bottom: 7%;
+	}
+
+	#advantages-mobile dd {
+		opacity: 1;
+		height: fit-content;
+		padding-bottom: 7%;
+	}
+
+	.overflow-wrapper {
+		grid-column: 1 / 5;
+	}
+
+	#our-advantage aside {
+		display: flex;
+		justify-content: center;
+		grid-column: 1 / 5;
+		grid-row: 2 / 3;
+	}
+
+	#phone-3 {
+		width: 70%;
+		margin-top: 70px;
+		margin-bottom: 80px;
+	}
+
+	/* BUY TOKENS */
+
+	#buy-tokens {
+		height: fit-content;
+		grid-template-rows: max-content max-content max-content;
+	}
+
+	.buy-tokens__title {
+		grid-column: 1 / 5;
+		margin-top: 100px;
+	}
+
+	.buy-tokens-form {
+		grid-column: 1 / 5;
+	}
+
+	.tokens-description {
+		grid-column: 1 / 5;
+		margin-bottom: 25vh;
+		margin-top: 30px;
+	}
+
+	/* TAIL */
+
+	#tail {
+		grid-template-rows: max-content max-content max-content;
+		height: fit-content;
+		padding-bottom: 100px;
+	}
+
+	#tail-title {
+		margin-top: 0;
+		margin-right: -32px;
+		height: 30vw;
+	}
+
+	#phone-4 {
+		grid-column: 2 / 4;
+		grid-row: 2 / 4;
+		margin-top: -40px;
+	}
+
+	#download-2 {
+		grid-column: 1 / 5;
+		grid-row: 3 / 4;
+		width: 100%;
+		justify-self: center;
+	}
+
+	/* FOOTER */
+
+	.footer__name-market {
+		grid-column: 1 / 3;
+	}
+
+	.footer__fund {
+		grid-column: 3 / 5;
+	}
+
+	.footer__contacts {
+		grid-column: 1 / 3;
+	}
+
+	.footer__company-data {
+		grid-column: 1 / 5;
+	}
+
+	.footer__socip {
+		grid-column: 1 / 5;
+	}
+
 }
