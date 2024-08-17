@@ -1,5 +1,5 @@
 from sqlmodel import Session, select
-from app.adventure.models import Adventure, AdventureState
+from app.adventure.models import Adventure, AdventurePublic, AdventureState
 from app.adventure.schemas import AdventureInfo
 
 
@@ -22,9 +22,22 @@ def update_state_content_adventure(
     result = results.first()
     if result is None:
         raise Exception()
-    result.state = state
-    result.content = content
+    if state:
+        result.state = state
+    if content:
+        result.content = content.model_dump_json()
+    else:
+        result.content = None
     session.add(result)
     session.commit()
     session.refresh(result)
     return result
+
+
+def convert_adventure_to_public(adventure: Adventure) -> AdventurePublic:
+    adventure_transcript = adventure.model_dump()
+    if not (adventure_transcript["content"] is None):
+        adventure_transcript["content"] = AdventureInfo.model_validate_json(
+            adventure_transcript["content"]
+        )
+    return AdventurePublic.model_validate(adventure_transcript)

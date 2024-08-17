@@ -9,8 +9,14 @@ class AdventureState(Enum):
     ready = 1
 
 
+class AdventurePublic(SQLModel):
+    id: int | None
+    state: AdventureState
+    content: AdventureInfo | None
+
+
 class Adventure(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     user_id: int | None = Field(foreign_key="user.id")
     state: AdventureState = Field(default=AdventureState.not_ready)
-    content: AdventureInfo | None = Field(default=None)
+    content: str | None = Field(default=None)
