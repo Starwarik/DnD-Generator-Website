@@ -184,8 +184,8 @@ main {
 
 .download h2 {
 	font-family: 'Raleway', sans-serif;
-	font-size: 40px; /*40px*/
-	letter-spacing: 3px;
+	font-size: calc(20px + 20 * (100vw / 1440)); 
+	letter-spacing: 2px;
 	font-weight: bold;
 	padding-left: 40px;
 	padding-top: 40px;
@@ -194,7 +194,7 @@ main {
 
 .download-description > p {
 	font-family: 'Raleway', sans-serif;
-	font-size: 20px; /*20px*/
+	font-size: calc(16px + 4 * (100vw / 1440));
 	font-weight: 600;
 	letter-spacing: 1px;
 	padding-top: 20px;
@@ -221,7 +221,7 @@ main {
 .download-anchor p {
 	color: var(--back);
 	font-family: 'Raleway', sans-serif;
-	font-size: 24px;
+	font-size: calc(16px + 8 * (100vw / 1440));
 	font-weight: 500;
 	letter-spacing: 2px;
 	text-align: center;
@@ -238,7 +238,7 @@ main {
 
 .overflow-wrapper h2 {
 	font-family: "Wremena Bold", sans-serif;
-  font-size: 50px;
+  font-size: calc(28px + 36 * (100vw / 1440));
   letter-spacing: 0.1em;
   line-height: 3.2rem;
 	margin-bottom: 80px;
@@ -249,9 +249,9 @@ main {
 	display: block;
 	font-family: "Raleway", sans-serif;
   font-weight: 600;
-  font-size: 30px;
+  font-size: calc(15px + 21 * (100vw / 1440));
   letter-spacing: 2px;
-  line-height: 45px;
+  line-height: 2em;
 }
 
 /* sticky телефон */
@@ -306,7 +306,7 @@ main {
 .description-item-mobile dd {
 	font-family: 'Raleway', sans-serif;
 	font-weight: 400;
-	font-size: 20px;
+	font-size: calc(15px + 5 * (100vw / 1440));
 	letter-spacing: 2px;
 	opacity: 0;
 	padding-left: 10%;
