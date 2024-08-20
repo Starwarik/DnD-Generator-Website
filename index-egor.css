@@ -75,9 +75,9 @@
 #what-is h2 {
     grid-column: 1 / 11;
     font-family: "Wremena Bold", sans-serif;
-    font-size: 50px;
+    font-size: calc(28px + 36 * (100vw / 1440));
     letter-spacing: 0.1em;
-    line-height: 3.2rem;
+    line-height: 1em;
     align-self: end;
 }
 
@@ -92,7 +92,7 @@
     font-weight: 500;
     font-style: normal;
 
-    font-size: 1rem;
+    font-size: calc(15px + 5 * (100vw / 1440));
     letter-spacing: 0.06em;
     line-height: 30px;
 
@@ -125,7 +125,7 @@
     align-self: end;
     grid-column: 1 / 5;
     font-family: "Wremena Bold", sans-serif;
-    font-size: 3.2rem;
+    font-size: calc(28px + 36 * (100vw / 1440));
     letter-spacing: 0.1em;
     line-height: 3.2rem;
 }
@@ -137,7 +137,7 @@
     font-weight: 600;
     font-style: normal;
 
-    font-size: 1rem;
+    font-size: calc(14px + 6 * (100vw / 1440));
     letter-spacing: 0.06em;
     line-height: 1rem;
 
@@ -336,7 +336,7 @@ form-submit:hover {
     font-weight: 500;
     font-style: normal;
 
-    font-size: 1rem;
+    font-size: calc(15px + 5 * (100vw / 1440));
     letter-spacing: 0.06em;
 
     background-color: var(--substrate);
