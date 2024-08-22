@@ -38,4 +38,4 @@ class YandexGPTText(TextGeneration):
         return self.parser.invoke(response)
 
 
-text_generation_model = YandexGPTText()
+text_generation_model = GigaChatText()

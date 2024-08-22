@@ -14,9 +14,10 @@ class Item(BaseModel):
 
 class Quest(BaseModel):
     name: str
-    background: str
     description: str
-    reward: str
+    goal: str
+    name_character: str
+    name_items: list[str]
 
 
 class AdventureInfo(BaseModel):

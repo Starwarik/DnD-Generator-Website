@@ -28,7 +28,6 @@ def generate_adventure(
         location_name,
         setting,
         num_players,
-        current_user.id,
         adventure.id,
         session,
     )
