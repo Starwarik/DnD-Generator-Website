@@ -18,9 +18,8 @@
 
 	.account-navbar {
 		position: absolute;
-		grid-template-columns: repeat(4, 1fr);
 		justify-content: start;
-		gap: 0px 60px;
+		gap: 0px 40px;
 		padding-left: 32px;
 		padding-right: 32px;
 		margin: 0;
@@ -33,6 +32,7 @@
 	.account-navbar__image {
 		height: 52%;
 		width: 20vw;
+		margin: 0;
 	}
 
 	.partitions-image {
@@ -49,7 +49,7 @@
 	}
 
 	.partitions-image__wrapper {
-		justify-self: end;
+		justify-content: end;
 		margin-left: auto;
 	}
 
@@ -72,7 +72,7 @@
 	}
 
 	.head-coloriser {
-		margin: 0;
+		margin: 0 0 50px 0;
 	}
 	
 	.title, .download-wrapper, .phone-wrapper {
@@ -118,13 +118,17 @@
 		display: flex;
 		justify-content: center;
 		z-index: 1;
-		height:80%;
+		height:50%;
 		grid-row: 3 / 5;
 		background-color: var(--back);
 	}
 
 	.download-description {
 		height: max-content;
+	}
+
+	.download-anchor {
+		height: 50px;
 	}
 
 	#horn {
@@ -226,7 +230,6 @@
 	#tail {
 		grid-template-rows: max-content 53% auto;
 		height: fit-content;
-		padding-bottom: 100px;
 	}
 
 	#tail-title {
@@ -235,9 +238,12 @@
 		height: 30vw;
 	}
 
-	#phone-4 {
+	.tail__flex-wrapper {
 		grid-column: 2 / 4;
 		grid-row: 2 / 4;
+	}
+
+	#phone-4 {
 		margin-top: -40px;
 	}
 
@@ -251,7 +257,10 @@
 	/* FOOTER */
 
 	.footer {
-		padding-top: 10%;
+		position: relative;
+		left: 0;
+		z-index: 1;
+		padding-top: 14%;
 	}
 
 	.footer__name-market {

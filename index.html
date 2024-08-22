@@ -12,12 +12,15 @@
 		<link rel="stylesheet" href="media.css">
 		<link rel="stylesheet" href="media-phone.css">
 		<link rel="stylesheet" href="media-iphone.css">
+		<link rel="stylesheet" href="media-smallpc.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
 		<header class="grid" id="ui">
 			<div class="account-navbar no-seen" id="account-navbar-noname">
-				<img class="account-navbar__image" src="images/company_name_white.svg" />
+				<a class="account-navbar__image-anchor" href="#head">
+					<img class="account-navbar__image" src="images/company_name_white.svg" />
+				</a>
 				<div class="account-wrapper">
 					<img class="account-navbar__icon" src="images/user_icon_white.svg" />
 					<p class="account-navbar__text">
@@ -90,95 +93,105 @@
 				</div>
 			</nav>
 		</header>
-		<dialog class="dialog" id="dialog-register">
-			<div class="dialog-viewport">
-				<form class="dialog-form" id="dialog-form-register">
-					<fieldset>
-						<legend class="dialog__header">Регистрация</legend>
-						<div>
-							<label class="form-label">Email</label>
-							<input class="form-input" type="email" name="email" placeholder="Email" required>
+		<div class="dialog-wrapper">
+			<dialog class="dialog" id="dialog-register">
+				<div class="dialog-viewport">
+					<form class="dialog-form" id="dialog-form-register">
+						<fieldset>
+							<legend class="dialog__header">Регистрация</legend>
+							<div>
+								<label class="form-label">Email</label>
+								<input class="form-input" type="email" name="email" placeholder="Email" required>
+							</div>
+							<div class="dialog-form__field">
+								<label class="form-label">Логин</label>
+								<input class="form-input" type="text" name="login" placeholder="Логин" required>
+							</div>
+							<div class="dialog-form__field">
+								<label class="form-label">Пароль</label>
+								<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
+							</div>
+							<div class="dialog-form__field">
+								<label class="form-label">Подтвердить пароль</label>
+								<input class="form-input" type="password" name="pass_repeat" placeholder="Пароль" required>
+							</div>
+						</fieldset>
+						<div class="dialog-form__checkbox">
+							<input type="checkbox" id="horns" name="horns" required />
+							<label>Вы принимаете условия пользовательского соглашения</label>
 						</div>
-						<div class="dialog-form__field">
-							<label class="form-label">Логин</label>
-							<input class="form-input" type="text" name="login" placeholder="Логин" required>
-						</div>
-						<div class="dialog-form__field">
-							<label class="form-label">Пароль</label>
-							<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
-						</div>
-						<div class="dialog-form__field">
-							<label class="form-label">Подтвердить пароль</label>
-							<input class="form-input" type="password" name="pass_repeat" placeholder="Пароль" required>
-						</div>
-					</fieldset>
-					<div class="dialog-form__checkbox">
-						<input type="checkbox" id="horns" name="horns" required />
-						<label>Вы принимаете условия пользовательского соглашения</label>
-					</div>
-					<button class="form-submit dialog-form__submit" type="submit">Зарегистрироваться</button>
-					<p class="dialog-form__info">Уже зарегестрированы? <span class="dialog-form__info_higlited" onclick="show_login()">Вход</span></p>
-				</form>
-			</div>
-		</dialog>
-		<dialog class="dialog" id="dialog-login">
-			<div class="dialog-viewport">
-				<h2 class="dialog__header">Вход</h2>
-				<form class="dialog-form" id="dialog-form-login">
-					<fieldset>
-						<div>
-							<label class="form-label">Login / Email</label>
-							<input class="form-input" type="text" name="login" placeholder="Login / Email" required>
-						</div>
-						<div class="dialog-form__field">
-							<label class="form-label">Пароль</label>
-							<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
-						</div>
-					</fieldset>
-					<p class="dialog-login-form__reset-password" onclick="show_reset_password()">Забыли пароль?</p>
-					<button class="form-submit dialog-form__submit" type="submit">Войти</button>
-					<p class="dialog-form__info">Нет аккаунты? <span class="dialog-form__info_higlited" onclick="show_register()">Регистрация</span></p>
-				</form>
-			</div>
-		</dialog>
-		<dialog class="dialog" id="dialog-reset-password">
-			<div class="dialog-viewport">
-				<h2 class="dialog__header">Смена пароля</h2>
-				<form class="dialog-form" id="dialog-form-reset-password">
-					<fieldset>
-						<div>
-							<label class="form-label">Email</label>
-							<input class="form-input" type="email" name="email" placeholder="Email" required>
-						</div>
-					</fieldset>
-					<button class="form-submit dialog-form__submit" type="submit">Получить письмо</button>
-				</form>
-			</div>
-		</dialog>
-		<dialog class="dialog" id="dialog-reset-password-second">
-			<div class="dialog-viewport">
-				<h2 class="dialog__header">Смена пароля</h2>
-				<form class="dialog-form" id="dialog-form-reset-password-second">
-					<fieldset>
-						<div>
-							<label class="form-label">Пароль</label>
-							<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
-						</div>
-						<div class="dialog-form__field">
-							<label class="form-label">Подтвердить пароль</label>
-							<input class="form-input" type="password" name="pass_repeat" placeholder="Пароль" required>
-						</div>
-					</fieldset>
-					<button class="form-submit dialog-form__submit" type="submit">Сменить</button>
-				</form>
-			</div>	
-		</dialog>
-		<dialog class="dialog" id="dialog-reset-password-letter">
-			<div class="dialog-viewport">
-				<h1 class="dialog__header">Мы отправили<br/>Вам письмо</h1>
-				<h2 class="dialog__header">Проверьте почту для смены пароля</h2>
-			</div>	
-		</dialog>
+						<button class="form-submit dialog-form__submit" type="submit">Зарегистрироваться</button>
+						<p class="dialog-form__info">Уже зарегестрированы? <span class="dialog-form__info_higlited" onclick="show_login()">Вход</span></p>
+					</form>
+				</div>
+			</dialog>
+		</div>
+		<div class="dialog-wrapper">
+			<dialog class="dialog" id="dialog-login">
+				<div class="dialog-viewport">
+					<h2 class="dialog__header">Вход</h2>
+					<form class="dialog-form" id="dialog-form-login">
+						<fieldset>
+							<div>
+								<label class="form-label">Login / Email</label>
+								<input class="form-input" type="text" name="login" placeholder="Login / Email" required>
+							</div>
+							<div class="dialog-form__field">
+								<label class="form-label">Пароль</label>
+								<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
+							</div>
+						</fieldset>
+						<p class="dialog-login-form__reset-password" onclick="show_reset_password()">Забыли пароль?</p>
+						<button class="form-submit dialog-form__submit" type="submit">Войти</button>
+						<p class="dialog-form__info">Нет аккаунты? <span class="dialog-form__info_higlited" onclick="show_register()">Регистрация</span></p>
+					</form>
+				</div>
+			</dialog>
+		</div>
+		<div class="dialog-wrapper">
+			<dialog class="dialog" id="dialog-reset-password">
+				<div class="dialog-viewport">
+					<h2 class="dialog__header">Смена пароля</h2>
+					<form class="dialog-form" id="dialog-form-reset-password">
+						<fieldset>
+							<div>
+								<label class="form-label">Email</label>
+								<input class="form-input" type="email" name="email" placeholder="Email" required>
+							</div>
+						</fieldset>
+						<button class="form-submit dialog-form__submit" type="submit">Получить письмо</button>
+					</form>
+				</div>
+			</dialog>
+		</div>
+		<div class="dialog-wrapper">
+			<dialog class="dialog" id="dialog-reset-password-second">
+				<div class="dialog-viewport">
+					<h2 class="dialog__header">Смена пароля</h2>
+					<form class="dialog-form" id="dialog-form-reset-password-second">
+						<fieldset>
+							<div>
+								<label class="form-label">Пароль</label>
+								<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
+							</div>
+							<div class="dialog-form__field">
+								<label class="form-label">Подтвердить пароль</label>
+								<input class="form-input" type="password" name="pass_repeat" placeholder="Пароль" required>
+							</div>
+						</fieldset>
+						<button class="form-submit dialog-form__submit" type="submit">Сменить</button>
+					</form>
+				</div>	
+			</dialog>
+		</div>
+		<div class="dialog-wrapper">
+			<dialog class="dialog" id="dialog-reset-password-letter">
+				<div class="dialog-viewport">
+					<h1 class="dialog__header">Мы отправили<br/>Вам письмо</h1>
+					<h2 class="dialog__header">Проверьте почту для смены пароля</h2>
+				</div>	
+			</dialog>
+		</div>
 		<main>
 			<div class="head-coloriser">
 				<header class="grid" id="head">
@@ -186,9 +199,11 @@
 						<img src="./images/title.svg" />
 					</section>
 					<div class="phone-wrapper">
-						<img class="phone" id="phone-1" src="./images/phone1.svg">
-						<img class="phone" id="phone-2" src="./images/phone2.svg">
-						<img id="phones-mobile" src="./images/phones-mobile.svg" />
+						<div class="phone-wrapper__flex">
+							<img class="phone" id="phone-1" src="./images/phone1.svg">
+							<img class="phone" id="phone-2" src="./images/phone2.svg">
+							<img id="phones-mobile" src="./images/phones-mobile.svg" />
+						</div>
 					</div>
 					<div class="download-wrapper">
 						<article class="download" id="download-1">
@@ -330,14 +345,18 @@
 					<section class="title" id="tail-title">
 						<img src="./images/title.svg" />
 					</section>
-					<img id="phone-4" src="./images/phone4.svg">
-					<article class="download" id="download-2">
-						<h2>Скачайте генератор</h2>
-						<div id="download__buttons-wrapper">
-							<a id="download__appstore"><img src="./images/appstore.svg" /></a>
-							<a id="download__googleplay"><img src="./images/googleplay.svg" /></a>
-						</div>
-					</article>
+					<div class="tail__flex-wrapper">
+						<img id="phone-4" src="./images/phone4.svg">
+					</div>
+					<div class="download-wrapper">
+						<article class="download" id="download-2">
+							<h2>Скачайте генератор</h2>
+							<div id="download__buttons-wrapper">
+								<a id="download__appstore"><img src="./images/appstore.svg" /></a>
+								<a id="download__googleplay"><img src="./images/googleplay.svg" /></a>
+							</div>
+						</article>
+					</div>
 				</section>
 			</div>
 		</main>

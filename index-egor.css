@@ -11,6 +11,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    column-gap: 20px;
 
     background-color: black;
     pointer-events: all;
@@ -37,6 +38,10 @@
     display: inline-block;
 }
 
+.account-navbar__image {
+    margin-left: 13px;
+}
+
 .account-navbar__text {
     display: inline-block;
     
@@ -44,7 +49,7 @@
     font-optical-sizing: auto;
     font-weight: 500;
     font-style: normal;
-    font-size: 1rem;
+    font-size: calc(14px + 2 * (100vw / 1440));
     letter-spacing: 0.07em;
     line-height: 1rem;
 
@@ -69,6 +74,7 @@
 
 #what-is {
     height: 100vh;
+    max-height: 1024px;
     grid-template-rows: 40% auto;
 }
 
@@ -115,7 +121,7 @@
     position: relative;
     grid-template-rows: 20% auto;
     left: 0px;
-    height: 100vh;
+    height: fit-content;
     background-color: var(--back);
     z-index: 1;
 }
@@ -127,7 +133,7 @@
     font-family: "Wremena Bold", sans-serif;
     font-size: calc(28px + 36 * (100vw / 1440));
     letter-spacing: 0.1em;
-    line-height: 3.2rem;
+    line-height: 1em;
 }
 
 .buy-tokens__title_post-title {
@@ -139,7 +145,7 @@
 
     font-size: calc(14px + 6 * (100vw / 1440));
     letter-spacing: 0.06em;
-    line-height: 1rem;
+    line-height: 1em;
 
     color: var(--not-active);
     padding-left: 10px;
@@ -395,12 +401,13 @@ form-submit:hover {
 }
 
 .footer__name {
-    width: 328px;
+    width: 70%;
     margin-bottom: 32px;
 }
 
 .footer__market {
     display: flex;
+    width: 100%;
     gap: 20px;
     flex-direction: row;
     flex-wrap: wrap;
@@ -408,6 +415,8 @@ form-submit:hover {
 
 .footer__appstore, .footer__googleplay {
     display: inline;
+    width: 45%;
+    min-width: 184px;
 }
 
 .footer__fund {
@@ -428,9 +437,9 @@ form-submit:hover {
     font-style: normal;
 
     font-weight: 600;
-    font-size: 1rem;
+    font-size: calc(14px + 5 * (100vw / 1440));
     line-height: 1.75rem;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
 
     max-width: 365px;
 }
@@ -451,7 +460,7 @@ form-submit:hover {
     font-style: normal;
 
     font-weight: 600;
-    font-size: 1rem;
+    font-size: calc(14px + 5 * (100vw / 1440));
     line-height: 1.75rem;
     letter-spacing: 0.06em;
 
@@ -478,15 +487,18 @@ form-submit:hover {
 
 /* Dialog register */
 
+.dialog-wrapper {
+    display: flex;
+    position: fixed;
+    flex-direction: row;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+}
+
 .dialog {
     width: 404px;
     padding: 0;
-
-    position: fixed;
-    left: 50%;
-    margin-left: -202px;
-    top: 100px;
-
     z-index: 100;
 }
 

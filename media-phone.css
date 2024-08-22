@@ -20,7 +20,7 @@
 		position: absolute;
 		grid-template-columns: repeat(4, 1fr);
 		justify-content: start;
-		gap: 0px 60px;
+		gap: 0px 20px;
 		padding-left: 32px;
 		padding-right: 32px;
 		margin: 0;
@@ -33,6 +33,7 @@
 	.account-navbar__image {
 		height: 52%;
 		width: 20vw;
+		margin: 0;
 	}
 
 	.partitions-image {
@@ -49,7 +50,7 @@
 	}
 
 	.partitions-image__wrapper {
-		justify-self: end;
+		justify-content: end;
 		margin-left: auto;
 	}
 
@@ -72,7 +73,7 @@
 	}
 
 	.head-coloriser {
-		margin: 0;
+		margin: 0 0 50px 0;
 	}
 	
 	.title, .download-wrapper, .phone-wrapper {
@@ -118,13 +119,17 @@
 		display: flex;
 		justify-content: center;
 		z-index: 1;
-		height:80%;
+		height: 50%;
 		grid-row: 3 / 5;
 		background-color: var(--back);
 	}
 
 	.download-description {
 		height: max-content;
+	}
+
+	.download-anchor {
+		height: 50px;
 	}
 
 	#horn {
@@ -199,6 +204,10 @@
 		grid-column: 1 / 5;
 	}
 
+	.overflow-wrapper h2 {
+		margin: 0;
+	}
+
 	#our-advantage aside {
 		display: flex;
 		justify-content: center;
@@ -237,9 +246,8 @@
 	/* TAIL */
 
 	#tail {
-		grid-template-rows: auto 50% auto;
+		grid-template-rows: auto auto auto;
 		height: fit-content;
-		padding-bottom: 100px;
 	}
 
 	#tail-title {
@@ -248,9 +256,13 @@
 		height: 30vw;
 	}
 
-	#phone-4 {
+	.tail__flex-wrapper {
 		grid-column: 2 / 4;
 		grid-row: 2 / 4;
+		margin-top: -100px;
+	}
+
+	#phone-4 {
 		margin-top: -40px;
 	}
 
@@ -259,12 +271,21 @@
 		grid-row: 3 / 4;
 		width: 100%;
 		justify-self: center;
+		margin-top: -100px;
+	}
+
+	#download__appstore {
+		padding-left: 15px;
+	}
+
+	#download__googleplay {
+		padding-right: 15px;
 	}
 
 	/* FOOTER */
 
 	.footer {
-		padding-top: 20%;
+		margin-top: -170px;
 	}
 
 	.footer__name-market {
