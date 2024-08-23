@@ -1,4 +1,4 @@
-@media (min-width: 1025px) and (max-width: 1340px) {
+@media (min-width: 1024px) and (max-width: 1340px) {
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(12, 1fr);

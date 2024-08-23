@@ -49,7 +49,7 @@
     font-optical-sizing: auto;
     font-weight: 500;
     font-style: normal;
-    font-size: calc(14px + 2 * (100vw / 1440));
+    font-size: calc(11px + 5 * (100vw / 1440));
     letter-spacing: 0.07em;
     line-height: 1rem;
 
@@ -492,12 +492,13 @@ form-submit:hover {
     position: fixed;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
     width: 100vw;
     height: 100vh;
 }
 
 .dialog {
-    width: 404px;
+    width: 20%;
     padding: 0;
     z-index: 100;
 }

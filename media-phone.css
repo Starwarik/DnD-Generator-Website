@@ -1,4 +1,4 @@
-@media (min-width: 430px) and (max-width: 600px) {
+@media (min-width: 340px) and (max-width: 600px) {
 
 	.grid {
 		display: grid;
@@ -36,6 +36,10 @@
 		margin: 0;
 	}
 
+	.account-navbar__text {
+		min-width: 130px;
+	}
+
 	.partitions-image {
 		width: 20vw;
 	}
@@ -67,13 +71,14 @@
 	/* HEAD */
 
 	#head {
-		grid-template-rows: auto max-content max-content auto;
+		grid-template-rows: 20% max-content max-content 10%;
 		height: fit-content;
 		padding-top: 150px;
 	}
 
 	.head-coloriser {
 		margin: 0 0 50px 0;
+		border-radius: 0px 0px 40px 40px;
 	}
 	
 	.title, .download-wrapper, .phone-wrapper {
@@ -83,21 +88,21 @@
 	.title {
 		justify-content: flex-start;
 		grid-row: 1 / 2;
-		height: 30vw;
+		height: 100%;
 		margin-left: 0;
 		margin-right: -32px;
 		border-radius: 45px 0 0 45px;
 	}
 
 	.title > img {
-		width: 50vw;
-		padding-left: 5%;
+		width: 70vw;
+		padding-left: 10%;
 		padding-right: 2%;
 	}
 
 	.phone-wrapper {
 		position: relative;
-		top: -7vh;
+		top: -6vh;
 		display: flex;
 		grid-row: 2 / 4;
 		z-index: 1;
@@ -147,6 +152,7 @@
 	#what-is h2 {
 		grid-column: 1 / 5;
 		grid-template-rows: max-content max-content max-content;
+		font-size: calc(28px + (36 + 36 * 0.7) * ((100vw - 320px) / 1440));
 	}
 
 	.phone__what-is__wrapper {
@@ -252,14 +258,15 @@
 
 	#tail-title {
 		margin-top: 0;
-		margin-right: -32px;
-		height: 30vw;
+		height: 100%;
 	}
 
 	.tail__flex-wrapper {
 		grid-column: 2 / 4;
 		grid-row: 2 / 4;
-		margin-top: -100px;
+		margin-top: -30px;
+		width: 45vw;
+		min-width: 220px;
 	}
 
 	#phone-4 {
@@ -274,12 +281,21 @@
 		margin-top: -100px;
 	}
 
+	#download__buttons-wrapper {
+		flex-wrap: wrap;
+		row-gap: 15px;
+		padding-left: 4%;
+		padding-right: 4%;
+	}
+
 	#download__appstore {
-		padding-left: 15px;
+		width: 60%;
+		max-width: 170px;
 	}
 
 	#download__googleplay {
-		padding-right: 15px;
+		width: 60%;
+		max-width: 170px;
 	}
 
 	/* FOOTER */

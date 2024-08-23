@@ -69,6 +69,10 @@ main {
 	height: 33px;
 }
 
+.nav-description {
+	display: none;
+}
+
 /* ЗАГОЛОВОК САЙТА (И ХВОСТ) */
 
 #head {
