@@ -93,28 +93,28 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 
 		advantagesAnimTriggerPC = ScrollTrigger.create({
 			trigger: "#our-advantage",
-			start: "top 30%",
+			start: "top 20%",
 			onEnter: () => {advantagesAnimPC.play();},
 			once: true
 		});
 
 		whatIsAnimTriggerPC = ScrollTrigger.create({
 			trigger: "#what-is",
-			start: "top 30%",
+			start: "top top",
 			onEnter: () => {whatIsAnimPC.play();},
 			once: true
 		});
 
 		buyTokensAnimTriggerPC = ScrollTrigger.create({
 			trigger: "#buy-tokens",
-			start: "top 30%",
+			start: "top top",
 			onEnter: () => {buyTokensAnimPC.play();},
 			once: true
 		});
 
 		hornAnimTriggerPC = ScrollTrigger.create({
 			trigger: "#horn",
-			start: "top 70%",
+			start: "top 30%",
 			onEnter: () => {hornAnimPC.play();},
 			once: true
 		});
@@ -145,17 +145,17 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		headHidePhonesAnimPC.from("#phone-1", { xPercent: -220, ease: "expo.out", duration: 0.5 });
 		headHidePhonesAnimPC.from("#phone-2", { xPercent: -220, ease: "expo.out", duration: 0.5 }, "<");
 
-		whatIsAnimPC = gsap.timeline();
-		whatIsAnimPC.from("#what-is h2", { yPercent: -100, opacity: 0, ease: "expo.out", duration: 2});
-		whatIsAnimPC.from("#what-is p", { yPercent: 30, opacity: 0, ease: "expo.out", duration: 1.5});
+		whatIsAnimPC = gsap.timeline().pause();
+		whatIsAnimPC.from("#what-is h2", { yPercent: -100, opacity: 0, ease: "expo.out", duration: 1.5});
+		whatIsAnimPC.from("#what-is p", { yPercent: 30, opacity: 0, ease: "expo.out", duration: 1});
 
-		advantagesAnimPC = gsap.timeline();
+		advantagesAnimPC = gsap.timeline().pause();
 		advantagesAnimPC.from(".overflow-wrapper h2", { yPercent: -100, opacity: 0, duration: 1 });
 		advantagesAnimPC.to("#advantages", { rowGap: 120, duration: 0.7 }, "<");
 		advantagesAnimPC.to(".description-item:nth-child(even)", { xPercent: 27, duration: 0.7 }, "<");
 		advantagesAnimPC.to(".description-item:nth-child(odd)", { xPercent: -27, duration: 0.7 }, "<");
 
-		buyTokensAnimPC = gsap.timeline();
+		buyTokensAnimPC = gsap.timeline().pause();
 		buyTokensAnimPC.from(".buy-tokens__title", { yPercent: -30, opacity: 0, ease: "expo.out", duration: 0.7});
 		buyTokensAnimPC.from(".buy-tokens-form", { yPercent: 100, opacity: 0, ease: "expo.out", duration: 1});
 		buyTokensAnimPC.from(".tokens-description", { yPercent: 100, opacity: 0, ease: "expo.out", duration: 1}, "<");
@@ -164,9 +164,9 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 			yPercent: 150,
 			duration: 0.7,
 			ease: "power4.out"
-		});
+		}).pause();
 
-		tailOnScrollAnimPC = gsap.timeline();
+		tailOnScrollAnimPC = gsap.timeline().pause();
 		tailOnScrollAnimPC.from("#phone-4", { yPercent: 110, ease: "expo.out", duration: 1 });
 		tailOnScrollAnimPC.from("#tail-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
 		tailOnScrollAnimPC.from("#download-2", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
@@ -188,8 +188,22 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 
 		headOnStartAnimMobile = gsap.timeline();
 		headOnStartAnimMobile.from("#phones-mobile", { yPercent: 100, ease: "expo.out", duration: 1 });
-		headOnStartAnimMobile.fromTo("#head-title", { xPercent: 100, ease: "expo.out", duration: 1.07 }, { xPercent: 0, ease: "expo.out", duration: 1.07 }, "<");
+		headOnStartAnimMobile.from("#head-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
 		headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
+
+		navAnimMobile = gsap.timeline().pause();
+		navAnimMobile.set(".nav-description", { minWidth: "40vw" });
+		navAnimMobile.from("#nav", { width: 0, ease: "expo.inout", duration: 0.4 });
+		navAnimMobile.from(".nav-wrapper", { backgroundColor: "#00000011", pointerEvents: "none", ease: "power2.inout", duration: 0.4 }, "<");
+		navAnimMobile.set(".nav-description", { minWidth: "fit-content" });
+
+		document.querySelector(".nav-wrapper").addEventListener("mousedown", () => {
+			navAnimMobile.reverse();
+		});
+
+		document.querySelector(".partitions-image__wrapper").addEventListener("mousedown", () => {
+			navAnimMobile.play();
+		});
 
 	});
 
@@ -209,6 +223,20 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		headOnStartAnimMobile.fromTo("#head-title", { xPercent: 100, ease: "expo.out", duration: 1.07 }, { xPercent: 0, ease: "expo.out", duration: 1.07 }, "<");
 		headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
 
+		navAnimMobile = gsap.timeline().pause();
+		navAnimMobile.set(".nav-description", { minWidth: "60vw" });
+		navAnimMobile.from("#nav", { opacity: 0, ease: "expo.inout", duration: 0.4 });
+		navAnimMobile.from(".nav-wrapper", { backgroundColor: "#00000011", pointerEvents: "none" }, "<");
+		navAnimMobile.set(".nav-description", { minWidth: "fit-content" });
+
+		document.querySelector(".nav-wrapper").addEventListener("mousedown", () => {
+			navAnimMobile.reverse();
+		});
+
+		document.querySelector(".partitions-image__wrapper").addEventListener("mousedown", () => {
+			navAnimMobile.play();
+		});
+
 	});
 } else {
 	window.addEventListener('load', () => {
@@ -216,6 +244,20 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		headOnStartAnimMobile = gsap.timeline();
 		headOnStartAnimMobile.fromTo("#head-title", { xPercent: 100, ease: "expo.out", duration: 1.07 }, { xPercent: 0, ease: "expo.out", duration: 1.07 }, "<");
 		headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
+
+		navAnimMobile = gsap.timeline().pause();
+		navAnimMobile.set(".nav-description", { minWidth: "40vw" });
+		navAnimMobile.from("#nav", { width: 0, ease: "expo.inout", duration: 0.4 });
+		navAnimMobile.from(".nav-wrapper", { backgroundColor: "#00000011", pointerEvents: "none", ease: "power2.inout", duration: 0.4 }, "<");
+		navAnimMobile.set(".nav-description", { minWidth: "fit-content" });
+
+		document.querySelector(".nav-wrapper").addEventListener("mousedown", () => {
+			navAnimMobile.reverse();
+		});
+
+		document.querySelector(".partitions-image__wrapper").addEventListener("mousedown", () => {
+			navAnimMobile.play();
+		});
 
 	});
 } 

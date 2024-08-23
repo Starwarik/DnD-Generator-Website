@@ -6,6 +6,7 @@
 
 :root {
 	--main: #000000;
+    --main-transparent: #00000040;
 	--back: #F4F4F4;
 	--accent: #DD1144;
 	--substrate: #FFFFFF;

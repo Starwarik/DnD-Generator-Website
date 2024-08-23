@@ -26,11 +26,14 @@ main {
 
 /* навигационная панель */
 
+.nav-wrapper {
+	grid-column: 12 / 13;
+}
+
 #nav {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
-	grid-column: 12 / 13;
 }
 
 .navmenu {
@@ -71,6 +74,11 @@ main {
 
 .nav-description {
 	display: none;
+}
+
+.nav-description__wrapper {
+	text-decoration: none;
+	color: var(--main)
 }
 
 /* ЗАГОЛОВОК САЙТА (И ХВОСТ) */
