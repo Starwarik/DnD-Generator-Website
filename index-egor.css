@@ -488,19 +488,25 @@ form-submit:hover {
 /* Dialog register */
 
 .dialog-wrapper {
-    display: flex;
     position: fixed;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
 }
 
 .dialog {
-    width: 20%;
+    width: 404px;
     padding: 0;
+
+    position: fixed;
+    left: 50%;
+    margin-left: -202px;
+    top: 100px;
+
     z-index: 100;
+}
+
+.dialog__exit-button {
+    width: fit-content;
+    height: fit-content;
+    margin-left: 95%;
 }
 
 .dialog-viewport {

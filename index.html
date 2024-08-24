@@ -104,7 +104,6 @@
 					<div class="navmenu" id="nav-footer">
 						<div class="navline bracket-line" id="line-6"></div>
 						<a class="navpoint" id="point-6">
-							<object data="./images/navstar.svg"></object>
 						</a>
 					</div>
 				</nav>
@@ -113,6 +112,7 @@
 		<div class="dialog-wrapper">
 			<dialog class="dialog" id="dialog-register">
 				<div class="dialog-viewport">
+					<img class="dialog__exit-button" src="./images/exit_button.svg" onclick="close_all_dialogues()"></img>
 					<form class="dialog-form" id="dialog-form-register">
 						<fieldset>
 							<legend class="dialog__header">Регистрация</legend>
@@ -146,6 +146,7 @@
 		<div class="dialog-wrapper">
 			<dialog class="dialog" id="dialog-login">
 				<div class="dialog-viewport">
+					<img class="dialog__exit-button" src="./images/exit_button.svg" onclick="close_all_dialogues()"></img>
 					<h2 class="dialog__header">Вход</h2>
 					<form class="dialog-form" id="dialog-form-login">
 						<fieldset>
@@ -160,7 +161,7 @@
 						</fieldset>
 						<p class="dialog-login-form__reset-password" onclick="show_reset_password()">Забыли пароль?</p>
 						<button class="form-submit dialog-form__submit" type="submit">Войти</button>
-						<p class="dialog-form__info">Нет аккаунты? <span class="dialog-form__info_higlited" onclick="show_register()">Регистрация</span></p>
+						<p class="dialog-form__info">Нет аккаунта? <span class="dialog-form__info_higlited" onclick="show_register()">Регистрация</span></p>
 					</form>
 				</div>
 			</dialog>
@@ -168,6 +169,7 @@
 		<div class="dialog-wrapper">
 			<dialog class="dialog" id="dialog-reset-password">
 				<div class="dialog-viewport">
+					<img class="dialog__exit-button" src="./images/exit_button.svg" onclick="close_all_dialogues()"></img>
 					<h2 class="dialog__header">Смена пароля</h2>
 					<form class="dialog-form" id="dialog-form-reset-password">
 						<fieldset>
@@ -184,6 +186,7 @@
 		<div class="dialog-wrapper">
 			<dialog class="dialog" id="dialog-reset-password-second">
 				<div class="dialog-viewport">
+					<img class="dialog__exit-button" src="./images/exit_button.svg" onclick="close_all_dialogues()"></img>
 					<h2 class="dialog__header">Смена пароля</h2>
 					<form class="dialog-form" id="dialog-form-reset-password-second">
 						<fieldset>

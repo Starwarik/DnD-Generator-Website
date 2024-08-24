@@ -178,24 +178,64 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 } else if (window.matchMedia('(min-width: 601px)').matches) {
 	window.addEventListener('load', () => {
 
-		headHidePhonesTriggerMobile = ScrollTrigger.create({
-			trigger: "#head",
-			start: "80% 10%",
-			end: "80% 10%",
-			onEnter: () => {headHidePhonesAnimMobile.reverse();},
-			onEnterBack: () => {headHidePhonesAnimMobile.restart();}
+		whatIsAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#what-is",
+			start: "top 30%",
+			onEnter: () => {whatIsAnimMobile.play();},
+			once: true
+		});
+
+		advantagesAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#our-advantage",
+			start: "top 30%",
+			onEnter: () => {advantagesAnimMobile.play();},
+			once: true
+		});
+
+		buyTokensAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#buy-tokens",
+			start: "top 30%",
+			onEnter: () => {buyTokensAnimMobile.play();},
+			once: true
+		});
+
+		tailAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#tail",
+			start: "top 30%",
+			onEnter: () => {tailAnimMobile.play();},
+			once: true
 		});
 
 		headOnStartAnimMobile = gsap.timeline();
 		headOnStartAnimMobile.from("#phones-mobile", { yPercent: 100, ease: "expo.out", duration: 1 });
 		headOnStartAnimMobile.from("#head-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
 		headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
+		headOnStartAnimMobile.from(".account-navbar", { yPercent: -200, ease: "expo.out", duration: 1.07 }, "<");
 
 		navAnimMobile = gsap.timeline().pause();
 		navAnimMobile.set(".nav-description", { minWidth: "40vw" });
-		navAnimMobile.from("#nav", { width: 0, ease: "expo.inout", duration: 0.4 });
+		navAnimMobile.to("#nav", { width: "55vw", ease: "expo.inout", duration: 0.5 });
 		navAnimMobile.from(".nav-wrapper", { backgroundColor: "#00000011", pointerEvents: "none", ease: "power2.inout", duration: 0.4 }, "<");
 		navAnimMobile.set(".nav-description", { minWidth: "fit-content" });
+
+		whatIsAnimMobile = gsap.timeline().pause();
+		whatIsAnimMobile.from("#what-is h2", { yPercent: 900, duration: 1, ease: "expo.out" });
+		whatIsAnimMobile.from(".phone__what-is", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
+		whatIsAnimMobile.from("#what-is p", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+
+		advantagesAnimMobile = gsap.timeline().pause();
+		advantagesAnimMobile.from("#advantages-mobile", { xPercent: -70, yPercent: 100, duration: 1, ease: "expo.out" });
+		advantagesAnimMobile.from("#phone-3", { xPercent: 100, yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+
+		buyTokensAnimMobile = gsap.timeline().pause();
+		buyTokensAnimMobile.from(".buy-tokens__title", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+		buyTokensAnimMobile.from(".buy-tokens-form", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" });
+		buyTokensAnimMobile.from(".tokens-description", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
+
+		tailAnimMobile = gsap.timeline().pause();
+		tailAnimMobile.from("#phone-4", { yPercent: 100, ease: "expo.out", duration: 1 });
+		tailAnimMobile.from("#tail-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
+		tailAnimMobile.from("#download-2", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
 
 		document.querySelector(".nav-wrapper").addEventListener("mousedown", () => {
 			navAnimMobile.reverse();
@@ -210,24 +250,63 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 } else if (window.matchMedia('(min-width: 340px)').matches) {
 	window.addEventListener('load', () => {
 
-		headHidePhonesTriggerMobile = ScrollTrigger.create({
-			trigger: "#head",
-			start: "80% 10%",
-			end: "80% 10%",
-			onEnter: () => {headHidePhonesAnimMobile.reverse();},
-			onEnterBack: () => {headHidePhonesAnimMobile.restart();}
+		whatIsAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#what-is",
+			start: "top 30%",
+			onEnter: () => {whatIsAnimMobile.play();},
+			once: true
+		});
+
+		advantagesAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#our-advantage",
+			start: "top 30%",
+			onEnter: () => {advantagesAnimMobile.play();},
+			once: true
+		});
+
+		buyTokensAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#buy-tokens",
+			start: "top 30%",
+			onEnter: () => {buyTokensAnimMobile.play();},
+			once: true
+		});
+
+		tailAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#tail",
+			start: "top 30%",
+			onEnter: () => {tailAnimMobile.play();},
+			once: true
 		});
 
 		headOnStartAnimMobile = gsap.timeline();
 		headOnStartAnimMobile.from("#phones-mobile", { yPercent: 100, ease: "expo.out", duration: 1 });
-		headOnStartAnimMobile.fromTo("#head-title", { xPercent: 100, ease: "expo.out", duration: 1.07 }, { xPercent: 0, ease: "expo.out", duration: 1.07 }, "<");
+		headOnStartAnimMobile.from("#head-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
 		headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
+		headOnStartAnimMobile.from(".account-navbar", { yPercent: -200, ease: "expo.out", duration: 1.07 }, "<");
 
 		navAnimMobile = gsap.timeline().pause();
 		navAnimMobile.set(".nav-description", { minWidth: "60vw" });
-		navAnimMobile.from("#nav", { opacity: 0, ease: "expo.inout", duration: 0.4 });
-		navAnimMobile.from(".nav-wrapper", { backgroundColor: "#00000011", pointerEvents: "none" }, "<");
+		navAnimMobile.to(".nav-wrapper", { opacity: 1, backgroundColor: "#00000011", pointerEvents: "all" }, "<");
 		navAnimMobile.set(".nav-description", { minWidth: "fit-content" });
+
+		whatIsAnimMobile = gsap.timeline().pause();
+		whatIsAnimMobile.from("#what-is h2", { yPercent: 900, duration: 1, ease: "expo.out" });
+		whatIsAnimMobile.from(".phone__what-is", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
+		whatIsAnimMobile.from("#what-is p", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+
+		advantagesAnimMobile = gsap.timeline().pause();
+		advantagesAnimMobile.from("#advantages-mobile", { xPercent: -70, yPercent: 100, duration: 1, ease: "expo.out" });
+		advantagesAnimMobile.from("#phone-3", { xPercent: 20, yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+
+		buyTokensAnimMobile = gsap.timeline().pause();
+		buyTokensAnimMobile.from(".buy-tokens__title", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+		buyTokensAnimMobile.from(".buy-tokens-form", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" });
+		buyTokensAnimMobile.from(".tokens-description", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
+
+		tailAnimMobile = gsap.timeline().pause();
+		tailAnimMobile.from("#phone-4", { yPercent: 100, ease: "expo.out", duration: 1 });
+		tailAnimMobile.from("#tail-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
+		tailAnimMobile.from("#download-2", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
 
 		document.querySelector(".nav-wrapper").addEventListener("mousedown", () => {
 			navAnimMobile.reverse();
@@ -241,15 +320,61 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 } else {
 	window.addEventListener('load', () => {
 
+		whatIsAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#what-is",
+			start: "top 30%",
+			onEnter: () => {whatIsAnimMobile.play();},
+			once: true
+		});
+
+		advantagesAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#our-advantage",
+			start: "top 30%",
+			onEnter: () => {advantagesAnimMobile.play();},
+			once: true
+		});
+
+		buyTokensAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#buy-tokens",
+			start: "top 30%",
+			onEnter: () => {buyTokensAnimMobile.play();},
+			once: true
+		});
+
+		tailAnimTriggerMobile = ScrollTrigger.create({
+			trigger: "#tail",
+			start: "top 30%",
+			onEnter: () => {tailAnimMobile.play();},
+			once: true
+		});
+
 		headOnStartAnimMobile = gsap.timeline();
-		headOnStartAnimMobile.fromTo("#head-title", { xPercent: 100, ease: "expo.out", duration: 1.07 }, { xPercent: 0, ease: "expo.out", duration: 1.07 }, "<");
+		headOnStartAnimMobile.from("#head-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
 		headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
+		headOnStartAnimMobile.from(".account-navbar", { yPercent: -200, ease: "expo.out", duration: 1.07 }, "<");
 
 		navAnimMobile = gsap.timeline().pause();
-		navAnimMobile.set(".nav-description", { minWidth: "40vw" });
-		navAnimMobile.from("#nav", { width: 0, ease: "expo.inout", duration: 0.4 });
-		navAnimMobile.from(".nav-wrapper", { backgroundColor: "#00000011", pointerEvents: "none", ease: "power2.inout", duration: 0.4 }, "<");
+		navAnimMobile.set(".nav-description", { minWidth: "60vw" });
+		navAnimMobile.to(".nav-wrapper", { opacity: 1, backgroundColor: "#00000011", pointerEvents: "all" }, "<");
 		navAnimMobile.set(".nav-description", { minWidth: "fit-content" });
+
+		whatIsAnimMobile = gsap.timeline().pause();
+		whatIsAnimMobile.from("#what-is h2", { yPercent: 900, duration: 1, ease: "expo.out" });
+		whatIsAnimMobile.from(".phone__what-is", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
+		whatIsAnimMobile.from("#what-is p", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+
+		advantagesAnimMobile = gsap.timeline().pause();
+		advantagesAnimMobile.from("#phone-3", { xPercent: 10, yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+		advantagesAnimMobile.from("#advantages-mobile", { xPercent: -70, yPercent: 100, duration: 1, ease: "expo.out" });
+
+		buyTokensAnimMobile = gsap.timeline().pause();
+		buyTokensAnimMobile.from(".buy-tokens__title", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+		buyTokensAnimMobile.from(".buy-tokens-form", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" });
+		buyTokensAnimMobile.from(".tokens-description", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
+
+		tailAnimMobile = gsap.timeline().pause();
+		tailAnimMobile.from("#tail-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
+		tailAnimMobile.from("#download-2", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
 
 		document.querySelector(".nav-wrapper").addEventListener("mousedown", () => {
 			navAnimMobile.reverse();
@@ -258,6 +383,5 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		document.querySelector(".partitions-image__wrapper").addEventListener("mousedown", () => {
 			navAnimMobile.play();
 		});
-
 	});
 } 

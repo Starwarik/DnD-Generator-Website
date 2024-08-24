@@ -11,14 +11,27 @@
 	/* UI */
 
 	#ui.grid {
+		display: block;
 		width: 100vw;
 		height: 100vh;
 		margin: 0;
 	}
 
+	.dialog {
+    width: 320px;
+		min-width: 320px;
+    padding: 0;
+
+    position: fixed;
+    left: 50%;
+    margin-left: -160px;
+    top: 100px;
+
+    z-index: 100;
+	}
+
 	.account-navbar {
 		position: absolute;
-		grid-template-columns: repeat(4, 1fr);
 		justify-content: start;
 		gap: 0px 20px;
 		padding-left: 32px;
@@ -66,8 +79,81 @@
 	}
 
 	#nav {
-		position: absolute;
-		right: 0;
+		align-items: flex-start;
+		width: 100vw;
+		height: fit-content;
+		background-color: var(--substrate);
+		
+	}
+
+	.nav-wrapper {
+		position: fixed;
+		z-index: 99;
+		background-color: var(--main-transparent);
+		width: 100vw;
+		height: 100vh;
+		opacity: 0;
+		pointer-events: none;
+		overflow-y: scroll;
+	}
+
+	.navmenu {
+		margin-left: 10%;
+		margin-right: 4%;
+		display: grid;
+		grid-template-columns: auto auto;
+		grid-template-rows: auto auto;
+		overflow: hidden;
+	}
+
+	.bracket-line {
+		height: 17vh;
+		min-height: 150px;
+	}
+
+	.navline {
+		height: 13vh;
+		min-height: 80px;
+	}
+
+	.navline, .bracket-line {
+		grid-column: 1 / 1;
+		grid-row: 1 / 1;
+		justify-self: center;
+	}
+
+	.nav-description__wrapper {
+		display: block;
+		grid-column: 2 / 2;
+		grid-row: 1 / 3;
+		height: fit-content;
+		width: fit-content;
+		align-self: end;
+		margin-left: 15px;
+		overflow: hidden;
+	}
+
+	.nav-description {
+		display: block;
+		font-family: 'Raleway', sans-serif;
+		font-size: calc(15px + 5 * (100vw / 744));
+		font-weight: 600;
+		letter-spacing: 1px;
+		min-width: fit-content;
+	}
+
+	.navpoint {
+		grid-column: 1 / 1;
+		grid-row: 2 / 2;
+	}
+
+	.navpoint, .navstar {
+		width: 50px;
+		height: 43px;
+	}
+
+	#point-6 {
+		height: 0;
 	}
 
 	/* HEAD */
@@ -204,7 +290,7 @@
 
 	.overflow-wrapper h2 {
 		margin: 0;
-		font-size: calc(28px + (36 + 36 * 0.7) * ((100vw - 320px) / 1440));;
+		font-size: calc(28px + (36 + 36 * 0.7) * ((100vw - 320px) / 1440));
 	}
 
 	#our-advantage aside {
