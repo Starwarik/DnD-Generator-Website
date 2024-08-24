@@ -203,7 +203,8 @@
 		display: flex;
 		justify-content: center;
 		z-index: 1;
-		height: 60%;
+		height: 55%;
+		width: 100%;
 		grid-row: 3 / 5;
 		background-color: var(--back);
 	}
@@ -334,6 +335,7 @@
 	#tail {
 		grid-template-rows: auto auto auto;
 		height: fit-content;
+		width: calc(100% - 64px);
 	}
 
 	#tail-title {
@@ -356,9 +358,10 @@
 	#download-2 {
 		grid-column: 1 / 5;
 		grid-row: 3 / 4;
-		width: 100%;
 		justify-self: center;
+		width: 100%;
 		margin-top: -100px;
+		margin-left: 0;
 	}
 
 	#download__buttons-wrapper {

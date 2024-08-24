@@ -214,7 +214,7 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 
 		navAnimMobile = gsap.timeline().pause();
 		navAnimMobile.set(".nav-description", { minWidth: "40vw" });
-		navAnimMobile.to("#nav", { width: "55vw", ease: "expo.inout", duration: 0.5 });
+		navAnimMobile.to("#nav", { width: "60vw", ease: "expo.inout", duration: 0.5 });
 		navAnimMobile.from(".nav-wrapper", { backgroundColor: "#00000011", pointerEvents: "none", ease: "power2.inout", duration: 0.4 }, "<");
 		navAnimMobile.set(".nav-description", { minWidth: "fit-content" });
 
@@ -295,8 +295,8 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		whatIsAnimMobile.from("#what-is p", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
 
 		advantagesAnimMobile = gsap.timeline().pause();
+		advantagesAnimMobile.from("#phone-3", { xPercent: -70, yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
 		advantagesAnimMobile.from("#advantages-mobile", { xPercent: -70, yPercent: 100, duration: 1, ease: "expo.out" });
-		advantagesAnimMobile.from("#phone-3", { xPercent: 20, yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
 
 		buyTokensAnimMobile = gsap.timeline().pause();
 		buyTokensAnimMobile.from(".buy-tokens__title", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
@@ -305,7 +305,7 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 
 		tailAnimMobile = gsap.timeline().pause();
 		tailAnimMobile.from("#phone-4", { yPercent: 100, ease: "expo.out", duration: 1 });
-		tailAnimMobile.from("#tail-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
+		tailAnimMobile.from("#tail-title", { xPercent: -150, ease: "expo.out", duration: 1 }, "<");
 		tailAnimMobile.from("#download-2", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
 
 		document.querySelector(".nav-wrapper").addEventListener("mousedown", () => {
@@ -364,7 +364,7 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		whatIsAnimMobile.from("#what-is p", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
 
 		advantagesAnimMobile = gsap.timeline().pause();
-		advantagesAnimMobile.from("#phone-3", { xPercent: 10, yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+		advantagesAnimMobile.from("#phone-3", { xPercent: -70, yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
 		advantagesAnimMobile.from("#advantages-mobile", { xPercent: -70, yPercent: 100, duration: 1, ease: "expo.out" });
 
 		buyTokensAnimMobile = gsap.timeline().pause();
