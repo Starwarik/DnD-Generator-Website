@@ -28,6 +28,20 @@
     z-index: 100;
 	}
 
+	.account-navbar-menu-wrapper {
+		display: flex;
+		align-items: end;
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+	}
+
+	.account-navbar-menu {
+		opacity: 1;
+		width: 100vw;
+		position: static;
+	}
+
 	.account-navbar {
 		position: absolute;
 		justify-content: start;

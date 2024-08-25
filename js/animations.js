@@ -139,6 +139,8 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		headOnStartAnimPC.from("#phone-2", { yPercent: 150, ease: "expo.out", duration: 1.07 }, "<");
 		headOnStartAnimPC.from("#head-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
 		headOnStartAnimPC.from("#download-1", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+		headOnStartAnimPC.from("#nav", { opacity: 0, ease: "expo.out", duration: 2 }, "<");
+		
 		headOnStartAnimPC.restart();
 
 		headHidePhonesAnimPC = gsap.timeline();
@@ -173,6 +175,19 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 
 		tailHidePhoneAnimPC = gsap.timeline();
 		tailHidePhoneAnimPC.to("#phone-4", { xPercent: -150, ease: "expo.in", duration: 0.5 });
+
+		accountAnimPC = gsap.timeline().pause();
+		accountAnimPC.to(".account-navbar-menu", { opacity: 1, y: 596, ease: "expo.inout", duration: 0.5 });
+		accountAnimPC.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
+
+		document.querySelector(".account-navbar-menu-exit").addEventListener("mousedown", () => {
+			accountAnimPC.reverse();
+		});
+
+		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
+			accountAnimPC.play();
+		});
+		
 	});
 
 } else if (window.matchMedia('(min-width: 601px)').matches) {
@@ -241,8 +256,22 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 			navAnimMobile.reverse();
 		});
 
-		document.querySelector(".partitions-image__wrapper").addEventListener("mousedown", () => {
-			navAnimMobile.play();
+		gsap.utils.toArray(".partitions-image__wrapper").forEach(partitions => {
+			partitions.addEventListener("mousedown", () => {
+				navAnimMobile.play();
+			});
+		});
+
+		accountAnimMobile = gsap.timeline().pause();
+		accountAnimMobile.from(".account-navbar-menu", { opacity: 0, yPercent: 200, ease: "expo.inout", duration: 0.5 });
+		accountAnimMobile.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
+
+		document.querySelector(".account-navbar-menu-exit").addEventListener("mousedown", () => {
+			accountAnimMobile.reverse();
+		});
+
+		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
+			accountAnimMobile.play();
 		});
 
 	});
@@ -312,8 +341,22 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 			navAnimMobile.reverse();
 		});
 
-		document.querySelector(".partitions-image__wrapper").addEventListener("mousedown", () => {
-			navAnimMobile.play();
+		gsap.utils.toArray(".partitions-image__wrapper").forEach(partitions => {
+			partitions.addEventListener("mousedown", () => {
+				navAnimMobile.play();
+			});
+		});
+
+		accountAnimMobile = gsap.timeline().pause();
+		accountAnimMobile.from(".account-navbar-menu", { opacity: 0, yPercent: 200, ease: "expo.inout", duration: 0.5 });
+		accountAnimMobile.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
+
+		document.querySelector(".account-navbar-menu-exit").addEventListener("mousedown", () => {
+			accountAnimMobile.reverse();
+		});
+
+		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
+			accountAnimMobile.play();
 		});
 
 	});
@@ -380,8 +423,22 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 			navAnimMobile.reverse();
 		});
 
-		document.querySelector(".partitions-image__wrapper").addEventListener("mousedown", () => {
-			navAnimMobile.play();
+		gsap.utils.toArray(".partitions-image__wrapper").forEach(partitions => {
+			partitions.addEventListener("mousedown", () => {
+				navAnimMobile.play();
+			});
+		});
+
+		accountAnimMobile = gsap.timeline().pause();
+		accountAnimMobile.from(".account-navbar-menu", { opacity: 0, yPercent: 200, ease: "expo.inout", duration: 0.5 });
+		accountAnimMobile.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
+
+		document.querySelector(".account-navbar-menu-exit").addEventListener("mousedown", () => {
+			accountAnimMobile.reverse();
+		});
+
+		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
+			accountAnimMobile.play();
 		});
 	});
 } 

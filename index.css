@@ -28,6 +28,7 @@ main {
 
 .nav-wrapper {
 	grid-column: 12 / 13;
+	grid-row: 1 / 4;
 }
 
 #nav {

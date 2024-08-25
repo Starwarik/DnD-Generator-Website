@@ -630,19 +630,39 @@ form-submit:hover {
 
 /* Account Navbar menu */
 
+.account-navbar-menu-exit {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 30;
+}
+
+.account-navbar-menu-wrapper {
+    position: fixed;
+    top: -500px;
+    height: fit-content;
+    width: 35vw;
+    z-index: 32;
+}
+
 .account-navbar-menu {
-    margin-top: 16px;
+    position: fixed;
+    top: -500px;
     padding: 31px 42px;
 
     height: fit-content;
-    grid-column: 1 / 6;
+    width: 35vw;
+    opacity: 0;
 
     border-radius: 11px;
 
     background-color: white;
     pointer-events: all;
 
-    z-index: 30;
+    z-index: 32;
 }
 
 .account-navbar-menu__text {
