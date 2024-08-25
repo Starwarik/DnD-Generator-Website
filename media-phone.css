@@ -91,6 +91,7 @@
 	}
 
 	#nav {
+		display: none;
 		align-items: flex-start;
 		width: 100vw;
 		height: fit-content;

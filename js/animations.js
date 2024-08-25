@@ -314,9 +314,8 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		headOnStartAnimMobile.from(".account-navbar", { yPercent: -200, ease: "expo.out", duration: 1.07 }, "<");
 
 		navAnimMobile = gsap.timeline().pause();
-		navAnimMobile.set(".nav-description", { minWidth: "60vw" });
+		navAnimMobile.set("#nav", { display: "block" });
 		navAnimMobile.to(".nav-wrapper", { opacity: 1, backgroundColor: "#00000011", pointerEvents: "all" }, "<");
-		navAnimMobile.set(".nav-description", { minWidth: "fit-content" });
 
 		whatIsAnimMobile = gsap.timeline().pause();
 		whatIsAnimMobile.from("#what-is h2", { yPercent: 900, duration: 1, ease: "expo.out" });
@@ -397,9 +396,8 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		headOnStartAnimMobile.from(".account-navbar", { yPercent: -200, ease: "expo.out", duration: 1.07 }, "<");
 
 		navAnimMobile = gsap.timeline().pause();
-		navAnimMobile.set(".nav-description", { minWidth: "60vw" });
+		navAnimMobile.set("#nav", { display: "block" });
 		navAnimMobile.to(".nav-wrapper", { opacity: 1, backgroundColor: "#00000011", pointerEvents: "all" }, "<");
-		navAnimMobile.set(".nav-description", { minWidth: "fit-content" });
 
 		whatIsAnimMobile = gsap.timeline().pause();
 		whatIsAnimMobile.from("#what-is h2", { yPercent: 900, duration: 1, ease: "expo.out" });
