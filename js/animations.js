@@ -185,7 +185,7 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		});
 
 		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
-			accountAnimPC.play();
+			accountAnimPC.restart();
 		});
 		
 	});
@@ -271,7 +271,7 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		});
 
 		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
-			accountAnimMobile.play();
+			accountAnimMobile.restart();
 		});
 
 	});
@@ -356,7 +356,7 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		});
 
 		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
-			accountAnimMobile.play();
+			accountAnimMobile.restart();
 		});
 
 	});
@@ -438,7 +438,7 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		});
 
 		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
-			accountAnimMobile.play();
+			accountAnimMobile.restart();
 		});
 	});
 } 
