@@ -174,7 +174,7 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		tailOnScrollAnimPC.from("#download-2", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
 
 		tailHidePhoneAnimPC = gsap.timeline();
-		tailHidePhoneAnimPC.to("#phone-4", { xPercent: -150, ease: "expo.in", duration: 0.5 });
+		tailHidePhoneAnimPC.to("#phone-4", { xPercent: -160, ease: "expo.in", duration: 0.5 });
 
 		accountAnimPC = gsap.timeline().pause();
 		accountAnimPC.to(".account-navbar-menu", { opacity: 1, y: 596, ease: "expo.inout", duration: 0.5 });

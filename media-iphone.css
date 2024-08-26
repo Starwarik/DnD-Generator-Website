@@ -323,6 +323,11 @@
 
 	/* BUY TOKENS */
 
+	.buy-tokens__content-wrapper {
+		grid-column: 1 / 5;
+		flex-direction: column;
+	}
+
 	#buy-tokens {
 		height: fit-content;
 		grid-template-rows: max-content max-content max-content;
@@ -334,13 +339,13 @@
 	}
 
 	.buy-tokens-form {
-		grid-column: 1 / 5;
+		width: 100%;
 	}
 
 	.tokens-description {
-		grid-column: 1 / 5;
 		margin-bottom: 25vh;
 		margin-top: 30px;
+		width: 100%;
 	}
 
 	/* TAIL */
@@ -396,6 +401,7 @@
 	.footer__fund {
 		grid-column: 1 / 5;
 		margin-top: 30px;
+		flex-wrap: wrap;
 	}
 
 	.footer__contacts {

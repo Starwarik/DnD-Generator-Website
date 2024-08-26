@@ -44,6 +44,12 @@ body {
     -webkit-font-smoothing: antialiased;
     position: relative;
     height: 100%;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 /*
     5. Improve media defaults
@@ -107,4 +113,10 @@ fieldset {
 dialog {
     border-radius: 22px;
     border-width: 0;
+    -ms-overflow-style: none;
+    scrollbar-width: 0px;
+}
+
+dialog::-webkit-scrollbar {
+    display: none;
 }
