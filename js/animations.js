@@ -169,23 +169,33 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		}).pause();
 
 		tailOnScrollAnimPC = gsap.timeline().pause();
-		tailOnScrollAnimPC.from("#phone-4", { yPercent: 110, ease: "expo.out", duration: 1 });
+		tailOnScrollAnimPC.from("#phone-4", { yPercent: 50, ease: "expo.out", duration: 1 });
 		tailOnScrollAnimPC.from("#tail-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
 		tailOnScrollAnimPC.from("#download-2", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
 
 		tailHidePhoneAnimPC = gsap.timeline();
 		tailHidePhoneAnimPC.to("#phone-4", { xPercent: -160, ease: "expo.in", duration: 0.5 });
 
-		accountAnimPC = gsap.timeline().pause();
-		accountAnimPC.to(".account-navbar-menu", { opacity: 1, y: 596, ease: "expo.inout", duration: 0.5 });
-		accountAnimPC.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
+		accountMenuAnimPC = gsap.timeline().pause();
+		accountMenuAnimPC.to(".account-navbar-menu", { opacity: 1, y: 596, ease: "expo.inout", duration: 0.5 });
+		accountMenuAnimPC.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
 
 		document.querySelector(".account-navbar-menu-exit").addEventListener("mousedown", () => {
-			accountAnimPC.reverse();
+			accountMenuAnimPC.reverse();
 		});
 
 		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
-			accountAnimPC.restart();
+			accountMenuAnimPC.restart();
+		});
+
+		accountAnimPC = gsap.to(".account-navbar__text", { width: 65, marginLeft: 10 }).pause();
+
+		document.querySelector(".account-navbar").addEventListener("mouseenter", () => {
+			accountAnimPC.play();
+		});
+
+		document.querySelector(".account-navbar").addEventListener("mouseleave", () => {
+			accountAnimPC.reverse();
 		});
 		
 	});

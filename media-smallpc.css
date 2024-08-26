@@ -352,11 +352,14 @@
 	}
 	/* Account NavBar */
 
-		.account-navbar {
-			margin-top: 31px;
+	.account-navbar {
+		position: absolute;
+		top: 31px;
+		left: -55px;
 
-			height: fit-content;
-			grid-column: 1 / 6;
+
+		height: fit-content;
+		width: fit-content;
 
 		border-radius: 11px;
 
@@ -364,6 +367,9 @@
 		justify-content: space-around;
 		align-items: center;
 		column-gap: 20px;
+
+		padding-left: 20px;
+    padding-right: 20px;
 
 		background-color: black;
 		pointer-events: all;
@@ -379,7 +385,7 @@
 		display: none;
 	}
 
-	.account-navbar > div {
+	.account-navbar > .account-wrapper {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -388,6 +394,7 @@
 
 	.account-navbar__icon {
 		display: inline-block;
+		width: 12px;
 	}
 
 	.account-navbar__image {
@@ -404,8 +411,9 @@
 		font-size: calc(14px + 2 * (100vw / 1440));
 		letter-spacing: 0.07em;
 		line-height: 1rem;
+		text-wrap: nowrap;
 
-		margin-left: 10px;
+		margin-left: 0px;
 
 		color: var(--substrate);
 
