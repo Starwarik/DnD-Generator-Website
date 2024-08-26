@@ -32,7 +32,11 @@ class GigaChatImage(ImageGeneration):
             messages.append(HumanMessage(user_prompt))
         response = self.model(messages)
         image_uuid = response.additional_kwargs.get("image_uuid")
+        print(response)
+        print(response.additional_kwargs)
         image = self.model.get_file(image_uuid).content
         image = b64decode(image)
         image = ImageContainer(content=image, media_type="image/png")
         return image
+
+image_model = GigaChatImage()

@@ -10,6 +10,7 @@ class Character(BaseModel):
 class Item(BaseModel):
     name: str
     description: str
+    image_id: int
 
 
 class Quest(BaseModel):
