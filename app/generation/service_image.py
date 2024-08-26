@@ -6,7 +6,9 @@ from app.image.schemas import ImageContainer
 from .config import generation_setting
 
 from langchain.schema import HumanMessage, SystemMessage
-from langchain.chat_models.gigachat import GigaChat
+from langchain_community.chat_models.gigachat import GigaChat
+
+import re
 
 
 class ImageGeneration(ABC):
@@ -20,7 +22,7 @@ class GigaChatImage(ImageGeneration):
         self.model = GigaChat(
             credentials=generation_setting.gigachat_credentials, verify_ssl_certs=False
         )
-        self.model.bind_tools(tools=[], tool_choice="auto")
+        self.model = self.model.bind_tools(tools=[], tool_choice="auto")
 
     def generate_image(
         self, system_prompt: str | None, user_prompt: str | None
@@ -30,10 +32,8 @@ class GigaChatImage(ImageGeneration):
             messages.append(SystemMessage(system_prompt))
         if user_prompt:
             messages.append(HumanMessage(user_prompt))
-        response = self.model(messages)
-        image_uuid = response.additional_kwargs.get("image_uuid")
-        print(response)
-        print(response.additional_kwargs)
+        response = self.model.invoke(messages)
+        image_uuid = re.search(r'img src="(.+?)"', response.content).group(1)
         image = self.model.get_file(image_uuid).content
         image = b64decode(image)
         image = ImageContainer(content=image, media_type="image/png")

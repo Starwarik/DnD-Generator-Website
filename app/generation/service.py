@@ -1,4 +1,5 @@
 from base64 import b64decode
+from langchain_community.chat_models.gigachat import GigaChat
 from sqlmodel import Session
 
 from app.adventure.models import Adventure, AdventureState
@@ -15,26 +16,11 @@ import json
 from app.image.schemas import ImageContainer
 from app.image.service import upload_image
 
+from .config import generation_setting
+
 MessageType = HumanMessage | SystemMessage | AIMessage
 
 time = 0
-
-def __generate_image(
-    instruction: str,
-    user_id: int,
-    session: Session,
-):
-    messages = [HumanMessage(instruction)]
-    response = image_model.model(messages)
-    image_uuid = response.additional_kwargs.get("image_uuid")
-    print(response)
-    print(response.additional_kwargs)
-    print(image_uuid)
-    image_container = image_model.model.get_file(image_uuid).content
-    image_container = b64decode(image)
-    image_container = ImageContainer(content=image, media_type="image/png")
-    image = upload_image(image_container, user_id, session)
-    return image.id
 
 def _generate_image(
     instruction: str,
