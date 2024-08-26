@@ -12,16 +12,20 @@
 		<link rel="stylesheet" href="media.css">
 		<link rel="stylesheet" href="media-phone.css">
 		<link rel="stylesheet" href="media-iphone.css">
+		<link rel="stylesheet" href="media-smallpc.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
+		<div class="account-navbar-menu-exit"></div>
 		<header class="grid" id="ui">
 			<div class="account-navbar no-seen" id="account-navbar-noname">
-				<img class="account-navbar__image" src="images/company_name_white.svg" />
-				<div class="account-wrapper">
+				<a class="account-navbar__image-anchor" href="#head">
+					<img class="account-navbar__image" src="images/company_name_white.svg" />
+				</a>
+				<div class="account-wrapper" onclick="show_login()">
 					<img class="account-navbar__icon" src="images/user_icon_white.svg" />
 					<p class="account-navbar__text">
-						<span class="account-navbar__clickable" onclick="show_login()">Вход</span> / <span class="account-navbar__clickable" onclick="show_register()">Регистрация</span>
+						<span class="account-navbar__clickable">Войти</span>
 					</p>
 				</div>
 				<div class="partitions-image__wrapper">
@@ -38,147 +42,179 @@
 					<img class="partitions-image" src="./images/Partitions.svg" />
 				</div>
 			</div>
-			<div class="account-navbar-menu no-seen" id="account-navbar-menu">
-				<p class="account-navbar-menu__text">Login: <span class="account-navbar-menu__info" id="account-navbar-menu__login">...</span> </p>
-				<p class="account-navbar-menu__text">Email: <span class="account-navbar-menu__info" id="account-navbar-menu__email">...</span></p>
-				<div class="buy-tokens-form__fields__amount-panel">
-					<label class="form-label">Текущий счёт</label>
-					<p class="buy-tokens-form__fields__amount-panel__balance"><span id="account-navbar-menu__balance">...</span> ток.</p>
-				</div>
-				<a class="form-submit" href="#buy-tokens" onclick="hide_navbar_menu()">Пополнить счет</a>
-				<div class="account-navbar-menu__exit-menu" onclick="logout()">
-					<img src="images/exit_icon.svg">
-					<p>Выйти</p>
-				</div>
-			</div>
-			<nav id="nav">
-				<div class="navmenu" id="nav-head">
-					<div class="navline bracket-line" id="line-1"></div>
-					<a class="navpoint" id="point-1" href="#head">
-						<object class="navstar" data="./images/navstar.svg"></object>
-					</a>
-				</div>
-				<div class="navmenu" id="nav-what-is">
-					<div class="navline middle-line" id="line-2"></div>
-					<a class="navpoint" id="point-2" href="#what-is">
-						<object class="navstar" data="./images/navstar.svg"></object>
-					</a>
-				</div>
-				<div class="navmenu" id="nav-our-advantage">
-					<div class="navline middle-line" id="line-3"></div>
-					<a class="navpoint" id="point-3" href="#our-advantage">
-						<object class="navstar" data="./images/navstar.svg"></object>
-					</a>
-				</div>
-				<div class="navmenu" id="nav-buy-tokens">
-					<div class="navline middle-line" id="line-4"></div>
-					<a class="navpoint" id="point-4" href="#buy-tokens">
-						<object class="navstar" data="./images/navstar.svg"></object>
-					</a>
-				</div>
-				<div class="navmenu" id="nav-tail">
-					<div class="navline middle-line" id="line-5"></div>
-					<a class="navpoint" id="point-5" href="#tail">
-						<object class="navstar" data="./images/navstar.svg"></object>
-					</a>
-				</div>
-				<div class="navmenu" id="nav-footer">
-					<div class="navline bracket-line" id="line-6"></div>
-					<a class="navpoint" id="point-6">
-						<object data="./images/navstar.svg"></object>
-					</a>
-				</div>
-			</nav>
-		</header>
-		<dialog class="dialog" id="dialog-register">
-			<div class="dialog-viewport">
-				<form class="dialog-form" id="dialog-form-register">
-					<fieldset>
-						<legend class="dialog__header">Регистрация</legend>
-						<div>
-							<label class="form-label">Email</label>
-							<input class="form-input" type="email" name="email" placeholder="Email" required>
-						</div>
-						<div class="dialog-form__field">
-							<label class="form-label">Логин</label>
-							<input class="form-input" type="text" name="login" placeholder="Логин" required>
-						</div>
-						<div class="dialog-form__field">
-							<label class="form-label">Пароль</label>
-							<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
-						</div>
-						<div class="dialog-form__field">
-							<label class="form-label">Подтвердить пароль</label>
-							<input class="form-input" type="password" name="pass_repeat" placeholder="Пароль" required>
-						</div>
-					</fieldset>
-					<div class="dialog-form__checkbox">
-						<input type="checkbox" id="horns" name="horns" required />
-						<label>Вы принимаете условия пользовательского соглашения</label>
+			<div class="account-navbar-menu-wrapper">
+				<div class="account-navbar-menu" id="account-navbar-menu">
+					<p class="account-navbar-menu__text">Login: <span class="account-navbar-menu__info" id="account-navbar-menu__login">...</span> </p>
+					<p class="account-navbar-menu__text">Email: <span class="account-navbar-menu__info" id="account-navbar-menu__email">...</span></p>
+					<div class="buy-tokens-form__fields__amount-panel">
+						<label class="form-label">Текущий счёт</label>
+						<p class="buy-tokens-form__fields__amount-panel__balance"><span id="account-navbar-menu__balance">...</span> ток.</p>
 					</div>
-					<button class="form-submit dialog-form__submit" type="submit">Зарегистрироваться</button>
-					<p class="dialog-form__info">Уже зарегестрированы? <span class="dialog-form__info_higlited" onclick="show_login()">Вход</span></p>
-				</form>
+					<a class="form-submit" href="#buy-tokens" onclick="hide_navbar_menu()">Пополнить счет</a>
+					<div class="account-navbar-menu__exit-menu" onclick="logout()">
+						<img src="images/exit_icon.svg">
+						<p>Выйти</p>
+					</div>
+				</div>
 			</div>
-		</dialog>
-		<dialog class="dialog" id="dialog-login">
-			<div class="dialog-viewport">
-				<h2 class="dialog__header">Вход</h2>
-				<form class="dialog-form" id="dialog-form-login">
-					<fieldset>
-						<div>
-							<label class="form-label">Login / Email</label>
-							<input class="form-input" type="text" name="login" placeholder="Login / Email" required>
-						</div>
-						<div class="dialog-form__field">
-							<label class="form-label">Пароль</label>
-							<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
-						</div>
-					</fieldset>
-					<p class="dialog-login-form__reset-password" onclick="show_reset_password()">Забыли пароль?</p>
-					<button class="form-submit dialog-form__submit" type="submit">Войти</button>
-					<p class="dialog-form__info">Нет аккаунты? <span class="dialog-form__info_higlited" onclick="show_register()">Регистрация</span></p>
-				</form>
+			<div class="nav-wrapper">
+				<nav id="nav">
+					<div class="navmenu" id="nav-head">
+						<div class="navline bracket-line" id="line-1"></div>
+						<a class="navpoint" id="point-1" href="#head">
+							<object class="navstar" data="./images/navstar.svg"></object>
+						</a>
+						<a class="nav-description__wrapper" href="#head">
+							<p class="nav-description">Генератор Приключений</p>
+						</a>
+					</div>
+					<div class="navmenu" id="nav-what-is">
+						<div class="navline middle-line" id="line-2"></div>
+						<a class="navpoint" id="point-2" href="#what-is">
+							<object class="navstar" data="./images/navstar.svg"></object>
+						</a>
+						<a class="nav-description__wrapper" href="#what-is">
+							<p class="nav-description">Что такое Генератор Приключений</p>
+						</a>
+					</div>
+					<div class="navmenu" id="nav-our-advantage">
+						<div class="navline middle-line" id="line-3"></div>
+						<a class="navpoint" id="point-3" href="#our-advantage">
+							<object class="navstar" data="./images/navstar.svg"></object>
+						</a>
+						<a class="nav-description__wrapper" href="#our-advantage">
+							<p class="nav-description">В чём преимущество Генератора Приключений</p>
+						</a>
+					</div>
+					<div class="navmenu" id="nav-buy-tokens">
+						<div class="navline middle-line" id="line-4"></div>
+						<a class="navpoint" id="point-4" href="#buy-tokens">
+							<object class="navstar" data="./images/navstar.svg"></object>
+						</a>
+						<a class="nav-description__wrapper" href="#buy-tokens">
+							<p class="nav-description">Токены</p>
+						</a>
+					</div>
+					<div class="navmenu" id="nav-tail">
+						<div class="navline middle-line" id="line-5"></div>
+						<a class="navpoint" id="point-5" href="#tail">
+							<object class="navstar" data="./images/navstar.svg"></object>
+						</a>
+						<a class="nav-description__wrapper" href="#tail">
+							<p class="nav-description">Скачать приложение</p>
+						</a>
+					</div>
+					<div class="navmenu" id="nav-footer">
+						<div class="navline bracket-line" id="line-6"></div>
+						<a class="navpoint" id="point-6">
+						</a>
+					</div>
+				</nav>
 			</div>
-		</dialog>
-		<dialog class="dialog" id="dialog-reset-password">
-			<div class="dialog-viewport">
-				<h2 class="dialog__header">Смена пароля</h2>
-				<form class="dialog-form" id="dialog-form-reset-password">
-					<fieldset>
-						<div>
-							<label class="form-label">Email</label>
-							<input class="form-input" type="email" name="email" placeholder="Email" required>
+		</header>
+		<div class="dialog-wrapper">
+			<dialog class="dialog" id="dialog-register">
+				<div class="dialog-viewport">
+					<img class="dialog__exit-button" src="./images/exit_button.svg" onclick="close_all_dialogues()"></img>
+					<form class="dialog-form" id="dialog-form-register">
+						<fieldset>
+							<legend class="dialog__header">Регистрация</legend>
+							<div>
+								<label class="form-label">Email</label>
+								<input class="form-input" type="email" name="email" placeholder="Email" required>
+							</div>
+							<div class="dialog-form__field">
+								<label class="form-label">Логин</label>
+								<input class="form-input" type="text" name="login" placeholder="Логин" required>
+							</div>
+							<div class="dialog-form__field">
+								<label class="form-label">Пароль</label>
+								<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
+							</div>
+							<div class="dialog-form__field">
+								<label class="form-label">Подтвердить пароль</label>
+								<input class="form-input" type="password" name="pass_repeat" placeholder="Пароль" required>
+							</div>
+						</fieldset>
+						<div class="dialog-form__checkbox">
+							<input type="checkbox" id="horns" name="horns" required />
+							<label>Вы принимаете условия пользовательского соглашения</label>
 						</div>
-					</fieldset>
-					<button class="form-submit dialog-form__submit" type="submit">Получить письмо</button>
-				</form>
-			</div>
-		</dialog>
-		<dialog class="dialog" id="dialog-reset-password-second">
-			<div class="dialog-viewport">
-				<h2 class="dialog__header">Смена пароля</h2>
-				<form class="dialog-form" id="dialog-form-reset-password-second">
-					<fieldset>
-						<div>
-							<label class="form-label">Пароль</label>
-							<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
-						</div>
-						<div class="dialog-form__field">
-							<label class="form-label">Подтвердить пароль</label>
-							<input class="form-input" type="password" name="pass_repeat" placeholder="Пароль" required>
-						</div>
-					</fieldset>
-					<button class="form-submit dialog-form__submit" type="submit">Сменить</button>
-				</form>
-			</div>	
-		</dialog>
-		<dialog class="dialog" id="dialog-reset-password-letter">
-			<div class="dialog-viewport">
-				<h1 class="dialog__header">Мы отправили<br/>Вам письмо</h1>
-				<h2 class="dialog__header">Проверьте почту для смены пароля</h2>
-			</div>	
-		</dialog>
+						<button class="form-submit dialog-form__submit" type="submit">Зарегистрироваться</button>
+						<p class="dialog-form__info">Уже зарегестрированы? <span class="dialog-form__info_higlited" onclick="show_login()">Вход</span></p>
+					</form>
+				</div>
+			</dialog>
+		</div>
+		<div class="dialog-wrapper">
+			<dialog class="dialog" id="dialog-login">
+				<div class="dialog-viewport">
+					<img class="dialog__exit-button" src="./images/exit_button.svg" onclick="close_all_dialogues()"></img>
+					<h2 class="dialog__header">Вход</h2>
+					<form class="dialog-form" id="dialog-form-login">
+						<fieldset>
+							<div>
+								<label class="form-label">Login / Email</label>
+								<input class="form-input" type="text" name="login" placeholder="Login / Email" required>
+							</div>
+							<div class="dialog-form__field">
+								<label class="form-label">Пароль</label>
+								<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
+							</div>
+						</fieldset>
+						<p class="dialog-login-form__reset-password" onclick="show_reset_password()">Забыли пароль?</p>
+						<button class="form-submit dialog-form__submit" type="submit">Войти</button>
+						<p class="dialog-form__info">Нет аккаунта? <span class="dialog-form__info_higlited" onclick="show_register()">Регистрация</span></p>
+					</form>
+				</div>
+			</dialog>
+		</div>
+		<div class="dialog-wrapper">
+			<dialog class="dialog" id="dialog-reset-password">
+				<div class="dialog-viewport">
+					<img class="dialog__exit-button" src="./images/exit_button.svg" onclick="close_all_dialogues()"></img>
+					<h2 class="dialog__header">Смена пароля</h2>
+					<form class="dialog-form" id="dialog-form-reset-password">
+						<fieldset>
+							<div>
+								<label class="form-label">Email</label>
+								<input class="form-input" type="email" name="email" placeholder="Email" required>
+							</div>
+						</fieldset>
+						<button class="form-submit dialog-form__submit" type="submit">Получить письмо</button>
+					</form>
+				</div>
+			</dialog>
+		</div>
+		<div class="dialog-wrapper">
+			<dialog class="dialog" id="dialog-reset-password-second">
+				<div class="dialog-viewport">
+					<img class="dialog__exit-button" src="./images/exit_button.svg" onclick="close_all_dialogues()"></img>
+					<h2 class="dialog__header">Смена пароля</h2>
+					<form class="dialog-form" id="dialog-form-reset-password-second">
+						<fieldset>
+							<div>
+								<label class="form-label">Пароль</label>
+								<input class="form-input" type="password" name="pass" placeholder="Пароль" required>
+							</div>
+							<div class="dialog-form__field">
+								<label class="form-label">Подтвердить пароль</label>
+								<input class="form-input" type="password" name="pass_repeat" placeholder="Пароль" required>
+							</div>
+						</fieldset>
+						<button class="form-submit dialog-form__submit" type="submit">Сменить</button>
+					</form>
+				</div>	
+			</dialog>
+		</div>
+		<div class="dialog-wrapper">
+			<dialog class="dialog" id="dialog-reset-password-letter">
+				<div class="dialog-viewport">
+					<h1 class="dialog__header">Мы отправили<br/>Вам письмо</h1>
+					<h2 class="dialog__header">Проверьте почту для смены пароля</h2>
+				</div>	
+			</dialog>
+		</div>
 		<main>
 			<div class="head-coloriser">
 				<header class="grid" id="head">
@@ -186,9 +222,11 @@
 						<img src="./images/title.svg" />
 					</section>
 					<div class="phone-wrapper">
-						<img class="phone" id="phone-1" src="./images/phone1.svg">
-						<img class="phone" id="phone-2" src="./images/phone2.svg">
-						<img id="phones-mobile" src="./images/phones-mobile.svg" />
+						<div class="phone-wrapper__flex">
+							<img class="phone" id="phone-1" src="./images/phone1.svg">
+							<img class="phone" id="phone-2" src="./images/phone2.svg">
+							<img id="phones-mobile" src="./images/phones-mobile.svg" />
+						</div>
 					</div>
 					<div class="download-wrapper">
 						<article class="download" id="download-1">
@@ -298,31 +336,33 @@
 						ТОКЕНЫ
 						<span class="buy-tokens__title_post-title">валюта для генерации</span>
 					</h2>
-					<form class="buy-tokens-form">
-						<div class="account-info-form">
-							<img class="account-info-form__user-image" src="images/user_icon.svg" />
-							<p class="account-info-form__username">Alexey2006Ru</p>
-						</div>
-						<fieldset>
-							<legend class="form-legend">Счёт</legend>
-							<div class="buy-tokens-form__fields__amount-panel">
-								<label class="form-label">Текущий счёт</label>
-								<p class="buy-tokens-form__fields__amount-panel__balance">1000 <span>ток.</span></p>
+					<div class="buy-tokens__content-wrapper">
+						<form class="buy-tokens-form">
+							<div class="account-info-form">
+								<img class="account-info-form__user-image" src="images/user_icon.svg" />
+								<p class="account-info-form__username">Alexey2006Ru</p>
 							</div>
-							<div class="buy-tokens-form__fields__input_balance">
-								<label class="form-label">Сумма от 100 р.</label>
-								<input class="form-input" type="number" name="amount" placeholder="Ваша сумма" required>
-							</div>
-						</fieldset>
-						<p class="buy-tokens-form__tokens_count">Кол-во токенов: <span>1000</span></p>
-						<button class="form-submit" type="submit">Пополнить счёт</button>
-					</form>
-					<aside class="tokens-description">
-						<img class="tokens-description__star" src="images/star_black.svg" />
-						<p>Приобретая токены, вы получаете возможность генерировать приключения.</p>
-						<p class="tokens-description__middle-text">Минимальная стоимость одного приключения — <span>x ток.</span</p>
-						<p>Минимальная стоимость пополнения — <span>1000 ток. / 100 ₽</span></p>
-					</aside>
+							<fieldset>
+								<legend class="form-legend">Счёт</legend>
+								<div class="buy-tokens-form__fields__amount-panel">
+									<label class="form-label">Текущий счёт</label>
+									<p class="buy-tokens-form__fields__amount-panel__balance">1000 <span>ток.</span></p>
+								</div>
+								<div class="buy-tokens-form__fields__input_balance">
+									<label class="form-label">Сумма от 100 р.</label>
+									<input class="form-input" type="number" name="amount" placeholder="Ваша сумма" required>
+								</div>
+							</fieldset>
+							<p class="buy-tokens-form__tokens_count">Кол-во токенов: <span>1000</span></p>
+							<button class="form-submit" type="submit">Пополнить счёт</button>
+						</form>
+						<aside class="tokens-description">
+							<img class="tokens-description__star" src="images/star_black.svg" />
+							<p>Приобретая токены, вы получаете возможность генерировать приключения.</p>
+							<p class="tokens-description__middle-text">Минимальная стоимость одного приключения — <span>x ток.</span</p>
+							<p>Минимальная стоимость пополнения — <span>1000 ток. / 100 ₽</span></p>
+						</aside>
+					</div>
 				</section>
 			</div>
 			<div class="tail-coloriser">
@@ -330,14 +370,18 @@
 					<section class="title" id="tail-title">
 						<img src="./images/title.svg" />
 					</section>
-					<img id="phone-4" src="./images/phone4.svg">
-					<article class="download" id="download-2">
-						<h2>Скачайте генератор</h2>
-						<div id="download__buttons-wrapper">
-							<a id="download__appstore"><img src="./images/appstore.svg" /></a>
-							<a id="download__googleplay"><img src="./images/googleplay.svg" /></a>
-						</div>
-					</article>
+					<div class="tail__flex-wrapper">
+						<img id="phone-4" src="./images/phone4.svg">
+					</div>
+					<div class="download-wrapper">
+						<article class="download" id="download-2">
+							<h2>Скачайте генератор</h2>
+							<div id="download__buttons-wrapper">
+								<a id="download__appstore"><img src="./images/appstore.svg" /></a>
+								<a id="download__googleplay"><img src="./images/googleplay.svg" /></a>
+							</div>
+						</article>
+					</div>
 				</section>
 			</div>
 		</main>
@@ -375,8 +419,8 @@
 		</div>
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-		<!--<script src="./js/animations.js"></script>-->
-		<script src="./js/account_navbar.js"></script>
+		<script src="./js/animations.js"></script>
+		<!--<script src="./js/account_navbar.js"></script>-->
 		<script src="./js/cookie.js"></script>
 		<script src="./js/api.js"></script>
 		<script src="./js/account.js"></script>

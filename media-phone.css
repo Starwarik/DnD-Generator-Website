@@ -1,4 +1,4 @@
-@media (min-width: 430px) and (max-width: 600px) {
+@media (min-width: 340px) and (max-width: 600px) {
 
 	.grid {
 		display: grid;
@@ -16,11 +16,38 @@
 		margin: 0;
 	}
 
+	.dialog {
+    width: 340px;
+		min-width: 340px;
+    padding: 0;
+
+    position: fixed;
+    left: 50%;
+    margin-left: -170px;
+		margin-right: 20px;
+    top: 100px;
+
+    z-index: 100;
+	}
+
+	.account-navbar-menu-wrapper {
+		display: flex;
+		align-items: end;
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+	}
+
+	.account-navbar-menu {
+		opacity: 1;
+		width: 100vw;
+		position: static;
+	}
+
 	.account-navbar {
 		position: absolute;
-		grid-template-columns: repeat(4, 1fr);
 		justify-content: start;
-		gap: 0px 60px;
+		gap: 0px 20px;
 		padding-left: 32px;
 		padding-right: 32px;
 		margin: 0;
@@ -33,6 +60,11 @@
 	.account-navbar__image {
 		height: 52%;
 		width: 20vw;
+		margin: 0;
+	}
+
+	.account-navbar__text {
+		min-width: 130px;
 	}
 
 	.partitions-image {
@@ -49,7 +81,7 @@
 	}
 
 	.partitions-image__wrapper {
-		justify-self: end;
+		justify-content: end;
 		margin-left: auto;
 	}
 
@@ -59,20 +91,88 @@
 	}
 
 	#nav {
-		position: absolute;
-		right: 0;
+		display: none;
+		align-items: flex-start;
+		width: 100vw;
+		height: fit-content;
+		background-color: var(--substrate);
+		
+	}
+
+	.nav-wrapper {
+		position: fixed;
+		z-index: 99;
+		background-color: var(--main-transparent);
+		width: 100vw;
+		height: 100vh;
+		opacity: 0;
+		pointer-events: none;
+		overflow-y: scroll;
+	}
+
+	.navmenu {
+		margin-left: 10%;
+		margin-right: 4%;
+		display: grid;
+		grid-template-columns: auto auto;
+		grid-template-rows: auto auto;
+	}
+
+	.bracket-line {
+		height: 17vh;
+	}
+
+	.navline, .bracket-line {
+		grid-column: 1 / 1;
+		grid-row: 1 / 1;
+		justify-self: center;
+	}
+
+	.nav-description__wrapper {
+		display: block;
+		grid-column: 2 / 2;
+		grid-row: 1 / 3;
+		height: fit-content;
+		width: fit-content;
+		align-self: end;
+		margin-left: 15px;
+		overflow: hidden;
+	}
+
+	.nav-description {
+		display: block;
+		font-family: 'Raleway', sans-serif;
+		font-size: calc(15px + 5 * (100vw / 744));
+		font-weight: 600;
+		letter-spacing: 1px;
+		min-width: fit-content;
+	}
+
+	.navpoint {
+		grid-column: 1 / 1;
+		grid-row: 2 / 2;
+	}
+
+	.navpoint, .navstar {
+		width: 50px;
+		height: 43px;
+	}
+
+	#point-6 {
+		height: 0;
 	}
 
 	/* HEAD */
 
 	#head {
-		grid-template-rows: auto max-content max-content auto;
+		grid-template-rows: 20% max-content max-content 10%;
 		height: fit-content;
 		padding-top: 150px;
 	}
 
 	.head-coloriser {
-		margin: 0;
+		margin: 0 0 50px 0;
+		border-radius: 0px 0px 40px 40px;
 	}
 	
 	.title, .download-wrapper, .phone-wrapper {
@@ -82,21 +182,21 @@
 	.title {
 		justify-content: flex-start;
 		grid-row: 1 / 2;
-		height: 30vw;
+		height: 100%;
 		margin-left: 0;
 		margin-right: -32px;
 		border-radius: 45px 0 0 45px;
 	}
 
 	.title > img {
-		width: 50vw;
-		padding-left: 5%;
+		width: 70vw;
+		padding-left: 10%;
 		padding-right: 2%;
 	}
 
 	.phone-wrapper {
 		position: relative;
-		top: -7vh;
+		top: -6vh;
 		display: flex;
 		grid-row: 2 / 4;
 		z-index: 1;
@@ -118,13 +218,18 @@
 		display: flex;
 		justify-content: center;
 		z-index: 1;
-		height:80%;
+		height: 55%;
+		width: 100%;
 		grid-row: 3 / 5;
 		background-color: var(--back);
 	}
 
 	.download-description {
 		height: max-content;
+	}
+
+	.download-anchor {
+		height: 50px;
 	}
 
 	#horn {
@@ -142,6 +247,7 @@
 	#what-is h2 {
 		grid-column: 1 / 5;
 		grid-template-rows: max-content max-content max-content;
+		font-size: calc(28px + (36 + 36 * 0.7) * ((100vw - 320px) / 1440));
 	}
 
 	.phone__what-is__wrapper {
@@ -199,6 +305,11 @@
 		grid-column: 1 / 5;
 	}
 
+	.overflow-wrapper h2 {
+		margin: 0;
+		font-size: calc(28px + (36 + 36 * 0.7) * ((100vw - 320px) / 1440));
+	}
+
 	#our-advantage aside {
 		display: flex;
 		justify-content: center;
@@ -214,6 +325,11 @@
 
 	/* BUY TOKENS */
 
+	.buy-tokens__content-wrapper {
+		grid-column: 1 / 5;
+		flex-direction: column;
+	}
+
 	#buy-tokens {
 		height: fit-content;
 		grid-template-rows: max-content max-content max-content;
@@ -225,46 +341,70 @@
 	}
 
 	.buy-tokens-form {
-		grid-column: 1 / 5;
+		width: 100%;
 	}
 
 	.tokens-description {
-		grid-column: 1 / 5;
 		margin-bottom: 25vh;
 		margin-top: 30px;
+		width: 100%;
 	}
 
 	/* TAIL */
 
 	#tail {
-		grid-template-rows: auto 50% auto;
+		grid-template-rows: auto auto auto;
 		height: fit-content;
-		padding-bottom: 100px;
+		width: calc(100% - 64px);
 	}
 
 	#tail-title {
 		margin-top: 0;
-		margin-right: -32px;
-		height: 30vw;
+		height: 100%;
+	}
+
+	.tail__flex-wrapper {
+		grid-column: 2 / 4;
+		grid-row: 2 / 4;
+		margin-top: -30px;
+		width: 45vw;
+		min-width: 220px;
 	}
 
 	#phone-4 {
-		grid-column: 2 / 4;
-		grid-row: 2 / 4;
 		margin-top: -40px;
 	}
 
 	#download-2 {
 		grid-column: 1 / 5;
 		grid-row: 3 / 4;
-		width: 100%;
 		justify-self: center;
+		width: 100%;
+		margin-top: -100px;
+		margin-left: 0;
+	}
+
+	#download__buttons-wrapper {
+		flex-wrap: wrap;
+		row-gap: 15px;
+		padding-left: 4%;
+		padding-right: 4%;
+	}
+
+	#download__appstore {
+		width: 60%;
+		max-width: 170px;
+	}
+
+	#download__googleplay {
+		width: 60%;
+		max-width: 170px;
 	}
 
 	/* FOOTER */
 
 	.footer {
-		padding-top: 20%;
+		margin-top: -170px;
 	}
 
 	.footer__name-market {
@@ -274,6 +414,7 @@
 	.footer__fund {
 		grid-column: 1 / 5;
 		margin-top: 30px;
+		flex-wrap: wrap;
 	}
 
 	.footer__contacts {

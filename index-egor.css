@@ -11,6 +11,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    column-gap: 20px;
 
     background-color: black;
     pointer-events: all;
@@ -37,6 +38,10 @@
     display: inline-block;
 }
 
+.account-navbar__image {
+    margin-left: 13px;
+}
+
 .account-navbar__text {
     display: inline-block;
     
@@ -44,7 +49,7 @@
     font-optical-sizing: auto;
     font-weight: 500;
     font-style: normal;
-    font-size: 1rem;
+    font-size: calc(11px + 5 * (100vw / 1440));
     letter-spacing: 0.07em;
     line-height: 1rem;
 
@@ -69,6 +74,7 @@
 
 #what-is {
     height: 100vh;
+    max-height: 1024px;
     grid-template-rows: 40% auto;
 }
 
@@ -115,7 +121,7 @@
     position: relative;
     grid-template-rows: 20% auto;
     left: 0px;
-    height: 100vh;
+    height: fit-content;
     background-color: var(--back);
     z-index: 1;
 }
@@ -127,7 +133,8 @@
     font-family: "Wremena Bold", sans-serif;
     font-size: calc(28px + 36 * (100vw / 1440));
     letter-spacing: 0.1em;
-    line-height: 3.2rem;
+    line-height: 1em;
+    margin-top: 4em;
 }
 
 .buy-tokens__title_post-title {
@@ -139,18 +146,28 @@
 
     font-size: calc(14px + 6 * (100vw / 1440));
     letter-spacing: 0.06em;
-    line-height: 1rem;
+    line-height: 1em;
 
     color: var(--not-active);
     padding-left: 10px;
 }
 
+.buy-tokens__content-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    column-gap: 45px;
+    align-items: center;
+    grid-column: 1 / 11;
+}
+
 .buy-tokens-form {
-    grid-column: 1 / 7;
     background-color: var(--substrate);
     margin-top: 50px;
     padding: 30px;
     border-radius: 22px;
+    max-width: 700px;
+    width: 51%;
     height: fit-content;
 }
 
@@ -330,7 +347,6 @@ form-submit:hover {
 }
 
 .tokens-description {
-    grid-column: 7 / 11;
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-weight: 500;
@@ -343,6 +359,8 @@ form-submit:hover {
     padding: 25px 10px 25px 10px;
     margin-top: 120px;
     height: fit-content;
+    max-width: 500px;
+    width: 42%;
 
     border-radius: 22px;
 }
@@ -353,7 +371,7 @@ form-submit:hover {
     font-weight: 600;
     font-style: normal;
 
-    font-size: 1rem;
+    font-size: 1em;
     letter-spacing: 0.06em;
 
     color: var(--accent);
@@ -395,12 +413,15 @@ form-submit:hover {
 }
 
 .footer__name {
-    width: 328px;
+    width: 70%;
+    max-width: 300px;
     margin-bottom: 32px;
 }
 
 .footer__market {
     display: flex;
+    width: 100%;
+    max-width: 500px;
     gap: 20px;
     flex-direction: row;
     flex-wrap: wrap;
@@ -408,12 +429,14 @@ form-submit:hover {
 
 .footer__appstore, .footer__googleplay {
     display: inline;
+    width: 45%;
+    min-width: 184px;
 }
 
 .footer__fund {
-    grid-column: 5 / 11;
+    grid-column: 5 / 12;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     gap: 10px 53px;
 }
@@ -428,11 +451,11 @@ form-submit:hover {
     font-style: normal;
 
     font-weight: 600;
-    font-size: 1rem;
-    line-height: 1.75rem;
-    letter-spacing: 0.02em;
+    font-size: calc(14px + 5 * (100vw / 1440));
+    line-height: 1.1em;
+    letter-spacing: 0.01em;
 
-    max-width: 365px;
+    max-width: 840px;
 }
 
 .footer__contacts {
@@ -451,8 +474,8 @@ form-submit:hover {
     font-style: normal;
 
     font-weight: 600;
-    font-size: 1rem;
-    line-height: 1.75rem;
+    font-size: calc(14px + 2 * (100vw / 1440));
+    line-height: 1.1em;
     letter-spacing: 0.06em;
 
     color: var(--not-active);
@@ -478,6 +501,10 @@ form-submit:hover {
 
 /* Dialog register */
 
+.dialog-wrapper {
+    position: fixed;
+}
+
 .dialog {
     width: 404px;
     padding: 0;
@@ -488,6 +515,12 @@ form-submit:hover {
     top: 100px;
 
     z-index: 100;
+}
+
+.dialog__exit-button {
+    width: fit-content;
+    height: fit-content;
+    margin-left: 95%;
 }
 
 .dialog-viewport {
@@ -611,19 +644,39 @@ form-submit:hover {
 
 /* Account Navbar menu */
 
+.account-navbar-menu-exit {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 30;
+}
+
+.account-navbar-menu-wrapper {
+    position: fixed;
+    top: -500px;
+    height: fit-content;
+    width: 35vw;
+    z-index: 32;
+}
+
 .account-navbar-menu {
-    margin-top: 16px;
+    position: fixed;
+    top: -500px;
     padding: 31px 42px;
 
     height: fit-content;
-    grid-column: 1 / 6;
+    width: 35vw;
+    opacity: 0;
 
     border-radius: 11px;
 
     background-color: white;
     pointer-events: all;
 
-    z-index: 30;
+    z-index: 32;
 }
 
 .account-navbar-menu__text {

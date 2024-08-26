@@ -1,4 +1,4 @@
-const account_navbar_menu = document.getElementById('account-navbar-menu');
+/*const account_navbar_menu = document.getElementById('account-navbar-menu');
 var is_shown_navbar_menu = false;
 
 function show_navbar_menu() {
@@ -17,4 +17,4 @@ function toggle_navbar_menu() {
     } else {
         show_navbar_menu();
     }
-}
+}*/

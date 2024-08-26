@@ -6,6 +6,7 @@
 
 :root {
 	--main: #000000;
+    --main-transparent: #00000040;
 	--back: #F4F4F4;
 	--accent: #DD1144;
 	--substrate: #FFFFFF;
@@ -43,6 +44,12 @@ body {
     -webkit-font-smoothing: antialiased;
     position: relative;
     height: 100%;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 /*
     5. Improve media defaults
@@ -71,6 +78,7 @@ input[type="number"]::-webkit-outer-spin-button {
 /* Для Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* Для IE и Edge */
@@ -105,4 +113,10 @@ fieldset {
 dialog {
     border-radius: 22px;
     border-width: 0;
+    -ms-overflow-style: none;
+    scrollbar-width: 0px;
+}
+
+dialog::-webkit-scrollbar {
+    display: none;
 }
