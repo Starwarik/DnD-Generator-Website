@@ -15,6 +15,10 @@ main {
 
 /* ИНТЕРФЕЙС */
 
+.user-agreement {
+	color: var(--accent);
+}
+
 #ui {
 	z-index: 30;
 	position: fixed;

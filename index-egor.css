@@ -1,10 +1,13 @@
 /* Account NavBar */
 
 .account-navbar {
-    margin-top: 31px;
+    position: absolute;
+    top: 31px;
+    left: -55px;
+
 
     height: fit-content;
-    grid-column: 1 / 5;
+    width: fit-content;
 
     border-radius: 11px;
 
@@ -13,21 +16,25 @@
     align-items: center;
     column-gap: 20px;
 
+    padding-left: 20px;
+    padding-right: 20px;
+
     background-color: black;
     pointer-events: all;
 
     z-index: 30;
 }
 
-.partitions-image {
+.partitions-image__wrapper {
     display: none;
+    height: 0;
 }
 
 .no-seen {
     display: none;
 }
 
-.account-navbar > div {
+.account-navbar > .account-wrapper {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -36,6 +43,11 @@
 
 .account-navbar__icon {
     display: inline-block;
+    width: 12px;
+}
+
+.account-navbar__image-anchor {
+    display: none;
 }
 
 .account-navbar__image {
@@ -52,8 +64,11 @@
     font-size: calc(11px + 5 * (100vw / 1440));
     letter-spacing: 0.07em;
     line-height: 1rem;
+    text-wrap: nowrap;
 
-    margin-left: 10px;
+    margin-left: 0;
+    width: 0;
+    overflow: hidden;
 
     color: var(--substrate);
 
