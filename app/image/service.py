@@ -6,13 +6,14 @@ from app.image.models import Image
 from app.image.schemas import ImageContainer
 
 
-def upload_image(container: ImageContainer, user_id: int, session: Session):
+def upload_image(container: ImageContainer, user_id: int, session: Session) -> Image:
     image = Image(
         image=container.content, media_type=container.media_type, user_id=user_id
     )
     session.add(image)
     session.commit()
     session.refresh(image)
+    return image
 
 
 def get_image_by_id(image_id: int, user_id: int, session: Session) -> Image | None:

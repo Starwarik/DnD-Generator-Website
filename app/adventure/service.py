@@ -1,4 +1,4 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, and_
 from app.adventure.models import Adventure, AdventurePublic, AdventureState
 from app.adventure.schemas import AdventureInfo
 
@@ -10,6 +10,17 @@ def create_adventure(user_id: int, session: Session):
     session.refresh(adventure)
     return adventure
 
+def get_adventure(
+    id: int,
+    user_id: int,
+    session: Session,
+) -> Adventure:
+    command = select(Adventure).where(and_(Adventure.id == id, Adventure.user_id == user_id))
+    results = session.exec(command)
+    result = results.first()
+    if result is None:
+        raise Exception()
+    return result
 
 def update_state_content_adventure(
     id: int,
