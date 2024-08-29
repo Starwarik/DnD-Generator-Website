@@ -188,14 +188,16 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 			accountMenuAnimPC.restart();
 		});
 
-		accountAnimPC = gsap.to(".account-navbar__text", { width: 65, marginLeft: 10 }).pause();
+		gsap.utils.toArray(".account-navbar__text").forEach(text => {
+			accountAnimPC = gsap.to(text, { width: 65, marginLeft: 10 }).pause();
 
-		document.querySelector(".account-navbar").addEventListener("mouseenter", () => {
-			accountAnimPC.play();
-		});
+			text.addEventListener("mouseenter", () => {
+				accountAnimPC.play();
+			});
 
-		document.querySelector(".account-navbar").addEventListener("mouseleave", () => {
-			accountAnimPC.reverse();
+			text.addEventListener("mouseleave", () => {
+				accountAnimPC.reverse();
+			});
 		});
 		
 	});
