@@ -188,14 +188,15 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 			accountMenuAnimPC.restart();
 		});
 
-		gsap.utils.toArray(".account-navbar__text").forEach(text => {
+		gsap.utils.toArray(".account-navbar").forEach(plane => {
+			let text = plane.querySelector(".account-navbar__text");
 			accountAnimPC = gsap.to(text, { width: 65, marginLeft: 10 }).pause();
 
-			text.addEventListener("mouseenter", () => {
+			plane.addEventListener("mouseenter", () => {
 				accountAnimPC.play();
 			});
 
-			text.addEventListener("mouseleave", () => {
+			plane.addEventListener("mouseleave", () => {
 				accountAnimPC.reverse();
 			});
 		});
