@@ -774,7 +774,7 @@
 		flex-wrap: wrap;
 	}
 
-	.footer__appstore, .footer__googleplay {
+	.footer__appgallery, .footer__googleplay {
 		display: inline;
 		width: 45%;
 		min-width: 184px;
