@@ -187,18 +187,25 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
 			accountMenuAnimPC.restart();
 		});
+		
 
-		gsap.utils.toArray(".account-navbar").forEach(plane => {
-			let text = plane.querySelector(".account-navbar__text");
-			accountAnimPC = gsap.to(text, { width: 65, marginLeft: 10 }).pause();
+		accountAnimPC1 = gsap.to("#account-navbar-noname .account-navbar__text", { width: 65, marginLeft: 10 }).pause();
+		accountAnimPC2 = gsap.to("#account-navbar-auth .account-navbar__text", { width: 100, marginLeft: 10 }).pause();
 
-			plane.addEventListener("mouseenter", () => {
-				accountAnimPC.play();
-			});
+		document.querySelector("#account-navbar-noname").addEventListener("mouseenter", () => {
+			accountAnimPC1.play();
+		});
 
-			plane.addEventListener("mouseleave", () => {
-				accountAnimPC.reverse();
-			});
+		document.querySelector("#account-navbar-noname").addEventListener("mouseleave", () => {
+			accountAnimPC1.reverse();
+		});
+
+		document.querySelector("#account-navbar-auth").addEventListener("mouseenter", () => {
+			accountAnimPC2.play();
+		});
+
+		document.querySelector("#account-navbar-auth").addEventListener("mouseleave", () => {
+			accountAnimPC2.reverse();
 		});
 		
 	});
