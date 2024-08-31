@@ -7,6 +7,7 @@ async function setUserInfo(token) {
     if (user_info.status) {
         document.getElementById('account-navbar-auth__login').textContent = user_info.username;
         document.getElementById('account-navbar-menu__login').textContent = user_info.username;
+        document.getElementById('account-info-form__username').textContent = user_info.username;
         document.getElementById('account-navbar-menu__email').textContent = user_info.email;
         document.getElementById('account-navbar-menu__balance').textContent = user_info.balance;
     } else {
