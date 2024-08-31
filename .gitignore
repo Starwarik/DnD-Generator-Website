@@ -170,3 +170,4 @@ database.db
 launch.json
 .vscode/
 start.bat
+*.sh
