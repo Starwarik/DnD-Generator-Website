@@ -36,7 +36,7 @@ class GigaChatImage(ImageGeneration):
         image_uuid = re.search(r'img src="(.+?)"', response.content).group(1)
         image = self.model.get_file(image_uuid).content
         image = b64decode(image)
-        image = ImageContainer(content=image, media_type="image/png")
+        image = ImageContainer(content=image, media_type="image/jpeg")
         return image
 
 image_model = GigaChatImage()

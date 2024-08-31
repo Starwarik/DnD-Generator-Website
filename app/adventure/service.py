@@ -4,7 +4,7 @@ from app.adventure.schemas import AdventureInfo
 
 
 def create_adventure(user_id: int, session: Session):
-    adventure = Adventure(user_id=user_id)
+    adventure = Adventure(user_id=user_id, state=AdventureState.generating_text)
     session.add(adventure)
     session.commit()
     session.refresh(adventure)

@@ -59,7 +59,7 @@ def login_for_access_token(
 
 
 @auth_router.get("/api/reset_token")
-def reset_password(email: str, session: Session = Depends(get_session)):
+def reset_password(email: str, session: Session = Depends(get_session)) -> None:
     user = get_user_by_email(email, session)
     if not user:
         raise HTTPException(
@@ -72,7 +72,6 @@ def reset_password(email: str, session: Session = Depends(get_session)):
         data={"sub": user.id, "type": "reset"}, expires_delta=reset_token_expires
     )
     notification_service.send_refactory_notification(user.email, reset_token)
-    return {"status": True, "reset_token": reset_token}
 
 
 @auth_router.post("/api/register")
