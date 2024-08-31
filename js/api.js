@@ -1,4 +1,4 @@
-const domain = 'http://127.0.0.1:8000/';//'https://fuckweb.ru/';
+const domain = 'https://adventuregenerator.ru/';
 
 async function register(username, password, email) {
     let formData = {

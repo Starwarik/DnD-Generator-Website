@@ -225,6 +225,16 @@ main {
 	margin-right: 15px;
 }
 
+#download__appgallery {
+	width: 60%;
+	max-width: 170px;
+}
+
+#download__googleplay {
+	width: 60%;
+	max-width: 170px;
+}
+
 .download h2 {
 	font-family: 'Raleway', sans-serif;
 	font-size: calc(20px + 20 * (100vw / 1440)); 
