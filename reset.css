@@ -116,7 +116,3 @@ dialog {
     -ms-overflow-style: none;
     scrollbar-width: 0px;
 }
-
-dialog::-webkit-scrollbar {
-    display: none;
-}
