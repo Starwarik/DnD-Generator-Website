@@ -35,6 +35,27 @@ def generate_adventure(
     )
     return convert_adventure_to_public(adventure)
 
+@generation_router.get("/api/generate_test")
+def generate_adventure(
+    num_players: int,
+    location_name: str,
+    setting: str,
+    background_tasks: BackgroundTasks,
+    current_user: Annotated[User, Depends(get_current_user)],
+    session: Session = Depends(get_session),
+) -> AdventurePublic:
+    adventure = create_adventure(current_user.id, session)
+    background_tasks.add_task(
+        generate_adventure_test,
+        location_name,
+        setting,
+        num_players,
+        adventure.id,
+        background_tasks,
+        session,
+    )
+    return convert_adventure_to_public(adventure)
+
 @generation_router.get("/api/regenerate_quest")
 def regenerate_quest(
     id_adventure: int,

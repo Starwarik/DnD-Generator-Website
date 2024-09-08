@@ -1,7 +1,5 @@
-from base64 import b64decode
 from typing import Any
 from fastapi import BackgroundTasks
-from langchain_community.chat_models.gigachat import GigaChat
 from sqlmodel import Session
 
 from app.adventure.models import Adventure, AdventureState
@@ -14,15 +12,13 @@ from app.generation.service_image import image_model
 from app.generation.service_text import text_generation_model
 
 import json
+import time
 
-from app.image.schemas import ImageContainer
 from app.image.service import upload_image
 
 from .config import generation_setting
 
 MessageType = HumanMessage | SystemMessage | AIMessage
-
-time = 0
 
 def _generate_image(
     instruction: str,
@@ -241,6 +237,122 @@ def generate_adventure_with_models(
         num_players,
         extra_info
     )
+
+def generate_adventure_test(
+    location_name: str,
+    setting: str,
+    num_players: int,
+    adventure_id: int,
+    background_tasks: BackgroundTasks,
+    session: Session,
+):
+    time.sleep(5)
+    dummy_adventure = {
+        'name':'Test adventure',
+        'annotation':'',
+        'description':'Test location description',
+        'location':location_name,
+        'setting':setting,
+        'adventure_image_id':-1,
+        'map_image_id':-1,
+        'playerNum':num_players,
+        'characters':[
+            {
+                'name': 'Test character 1',
+                'description': 'Test description of character 1',
+                'image_id': -1
+            },
+            {
+                'name': 'Test character 2',
+                'description': 'Test description of character 2',
+                'image_id': -1
+            },
+            {
+                'name': 'Test character 3',
+                'description': 'Test description of character 3',
+                'image_id': -1
+            }
+        ],
+        'items':[
+            {
+                'name': 'Test item 1',
+                'description': 'Test description of item 1',
+                'image_id': -1
+            },
+            {
+                'name': 'Test item 2',
+                'description': 'Test description of item 2',
+                'image_id': -1
+            },
+            {
+                'name': 'Test item 3',
+                'description': 'Test description of item 3',
+                'image_id': -1
+            }
+        ],
+        'quests':[
+            {
+                'name': 'Test quest 1',
+                'description': 'Test description of quest 1',
+                'goal': 'Test goal of quest 1',
+                'name_character': 'Test character 3',
+                'name_items': []
+            },
+            {
+                'name': 'Test quest 2',
+                'description': 'Test description of quest 2',
+                'goal': 'Test goal of quest 2',
+                'name_character': 'Test character 1',
+                'name_items': ['Test item 1', 'Test item 3']
+            },
+            {
+                'name': 'Test quest 3',
+                'description': 'Test description of quest 3',
+                'goal': 'Test goal of quest 3',
+                'name_character': 'Test character 2',
+                'name_items': ['Test item 2']
+            },
+        ]
+    }
+    adventure_info = AdventureInfo.model_validate(dummy_adventure)
+    update_state_content_adventure(
+        adventure_id,
+        AdventureState.image_adventure,
+        adventure_info,
+        session
+    )
+    time.sleep(5)
+    adventure_info.adventure_image_id = 1
+    adventure_info.map_image_id = 1
+    update_state_content_adventure(
+        adventure_id,
+        AdventureState.image_items,
+        adventure_info,
+        session
+    )
+    time.sleep(5)
+    new_items = adventure_info.items
+    for i, x in enumerate(new_items):
+        new_items[i].image_id = 1
+    adventure_info.items = new_items
+    update_state_content_adventure(
+        adventure_id,
+        AdventureState.image_characters,
+        adventure_info,
+        session
+    )
+    time.sleep(5)
+    new_characters = adventure_info.characters
+    for i, x in enumerate(new_characters):
+        new_characters[i].image_id = 1
+    adventure_info.characters = new_characters
+    update_state_content_adventure(
+        adventure_id,
+        AdventureState.ready,
+        adventure_info,
+        session
+    )
+    
 
 def regenerate_quest_with_models(
     adventure: Adventure,
