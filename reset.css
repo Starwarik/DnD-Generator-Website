@@ -48,7 +48,7 @@ body {
     scrollbar-width: none;
 }
 
-body::-webkit-scrollbar {
+::-webkit-scrollbar {
     display: none;
 }
 /*
@@ -115,8 +115,4 @@ dialog {
     border-width: 0;
     -ms-overflow-style: none;
     scrollbar-width: 0px;
-}
-
-dialog::-webkit-scrollbar {
-    display: none;
 }
