@@ -47,8 +47,10 @@ def update_state_content_adventure(
 
 def convert_adventure_to_public(adventure: Adventure) -> AdventurePublic:
     adventure_transcript = adventure.model_dump()
+    '''
     if not (adventure_transcript["content"] is None):
         adventure_transcript["content"] = AdventureInfo.model_validate_json(
             adventure_transcript["content"]
         )
+    '''
     return AdventurePublic.model_validate(adventure_transcript)

@@ -16,7 +16,8 @@ class AdventureState(Enum):
 class AdventurePublic(SQLModel):
     id: int | None
     state: AdventureState
-    content: AdventureInfo | None
+    #content: AdventureInfo | None
+    content: str | None
 
 
 class Adventure(SQLModel, table=True):
