@@ -52,7 +52,7 @@ def generate_images_characters(adventure: Adventure, session: Session, state: Ad
     content = AdventureInfo.model_validate_json(adventure.content)
     for i in range(len(content.characters)):
         char = content.characters[i]
-        if char.image_id == -1:
+        if char.image_id is None:
             try:
                 image_id = _generate_image(
                     character_image_generation.format(char_name=char.name, char_description=char.description),
@@ -73,7 +73,7 @@ def generate_images_items(adventure: Adventure, session: Session, state: Adventu
     content = AdventureInfo.model_validate_json(adventure.content)
     for i in range(len(content.items)):
         item = content.items[i]
-        if item.image_id == -1:
+        if item.image_id is None:
             try:
                 image_id = _generate_image(
                     item_image_generation.format(item_name=item.name, item_description=item.description),
@@ -191,13 +191,11 @@ def generate_adventure_with_models(
     def success(out):
         items = [Item(
             name=x['name'],
-            description=x['description'],
-            image_id=-1
+            description=x['description']
         ) for x in out[1]['items']]
         characters = [Character(
             name=x['name'],
-            description=x['description'],
-            image_id=-1
+            description=x['description']
         ) for x in out[2]['players']]
         quests = [Quest(
             name=x['name'],
@@ -212,8 +210,6 @@ def generate_adventure_with_models(
             description=out[0]['location']['description'],
             location=location_name,
             setting=setting,
-            adventure_image_id=-1,
-            map_image_id=-1,
             playerNum=num_players,
             characters=characters,
             items=items,
@@ -253,41 +249,33 @@ def generate_adventure_test(
         'description':'Test location description',
         'location':location_name,
         'setting':setting,
-        'adventure_image_id':-1,
-        'map_image_id':-1,
         'playerNum':num_players,
         'characters':[
             {
                 'name': 'Test character 1',
-                'description': 'Test description of character 1',
-                'image_id': -1
+                'description': 'Test description of character 1'
             },
             {
                 'name': 'Test character 2',
-                'description': 'Test description of character 2',
-                'image_id': -1
+                'description': 'Test description of character 2'
             },
             {
                 'name': 'Test character 3',
-                'description': 'Test description of character 3',
-                'image_id': -1
+                'description': 'Test description of character 3'
             }
         ],
         'items':[
             {
                 'name': 'Test item 1',
-                'description': 'Test description of item 1',
-                'image_id': -1
+                'description': 'Test description of item 1'
             },
             {
                 'name': 'Test item 2',
-                'description': 'Test description of item 2',
-                'image_id': -1
+                'description': 'Test description of item 2'
             },
             {
                 'name': 'Test item 3',
-                'description': 'Test description of item 3',
-                'image_id': -1
+                'description': 'Test description of item 3'
             }
         ],
         'quests':[
@@ -440,8 +428,7 @@ def regenerate_character_concrete_with_models(
             print(out)
             content.characters[index_character] = Character(
                 name=out_try[0]['name'],
-                description=out_try[0]['description'],
-                image_id=-1
+                description=out_try[0]['description']
             )
             adventure = update_state_content_adventure(
                 adventure.id,
@@ -473,8 +460,7 @@ def regenerate_character_with_models(
             print(out)
             content.characters = [Character(
                 name=x['name'],
-                description=x['description'],
-                image_id=-1
+                description=x['description']
             ) for x in out_try[0]['players']]
             adventure = update_state_content_adventure(
                 adventure.id,
@@ -507,8 +493,7 @@ def regenerate_items_concrete_with_models(
             print(out)
             content.items[index_item] = Item(
                 name=out_try[0]['name'],
-                description=out_try[0]['description'],
-                image_id=-1
+                description=out_try[0]['description']
             )
             adventure = update_state_content_adventure(
                 adventure.id,
@@ -540,8 +525,7 @@ def regenerate_items_with_models(
             print(out)
             content.items = [Item(
                 name=x['name'],
-                description=x['description'],
-                image_id=-1
+                description=x['description']
             ) for x in out_try[0]['items']]
             adventure = update_state_content_adventure(
                 adventure.id,

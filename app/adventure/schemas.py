@@ -4,13 +4,13 @@ from pydantic import BaseModel
 class Character(BaseModel):
     name: str
     description: str
-    image_id: int
+    image_id: int | None = None
 
 
 class Item(BaseModel):
     name: str
     description: str
-    image_id: int
+    image_id: int | None = None
 
 
 class Quest(BaseModel):
@@ -27,8 +27,8 @@ class AdventureInfo(BaseModel):
     description: str
     location: str
     setting: str
-    adventure_image_id: int
-    map_image_id: int
+    adventure_image_id: int | None = None
+    map_image_id: int | None = None
     playerNum: int
     characters: list[Character]
     items: list[Item]
