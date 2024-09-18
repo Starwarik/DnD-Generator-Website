@@ -322,8 +322,8 @@ def generate_adventure_test(
         session
     )
     time.sleep(5)
-    adventure_info.adventure_image_id = 1
-    adventure_info.map_image_id = 1
+    adventure_info.adventure_image_id = -42
+    adventure_info.map_image_id = -42
     update_state_content_adventure(
         adventure_id,
         AdventureState.image_items,
@@ -333,7 +333,7 @@ def generate_adventure_test(
     time.sleep(5)
     new_items = adventure_info.items
     for i, x in enumerate(new_items):
-        new_items[i].image_id = 1
+        new_items[i].image_id = -42
     adventure_info.items = new_items
     update_state_content_adventure(
         adventure_id,
@@ -344,7 +344,7 @@ def generate_adventure_test(
     time.sleep(5)
     new_characters = adventure_info.characters
     for i, x in enumerate(new_characters):
-        new_characters[i].image_id = 1
+        new_characters[i].image_id = -42
     adventure_info.characters = new_characters
     update_state_content_adventure(
         adventure_id,
