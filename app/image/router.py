@@ -8,6 +8,7 @@ from app.image.models import Image
 from app.image.service import get_image_by_id
 from app.user.models import User
 from fastapi.responses import FileResponse
+from app.image.config import image_setting
 
 image_router = APIRouter(tags=["image"])
 
@@ -19,7 +20,7 @@ def get_user_info(
     session: Session = Depends(get_session),
 ):
     if image_id == -42:
-        return FileResponse("../images/test_image.jpg")
+        return FileResponse(image_setting.test_image_url)
     image = get_image_by_id(image_id, current_user.id, session)
     if image is None:
         return None

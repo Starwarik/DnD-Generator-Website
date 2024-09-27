@@ -152,7 +152,7 @@ def regenerate_items_concrete(
     )
     return convert_adventure_to_public(adventure)
 
-#@generation_router.get("/api/refresh_images")
+@generation_router.get("/api/refresh_images")
 def refresh_images(
     id_adventure: int,
     background_tasks: BackgroundTasks,

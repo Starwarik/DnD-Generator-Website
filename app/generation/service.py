@@ -39,6 +39,7 @@ def generate_images_adventure(adventure: Adventure, session: Session, state: Adv
                 session
             )
             content.map_image_id = image_id
+            time.sleep(10)
     except Exception as e:
         print(e)
     update_state_content_adventure(
@@ -52,7 +53,7 @@ def generate_images_characters(adventure: Adventure, session: Session, state: Ad
     content = AdventureInfo.model_validate_json(adventure.content)
     for i in range(len(content.characters)):
         char = content.characters[i]
-        if char.image_id is None:
+        if char.image_id == -1:
             try:
                 image_id = _generate_image(
                     character_image_generation.format(char_name=char.name, char_description=char.description),
@@ -60,6 +61,7 @@ def generate_images_characters(adventure: Adventure, session: Session, state: Ad
                     session
                 )
                 content.characters[i].image_id = image_id
+                time.sleep(10)
             except Exception as e:
                 print(e)
     update_state_content_adventure(
@@ -73,7 +75,7 @@ def generate_images_items(adventure: Adventure, session: Session, state: Adventu
     content = AdventureInfo.model_validate_json(adventure.content)
     for i in range(len(content.items)):
         item = content.items[i]
-        if item.image_id is None:
+        if item.image_id == -1:
             try:
                 image_id = _generate_image(
                     item_image_generation.format(item_name=item.name, item_description=item.description),
@@ -81,6 +83,7 @@ def generate_images_items(adventure: Adventure, session: Session, state: Adventu
                     session
                 )
                 content.items[i].image_id = image_id
+                time.sleep(10)
             except Exception as e:
                 print(e)
     update_state_content_adventure(
@@ -145,6 +148,7 @@ def _generate_iterative_chat(
         try:
             out.append(parse_json_garbage(generated_text))
             messages.append(AIMessage(generated_text))
+            time.sleep(10)
         except Exception:
             print(generated_text)
             return out, messages
@@ -152,7 +156,9 @@ def _generate_iterative_chat(
 
 def generate_all_images(adventure: Adventure, session: Session):
     generate_images_adventure(adventure, session, state=AdventureState.image_items)
+    time.sleep(20)
     generate_images_items(adventure, session, state=AdventureState.image_characters)
+    time.sleep(20)
     generate_images_characters(adventure, session, state=AdventureState.ready)
 
 def generate_with_tries(func_success, user_messages, num_players, extra_info: dict[str, Any]):
@@ -167,7 +173,7 @@ def generate_with_tries(func_success, user_messages, num_players, extra_info: di
         out += out_try
         if len(out) == len(user_messages):
             func_success(out)
-            break
+            return
         else:
             messages.pop()
             print(len(messages))
@@ -189,6 +195,7 @@ def generate_adventure_with_models(
     }
 
     def success(out):
+        print(out)
         items = [Item(
             name=x['name'],
             description=x['description']
