@@ -33,6 +33,8 @@ class GigaChatImage(ImageGeneration):
         if user_prompt:
             messages.append(HumanMessage(user_prompt))
         response = self.model.invoke(messages)
+        
+        print('INPUT IMAGE TOKENS', response.response_metadata['token_usage'].prompt_tokens, 'COMPLETION IMAGE TOKENS', response.response_metadata['token_usage'].completion_tokens, 'COMPLETION IMAGE TOKENS', response.response_metadata['token_usage'].total_tokens)
         image_uuid = re.search(r'img src="(.+?)"', response.content).group(1)
         image = self.model.get_file(image_uuid).content
         image = b64decode(image)

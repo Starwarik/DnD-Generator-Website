@@ -10,11 +10,13 @@ from app.generation.service import *
 from app.adventure.models import AdventurePublic, AdventureState
 from app.user.models import User
 from app.auth.dependencies import get_current_user
+from app.limiter import limiter
 
 generation_router = APIRouter(tags=["generation"])
 
 
 @generation_router.get("/api/generate")
+@limiter.limit("1/second;1250/hour")
 def generate_adventure(
     num_players: int,
     location_name: str,

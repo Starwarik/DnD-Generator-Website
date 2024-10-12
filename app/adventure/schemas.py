@@ -17,14 +17,12 @@ class Quest(BaseModel):
     name: str
     description: str
     goal: str
-    name_character: str
-    name_items: list[str]
 
 
 class AdventureInfo(BaseModel):
     name: str
     annotation: str
-    description: str
+    description: list[str]
     location: str
     setting: str
     adventure_image_id: int = -1

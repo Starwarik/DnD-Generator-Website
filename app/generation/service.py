@@ -34,11 +34,19 @@ def generate_images_adventure(adventure: Adventure, session: Session, state: Adv
     try:
         if content.map_image_id == -1:
             image_id = _generate_image(
-                map_image_generation.format(location_name=content.location, location_description=content.description),
+                map_image_generation.format(location_name=content.location, location_description='\n'.join(content.description)),
                 adventure.user_id,
                 session
             )
             content.map_image_id = image_id
+            time.sleep(10)
+        if content.adventure_image_id == -1:
+            image_id = _generate_image(
+                adventure_image_generation.format(location_name=content.location, location_description='\n'.join(content.description)),
+                adventure.user_id,
+                session
+            )
+            content.adventure_image_id = image_id
             time.sleep(10)
     except Exception as e:
         print(e)
