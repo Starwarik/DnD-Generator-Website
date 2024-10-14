@@ -8,6 +8,10 @@ from app.generation.schemas import JSONGenerationResult
 import json
 
 
+class MaxAttemptsExced(Exception):
+    pass
+
+
 def parse_json_garbage(s: str) -> dict[str, Any]:
     s = s[next(idx for idx, c in enumerate(s) if c in "{["):]
     try:
@@ -28,7 +32,7 @@ def generate_text_with_tries(instructions: list[TextGenerationInstruction], adve
             except Exception:
                 pass
         if generated_result is None:
-            raise Exception()
+            raise MaxAttemptsExced()
         generated_json = JSONGenerationResult(
             content=parse_json_garbage(generated_result.content),
             prompt_token_count=generated_result.prompt_token_count,
