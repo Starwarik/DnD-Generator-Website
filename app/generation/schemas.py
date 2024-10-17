@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class AdventureInfoInstructionAnswer(BaseModel):
-    description: dict[int, str]
+    description: dict[int|str, str] | list[str] | str
 
 
 class ItemAnswer(BaseModel):

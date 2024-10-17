@@ -47,7 +47,13 @@ class AdventureInfoInstruction(TextGenerationInstruction):
     
     def change_adventure_on_success(self, adventure: AdventureInfo, result: JSONGenerationResult) -> AdventureInfo:
         generated_answer = AdventureInfoInstructionAnswer.model_validate(result.content)
-        adventure.description = list(generated_answer.description.values())
+        generated_description = generated_answer.description
+        if type(generated_description) is str:
+            adventure.description = generated_description.split('/n')
+        elif type(generated_description) is list:
+            adventure.description = generated_description
+        elif type(generated_description) is dict:
+            adventure.description = list(generated_description.values())
         return adventure
 
 @final
