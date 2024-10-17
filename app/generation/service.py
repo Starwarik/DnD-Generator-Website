@@ -6,6 +6,7 @@ from app.adventure.models import Adventure, AdventureState
 from app.adventure.service import create_adventure, update_state_content_adventure
 from app.adventure.schemas import AdventureInfo, Character, Item, Quest
 from langchain.schema import HumanMessage, SystemMessage, AIMessage
+from app.generation.generation_service import generate_new_adventure
 from app.generation.prompts import *
 from app.generation.service_image import image_model
 
@@ -197,57 +198,19 @@ def generate_adventure_with_models(
     background_tasks: BackgroundTasks,
     session: Session,
 ):
-    extra_info = {
-        'nameLocation': location_name,
-        'nameSetting': setting
-    }
-
-    def success(out):
-        print(out)
-        items = [Item(
-            name=x['name'],
-            description=x['description']
-        ) for x in out[1]['items']]
-        characters = [Character(
-            name=x['name'],
-            description=x['description']
-        ) for x in out[2]['players']]
-        quests = [Quest(
-            name=x['name'],
-            description=x['description'],
-            goal=x['goal'],
-            name_character=x['name_character'],
-            name_items=x['name_items'],
-        ) for x in out[3]['quests']]
-        adventure = AdventureInfo(
-            name=out[0]['location']['name'],
-            annotation='',
-            description=out[0]['location']['description'],
-            location=location_name,
-            setting=setting,
-            playerNum=num_players,
-            characters=characters,
-            items=items,
-            quests=quests
-        )
-        adventure = update_state_content_adventure(
-            adventure_id,
-            AdventureState.image_adventure,
-            adventure,
-            session
-        )
-        background_tasks.add_task(
-            generate_all_images,
-            adventure,
-            session,
-        )
-
-    generate_with_tries(
-        success,
-        instructions,
-        num_players,
-        extra_info
+    adventure_info = generate_new_adventure(location_name, setting, num_players, text_generation_model)
+    adventure = update_state_content_adventure(
+        adventure_id,
+        AdventureState.image_adventure,
+        adventure_info,
+        session
     )
+    background_tasks.add_task(
+        generate_all_images,
+        adventure,
+        session,
+    )
+
 
 def generate_adventure_test(
     location_name: str,

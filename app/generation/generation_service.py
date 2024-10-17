@@ -2,6 +2,7 @@ from typing import Any
 from fastapi import BackgroundTasks
 from sqlmodel import Session
 from app.adventure.schemas import *
+from app.adventure.service import update_state_content_adventure
 from app.generation.instructions import *
 from app.generation.service_text import TextGenerationModel
 from app.generation.schemas import JSONGenerationResult
@@ -13,7 +14,12 @@ def parse_json_garbage(s: str) -> dict[str, Any]:
     try:
         return json.loads(s)
     except json.JSONDecodeError as e:
-        return json.loads(s[:e.pos])
+        try:
+            return json.loads(s[:e.pos])
+        except Exception as e:
+            print(s)
+            raise e
+    
     
 
 def generate_text_with_tries(instructions: list[TextGenerationInstruction], adventure: AdventureInfo, model: TextGenerationModel, n_tries: int = 3) -> AdventureInfo:
@@ -21,29 +27,31 @@ def generate_text_with_tries(instructions: list[TextGenerationInstruction], adve
     for instruction in instructions:
         prompts = instruction.get_prompts()
         config.update(instruction.get_additional_config(adventure))
+        for i in range(len(prompts)):
+            prompts[i].content = prompts[i].content.format(**config)
         generated_result = None
         for _ in range(n_tries):
             try:
                 generated_result = model.generate_text(prompts)
-            except Exception:
-                pass
+            except Exception as e:
+                print(_, 'try failed')
+                print(e)
         if generated_result is None:
-            raise Exception()
+            raise Exception('Max tries')
+        print('Success')
         generated_json = JSONGenerationResult(
             content=parse_json_garbage(generated_result.content),
             prompt_token_count=generated_result.prompt_token_count,
             assistant_token_count=generated_result.assistant_token_count
         )
+        print(generated_json)
         adventure = instruction.change_adventure_on_success(adventure, generated_json)
     return adventure
 
-def generate_adventure_with_models(
+def generate_new_adventure(
     location_name: str,
     setting: str,
     num_players: int,
-    adventure_id: int,
-    background_tasks: BackgroundTasks,
-    session: Session,
     model: TextGenerationModel
 ):
     adventure_info = AdventureInfo(
@@ -65,20 +73,8 @@ def generate_adventure_with_models(
         QuestsInstruction()
     ]
     
-    adventure_info = generate_text_with_tries(
+    return generate_text_with_tries(
         instructions,
         adventure_info,
         model
-    )
-
-    adventure = update_state_content_adventure(
-        adventure_id,
-        AdventureState.image_adventure,
-        adventure,
-        session
-    )
-
-    background_tasks.add_task(
-        generate_all_images,
-        adventure,
     )

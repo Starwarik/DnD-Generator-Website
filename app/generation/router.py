@@ -3,20 +3,17 @@ from fastapi import APIRouter, BackgroundTasks, Depends
 from sqlmodel import Session
 from typing_extensions import Annotated
 
-from app.adventure.schemas import AdventureInfo
 from app.adventure.service import convert_adventure_to_public, get_adventure
 from app.database.database import get_session
 from app.generation.service import *
-from app.adventure.models import AdventurePublic, AdventureState
+from app.adventure.models import AdventurePublic
 from app.user.models import User
 from app.auth.dependencies import get_current_user
-from app.limiter import limiter
 
 generation_router = APIRouter(tags=["generation"])
 
 
 @generation_router.get("/api/generate")
-@limiter.limit("1/second;1250/hour")
 def generate_adventure(
     num_players: int,
     location_name: str,
