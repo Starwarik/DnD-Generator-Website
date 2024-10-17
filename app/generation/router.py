@@ -93,16 +93,6 @@ def regenerate_quest_concrete(
 
 # ================================ CHARACTERS ===========================
 
-@generation_router.put("/api/adventure/{id_adventure}/characters/{index_character}")
-def regenerate_characters(
-    id_adventure: int,
-    index_character: int,
-    background_tasks: BackgroundTasks,
-    current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
-) -> AdventurePublic:
-    raise NotImplementedError()
-
 @generation_router.put("/api/adventure/{id_adventure}/characters")
 def regenerate_characters_concrete(
     id_adventure: int,
@@ -117,6 +107,16 @@ def regenerate_characters_concrete(
         session,
     )
     return convert_adventure_to_public(adventure)
+
+@generation_router.put("/api/adventure/{id_adventure}/characters/{index_character}")
+def regenerate_characters(
+    id_adventure: int,
+    index_character: int,
+    background_tasks: BackgroundTasks,
+    current_user: Annotated[User, Depends(get_current_user)],
+    session: Session = Depends(get_session),
+) -> AdventurePublic:
+    raise NotImplementedError()
 
 # ================================== ITEMS ======================================
 

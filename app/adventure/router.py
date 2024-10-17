@@ -13,7 +13,7 @@ from app.auth.dependencies import get_current_user
 adventure_router = APIRouter(tags=["adventure"])
 
 
-@adventure_router.get("/api/adventures")
+@adventure_router.get("/api/adventure")
 def get_user_adventure(
     current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
@@ -24,7 +24,7 @@ def get_user_adventure(
     return list(map(convert_adventure_to_public, results))
 
 
-@adventure_router.get("/api/adventures/{adventure_id}")
+@adventure_router.get("/api/adventure/{adventure_id}")
 def get_adventure(
     current_user: Annotated[User, Depends(get_current_user)],
     adventure_id: int,
