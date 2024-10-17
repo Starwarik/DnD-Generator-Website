@@ -21,7 +21,10 @@ def get_image(
 ):
     if image_id == -42:
         return FileResponse(image_setting.test_image_url)
-    image = get_image_by_id(image_id, current_user.id, session)
-    if image is None:
-        return None
-    return Response(content=image.image, media_type=image.media_type)
+    try:
+        image = get_image_by_id(image_id, current_user.id, session)
+        if image is None:
+            return None
+        return Response(content=image.image, media_type=image.media_type)
+    except Exception:
+        return Response(status_code=404)
