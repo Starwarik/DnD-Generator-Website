@@ -41,7 +41,7 @@ def get_adventure(
         raise Exception()
     return convert_adventure_to_public(result)
 
-@adventure_router.post("/api/change_annotation")
+@adventure_router.post("/api/adventure/{id_adventure}/annotation")
 def change_annotation(
     id_adventure: int,
     new_annotation: str,
