@@ -13,7 +13,7 @@ from app.auth.dependencies import get_current_user
 generation_router = APIRouter(tags=["generation"])
 
 
-'''
+"""
 @generation_router.get("/api/generate_test")
 def generate_adventure(
     num_players: int,
@@ -34,7 +34,8 @@ def generate_adventure(
         session,
     )
     return convert_adventure_to_public(adventure)
-'''
+"""
+
 
 @generation_router.post("/api/adventure")
 def generate_adventure(
@@ -57,7 +58,9 @@ def generate_adventure(
     )
     return convert_adventure_to_public(adventure)
 
+
 # ============================= QUESTS ========================
+
 
 @generation_router.put("/api/adventure/{id_adventure}/quests")
 def regenerate_quest(
@@ -73,6 +76,7 @@ def regenerate_quest(
         session,
     )
     return convert_adventure_to_public(adventure)
+
 
 @generation_router.put("/api/adventure/{id_adventure}/quests/{index_quest}")
 def regenerate_quest_concrete(
@@ -91,7 +95,9 @@ def regenerate_quest_concrete(
     )
     return convert_adventure_to_public(adventure)
 
+
 # ================================ CHARACTERS ===========================
+
 
 @generation_router.put("/api/adventure/{id_adventure}/characters")
 def regenerate_characters_concrete(
@@ -108,6 +114,7 @@ def regenerate_characters_concrete(
     )
     return convert_adventure_to_public(adventure)
 
+
 @generation_router.put("/api/adventure/{id_adventure}/characters/{index_character}")
 def regenerate_characters(
     id_adventure: int,
@@ -118,7 +125,9 @@ def regenerate_characters(
 ) -> AdventurePublic:
     raise NotImplementedError()
 
+
 # ================================== ITEMS ======================================
+
 
 @generation_router.put("/api/adventure/{id_adventure}/items")
 def regenerate_items(
@@ -134,6 +143,7 @@ def regenerate_items(
         session,
     )
     return convert_adventure_to_public(adventure)
+
 
 @generation_router.get("/api/adventure/{id_adventure}/items/{index_item}")
 def regenerate_items_concrete(
@@ -152,7 +162,9 @@ def regenerate_items_concrete(
     )
     return convert_adventure_to_public(adventure)
 
+
 # ======================================================================================
+
 
 @generation_router.get("/api/refresh_images")
 def refresh_images(

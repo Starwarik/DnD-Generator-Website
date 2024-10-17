@@ -19,6 +19,7 @@ class TextGenerationModel(ABC):
     def generate_text(self, prompts: list[Message]) -> TextGenerationResult:
         raise NotImplementedError()
 
+
 @final
 class GigaChatText(TextGenerationModel):
     def __init__(self):
@@ -44,67 +45,68 @@ class GigaChatText(TextGenerationModel):
         response = self.model.invoke(messages)
         return TextGenerationResult(
             content=response.content,
-            prompt_token_count=response.response_metadata['token_usage'].prompt_tokens,
-            assistant_token_count=response.response_metadata['token_usage'].completion_tokens
+            prompt_token_count=response.response_metadata["token_usage"].prompt_tokens,
+            assistant_token_count=response.response_metadata[
+                "token_usage"
+            ].completion_tokens,
         )
 
 
 @final
 class YandexGPTTextSync(TextGenerationModel):
-    def __init__(self, url_to_server: str = 'https://llm.api.cloud.yandex.net/foundationModels/v1/completion'):
+    def __init__(
+        self,
+        url_to_server: str = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion",
+    ):
         self.url_to_server = url_to_server
         self.api_key = generation_setting.yandexchat_api_key.get_secret_value()
         self.folder_id = generation_setting.yandexchat_folder_id
-        self.model_uri = 'yandexgpt-lite/latest'
+        self.model_uri = "yandexgpt-lite/latest"
         self.max_tokens = 2000
         self.temperature = 1
 
-    def _create_header(self)  -> dict[str, str]:
+    def _create_header(self) -> dict[str, str]:
         return {
-            'Content-Type': 'application/json',
-            'Authorization': 'Api-Key '+self.api_key
+            "Content-Type": "application/json",
+            "Authorization": "Api-Key " + self.api_key,
         }
-    
+
     def _create_payload(self, messages: list[dict[str, str]]) -> dict[str, Any]:
         return {
-            "modelUri": "gpt://"+self.folder_id+"/"+self.model_uri,
+            "modelUri": "gpt://" + self.folder_id + "/" + self.model_uri,
             "completionOptions": {
                 "stream": False,
                 "temperature": self.temperature,
-                "maxTokens": self.max_tokens
+                "maxTokens": self.max_tokens,
             },
-            "messages": messages
+            "messages": messages,
         }
-    
+
     def _convert_messages(self, prompts: list[Message]) -> list[dict[str, str]]:
         messages: list[dict[str, str]] = []
         for prompt in prompts:
             match prompt.type:
                 case MessageType.assistant:
-                    messages.append({
-                        "role": "assistant",
-                        "text": prompt.content
-                    })
+                    messages.append({"role": "assistant", "text": prompt.content})
                 case MessageType.user:
-                    messages.append({
-                        "role": "user",
-                        "text": prompt.content
-                    })
+                    messages.append({"role": "user", "text": prompt.content})
                 case MessageType.system:
-                    messages.append({
-                        "role": "user",
-                        "text": prompt.content
-                    })
+                    messages.append({"role": "user", "text": prompt.content})
         return messages
 
     def generate_text(self, prompts: list[Message]) -> TextGenerationResult:
         messages = self._convert_messages(prompts)
-        answer = requests.post(self.url_to_server, headers=self._create_header(), json=self._create_payload(messages))
+        answer = requests.post(
+            self.url_to_server,
+            headers=self._create_header(),
+            json=self._create_payload(messages),
+        )
         answer_json = answer.json()
         return TextGenerationResult(
-            content=answer_json['result']['alternatives'][0]['message']['text'],
-            prompt_token_count=answer_json['result']['usage']['inputTextTokens'],
-            assistant_token_count=answer_json['result']['usage']['completionTokens']
+            content=answer_json["result"]["alternatives"][0]["message"]["text"],
+            prompt_token_count=answer_json["result"]["usage"]["inputTextTokens"],
+            assistant_token_count=answer_json["result"]["usage"]["completionTokens"],
         )
+
 
 text_generation_model = YandexGPTTextSync()

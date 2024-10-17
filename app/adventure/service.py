@@ -10,17 +10,21 @@ def create_adventure(user_id: int, session: Session):
     session.refresh(adventure)
     return adventure
 
+
 def get_adventure(
     id: int,
     user_id: int,
     session: Session,
 ) -> Adventure:
-    command = select(Adventure).where(and_(Adventure.id == id, Adventure.user_id == user_id))
+    command = select(Adventure).where(
+        and_(Adventure.id == id, Adventure.user_id == user_id)
+    )
     results = session.exec(command)
     result = results.first()
     if result is None:
         raise Exception()
     return result
+
 
 def update_state_content_adventure(
     id: int,
@@ -47,10 +51,10 @@ def update_state_content_adventure(
 
 def convert_adventure_to_public(adventure: Adventure) -> AdventurePublic:
     adventure_transcript = adventure.model_dump()
-    '''
+    """
     if not (adventure_transcript["content"] is None):
         adventure_transcript["content"] = AdventureInfo.model_validate_json(
             adventure_transcript["content"]
         )
-    '''
+    """
     return AdventurePublic.model_validate(adventure_transcript)
