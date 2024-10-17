@@ -18,8 +18,7 @@ def parse_json_garbage(s: str) -> dict[str, Any]:
             return json.loads(s[:e.pos])
         except Exception as e:
             print(s)
-            raise e
-    
+            raise e   
     
 
 def generate_text_with_tries(instructions: list[TextGenerationInstruction], adventure: AdventureInfo, model: TextGenerationModel, n_tries: int = 3) -> AdventureInfo:
