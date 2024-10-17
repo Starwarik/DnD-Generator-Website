@@ -4,7 +4,7 @@ from sqlmodel import Session
 from app.adventure.schemas import *
 from app.adventure.service import update_state_content_adventure
 from app.generation.instructions import *
-from app.generation.service_text import TextGenerationModel
+from app.generation.client_text import TextGenerationModel
 from app.generation.schemas import JSONGenerationResult
 import json
 
