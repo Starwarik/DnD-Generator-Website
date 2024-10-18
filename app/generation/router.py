@@ -145,7 +145,7 @@ def regenerate_items(
     return convert_adventure_to_public(adventure)
 
 
-@generation_router.get("/api/adventure/{id_adventure}/items/{index_item}")
+@generation_router.put("/api/adventure/{id_adventure}/items/{index_item}")
 def regenerate_items_concrete(
     index_quest: int,
     id_adventure: int,
