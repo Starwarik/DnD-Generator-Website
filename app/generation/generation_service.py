@@ -24,10 +24,9 @@ def generate_text_with_tries(
     model: TextGenerationModel,
     n_tries: int = 3,
 ) -> AdventureInfo:
-    config: dict[str, str] = {}
     for instruction in instructions:
         prompts = instruction.get_prompts()
-        config.update(instruction.get_additional_config(adventure))
+        config = instruction.get_config(adventure)
         for i in range(len(prompts)):
             prompts[i].content = prompts[i].content.format(**config)
         generated_result = None

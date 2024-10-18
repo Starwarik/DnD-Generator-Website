@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from app.adventure.models import Adventure
 import app.generation.prompts as prompts_template
 
 from typing import final
@@ -9,6 +10,34 @@ import json
 from app.adventure.schemas import *
 from app.generation.schemas import *
 
+def calc_default_config(adventure: AdventureInfo) -> dict[str, str]:
+    return {
+        "nameLocation": adventure.location,
+        "nameSetting": adventure.setting,
+        "playerNum": str(adventure.playerNum),
+        "playerNumXthree": str(adventure.playerNum * 3),
+    }
+
+def calc_description_answer_config(adventure: AdventureInfo) -> dict[str, str]:
+    description = {(i + 1): x for i, x in enumerate(adventure.description)}
+    return {"description_json_answer": json.dumps(description, indent=4)}
+
+def calc_items_answer_config(adventure: AdventureInfo) -> dict[str, str]:
+    items = {
+        "items": [
+            {"name": x.name, "description": x.description} for x in adventure.items
+        ]
+    }
+    return {"items_json_answer": json.dumps(items, indent=4)}
+
+def calc_characters_answer_config(adventure: AdventureInfo) -> dict[str, str]:
+    characters = {
+        "players": [
+            {"name": x.name, "description": x.description}
+            for x in adventure.characters
+        ]
+    }
+    return {"characters_json_answer": json.dumps(characters, indent=4)}
 
 class TextGenerationInstruction(ABC):
     @abstractmethod
@@ -16,7 +45,7 @@ class TextGenerationInstruction(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_additional_config(self, adventure: AdventureInfo) -> dict[str, str]:
+    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         raise NotImplementedError()
 
     @abstractmethod
@@ -36,13 +65,8 @@ class AdventureInfoInstruction(TextGenerationInstruction):
             Message(type=MessageType.user, content=prompts_template.generate_prompt),
         ]
 
-    def get_additional_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        return {
-            "nameLocation": adventure.location,
-            "nameSetting": adventure.setting,
-            "playerNum": str(adventure.playerNum),
-            "playerNumXthree": str(adventure.playerNum * 3),
-        }
+    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
+        return calc_default_config(adventure)
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: JSONGenerationResult
@@ -72,9 +96,10 @@ class ItemsInstruction(TextGenerationInstruction):
             Message(type=MessageType.user, content=prompts_template.items_prompt),
         ]
 
-    def get_additional_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        description = {(i + 1): x for i, x in enumerate(adventure.description)}
-        return {"description_json_answer": json.dumps(description, indent=4)}
+    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
+        config = calc_default_config(adventure)
+        config.update(calc_description_answer_config(adventure))
+        return config
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: JSONGenerationResult
@@ -102,13 +127,11 @@ class CharactersInstruction(TextGenerationInstruction):
             Message(type=MessageType.user, content=prompts_template.characters_prompt),
         ]
 
-    def get_additional_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        items = {
-            "items": [
-                {"name": x.name, "description": x.description} for x in adventure.items
-            ]
-        }
-        return {"items_json_answer": json.dumps(items, indent=4)}
+    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
+        config = calc_default_config(adventure)
+        config.update(calc_description_answer_config(adventure))
+        config.update(calc_items_answer_config(adventure))
+        return config
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: JSONGenerationResult
@@ -141,14 +164,12 @@ class QuestsInstruction(TextGenerationInstruction):
             Message(type=MessageType.user, content=prompts_template.quest_prompt),
         ]
 
-    def get_additional_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        characters = {
-            "players": [
-                {"name": x.name, "description": x.description}
-                for x in adventure.characters
-            ]
-        }
-        return {"characters_json_answer": json.dumps(characters, indent=4)}
+    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
+        config = calc_default_config(adventure)
+        config.update(calc_description_answer_config(adventure))
+        config.update(calc_items_answer_config(adventure))
+        config.update(calc_characters_answer_config(adventure))
+        return config
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: JSONGenerationResult
