@@ -8,8 +8,8 @@ from app.adventure.schemas import AdventureInfo, Character, Item, Quest
 from langchain.schema import HumanMessage, SystemMessage, AIMessage
 from app.generation.generation_service import generate_new_adventure
 from app.generation.prompts import *
-from app.generation.client_image import image_model
 
+from app.generation.client_image import image_model
 from app.generation.client_text import text_generation_model
 
 import json
