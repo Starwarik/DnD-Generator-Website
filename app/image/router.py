@@ -13,15 +13,18 @@ from app.image.config import image_setting
 image_router = APIRouter(tags=["image"])
 
 
-@image_router.get("/api/get_image")
-def get_user_info(
-    current_user: Annotated[User, Depends(get_current_user)],
+@image_router.get("/api/images/{image_id}")
+def get_image(
     image_id: int,
+    current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
 ):
     if image_id == -42:
         return FileResponse(image_setting.test_image_url)
-    image = get_image_by_id(image_id, current_user.id, session)
-    if image is None:
-        return None
-    return Response(content=image.image, media_type=image.media_type)
+    try:
+        image = get_image_by_id(image_id, current_user.id, session)
+        if image is None:
+            return None
+        return Response(content=image.image, media_type=image.media_type)
+    except Exception:
+        return Response(status_code=404)

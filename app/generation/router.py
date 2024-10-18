@@ -3,40 +3,17 @@ from fastapi import APIRouter, BackgroundTasks, Depends
 from sqlmodel import Session
 from typing_extensions import Annotated
 
-from app.adventure.schemas import AdventureInfo
 from app.adventure.service import convert_adventure_to_public, get_adventure
 from app.database.database import get_session
 from app.generation.service import *
-from app.adventure.models import AdventurePublic, AdventureState
+from app.adventure.models import AdventurePublic
 from app.user.models import User
 from app.auth.dependencies import get_current_user
-from app.limiter import limiter
 
 generation_router = APIRouter(tags=["generation"])
 
 
-@generation_router.get("/api/generate")
-@limiter.limit("1/second;1250/hour")
-def generate_adventure(
-    num_players: int,
-    location_name: str,
-    setting: str,
-    background_tasks: BackgroundTasks,
-    current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
-) -> AdventurePublic:
-    adventure = create_adventure(current_user.id, session)
-    background_tasks.add_task(
-        generate_adventure_with_models,
-        location_name,
-        setting,
-        num_players,
-        adventure.id,
-        background_tasks,
-        session,
-    )
-    return convert_adventure_to_public(adventure)
-
+"""
 @generation_router.get("/api/generate_test")
 def generate_adventure(
     num_players: int,
@@ -57,8 +34,35 @@ def generate_adventure(
         session,
     )
     return convert_adventure_to_public(adventure)
+"""
 
-@generation_router.get("/api/regenerate_quest")
+
+@generation_router.post("/api/adventure")
+def generate_adventure(
+    num_players: int,
+    location_name: str,
+    setting: str,
+    background_tasks: BackgroundTasks,
+    current_user: Annotated[User, Depends(get_current_user)],
+    session: Session = Depends(get_session),
+) -> AdventurePublic:
+    adventure = create_adventure(current_user.id, session)
+    background_tasks.add_task(
+        generate_adventure_with_models,
+        location_name,
+        setting,
+        num_players,
+        adventure.id,
+        background_tasks,
+        session,
+    )
+    return convert_adventure_to_public(adventure)
+
+
+# ============================= QUESTS ========================
+
+
+@generation_router.put("/api/adventure/{id_adventure}/quests")
 def regenerate_quest(
     id_adventure: int,
     background_tasks: BackgroundTasks,
@@ -73,7 +77,8 @@ def regenerate_quest(
     )
     return convert_adventure_to_public(adventure)
 
-@generation_router.get("/api/regenerate_quest/{index_quest}")
+
+@generation_router.put("/api/adventure/{id_adventure}/quests/{index_quest}")
 def regenerate_quest_concrete(
     index_quest: int,
     id_adventure: int,
@@ -90,8 +95,12 @@ def regenerate_quest_concrete(
     )
     return convert_adventure_to_public(adventure)
 
-@generation_router.get("/api/regenerate_characters")
-def regenerate_characters(
+
+# ================================ CHARACTERS ===========================
+
+
+@generation_router.put("/api/adventure/{id_adventure}/characters")
+def regenerate_characters_concrete(
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -105,24 +114,22 @@ def regenerate_characters(
     )
     return convert_adventure_to_public(adventure)
 
-@generation_router.get("/api/regenerate_quest/{index_quest}")
-def regenerate_quest_concrete(
-    index_quest: int,
+
+@generation_router.put("/api/adventure/{id_adventure}/characters/{index_character}")
+def regenerate_characters(
     id_adventure: int,
+    index_character: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
 ) -> AdventurePublic:
-    adventure = get_adventure(id_adventure, current_user.id, session)
-    background_tasks.add_task(
-        regenerate_quest_concrete_with_models,
-        adventure,
-        index_quest,
-        session,
-    )
-    return convert_adventure_to_public(adventure)
+    raise NotImplementedError()
 
-@generation_router.get("/api/regenerate_items")
+
+# ================================== ITEMS ======================================
+
+
+@generation_router.put("/api/adventure/{id_adventure}/items")
 def regenerate_items(
     id_adventure: int,
     background_tasks: BackgroundTasks,
@@ -137,7 +144,8 @@ def regenerate_items(
     )
     return convert_adventure_to_public(adventure)
 
-@generation_router.get("/api/regenerate_items/{index_item}")
+
+@generation_router.put("/api/adventure/{id_adventure}/items/{index_item}")
 def regenerate_items_concrete(
     index_quest: int,
     id_adventure: int,
@@ -153,6 +161,10 @@ def regenerate_items_concrete(
         session,
     )
     return convert_adventure_to_public(adventure)
+
+
+# ======================================================================================
+
 
 @generation_router.get("/api/refresh_images")
 def refresh_images(
