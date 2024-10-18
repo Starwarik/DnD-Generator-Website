@@ -1,8 +1,13 @@
+# ============================ Message Template =============================
+
+from app.generation.schemas import Message, MessageType
+
+
 instruction_system = """Оставь в качестве результата ТОЛЬКО JSON код, результат должен быть отдельным объектом в коде и иметь конечный и креативный."""
 
-generate_prompt = """Сгенерируй описание локации для ролевой настольной игры Dungeons & Dragons. Локация: "{nameLocation}", сеттинг: "{nameSetting}", количество участников: {playerNum}. Описание должно быть на русском языке в формате JSON и включать единственный ключ: "description" — текстовое обобщённое описание локации, в котором ключевые точки локации перечислены по номерам."""
+adventure_info_prompt = """Сгенерируй описание локации для ролевой настольной игры Dungeons & Dragons. Локация: "{nameLocation}", сеттинг: "{nameSetting}", количество участников: {playerNum}. Описание должно быть на русском языке в формате JSON и включать единственный ключ: "description" — текстовое обобщённое описание локации, в котором ключевые точки локации перечислены по номерам."""
 
-generate_answer = "{description_json_answer}"
+adventure_info_answer = "{description_json_answer}"
 
 items_prompt = """Сгенерируй в формате JSON описание возможных сокровищ (не менее 2 и не более 4), которые могут быть найдены на территории ранее описанной локации (объект “location”). Используй описания сокровищ из руководства D&D 5-й редакции. Структурируй результат отдельно в объекте “items”, без включения описания самой локации. Каждый предмет должен содержать ключи: "name" — название предмета; "description" — описание предмета."""
 
@@ -12,105 +17,77 @@ characters_prompt = """Сгенерируй в формате JSON описан�
 
 characters_answer = "{characters_json_answer}"
 
-quest_prompt = """Сгенерируй не менее 4 квестов, используя информацию из объекта 'location'. В каждом квесте должно быть подробное описание, включающее конкретные события и объекты. Ограничение на описание каждого квеста — не более 850 символов. Структурируй ответ в формате JSON так, чтобы квесты были представлены в объекте “quests”, с ключами: "name" — название квеста; "description" — подробное описание квеста (до 850 символов); "goal" — цель квеста."""
+quests_prompt = """Сгенерируй не менее 4 квестов, используя информацию из объекта 'location'. В каждом квесте должно быть подробное описание, включающее конкретные события и объекты. Ограничение на описание каждого квеста — не более 850 символов. Структурируй ответ в формате JSON так, чтобы квесты были представлены в объекте “quests”, с ключами: "name" — название квеста; "description" — подробное описание квеста (до 850 символов); "goal" — цель квеста."""
 
-quest_regeneration_prompt = """На основе сгенерированного описания локации, придумай новый квесты (их должно быть не менее {playerNum} и не более {playerNumXthree}) и помести их в отдельный объект "quests".  Привяжи к ранее описанным персонажам, а также получаемые сокровища. ). Структурируй свой ответ в JSON код так, чтобы каждый квест был представлен объектом с ключами: “name” – название квеста, “description” – описание квеста, “goal” – цель квеста, “name_character”, “name_items”.
-Инструкции: Оставь в качестве результата ТОЛЬКО JSON код, без дополнительного комментария
-{{
-  "quests": [
-    {{
-      "name": "Тайна древнего храма",
-      "description": "В окрестностях города был обнаружен древний храм, который, по слухам, скрывает несметные сокровища. Но чтобы добраться до них, нужно пройти через множество ловушек и решить сложные головоломки.",
-      "goal": "Добраться до сокровищ древнего храма.",
-      "name_character": "Иван",
-      "name_items": ["древний свиток"]
-    }},
-    {{
-      "name": "Спасение принцессы",
-      "description": "Злой колдун похитил принцессу из замка. Чтобы спасти её, нужно найти все части магического амулета, которые разбросаны по всему королевству.",
-      "goal": "Собрать все части амулета и спасти принцессу.",
-      "name_character": "Анна",
-      "name_items": ["магический амулет"]
-    }},
-    {{
-      "name": "Поиск пропавшего артефакта",
-      "description": "Из музея пропал древний артефакт, обладающий магическими свойствами. Нужно найти его, пока он не попал в руки злодеев.",
-      "goal": "Найти пропавший артефакт и вернуть его в музей.",
-      "name_character": "Сергей",
-      "name_items": []
-    }},
-    {{
-      "name": "Разгадка тайны заброшенного дома",
-      "description": "Жители города рассказывают о таинственном заброшенном доме, где происходят странные вещи. Нужно разгадать тайну этого дома и узнать, что там происходит.",
-      "goal": "Раскрыть тайну заброшенного дома.",
-      "name_character": "Мария",
-      "name_items": ["ключ от заброшенного дома"]
-    }},
-    {{
-      "name": "Путешествие в страну эльфов",
-      "description": "По легенде, в далёкой стране живут эльфы, обладающие волшебными знаниями. Нужно отправиться в это путешествие и найти их, чтобы получить ответы на свои вопросы.",
-      "goal": "Встретиться с эльфами и получить от них знания.",
-      "name_character": "Алексей",
-      "name_items": ["волшебная книга"]
-    }}
-  ]
-}}"""
+quests_answer = "{quests_json_answer}"
 
-quest_regeneration_concrete_prompt = """"""
-
-items_regeneration_prompt = """Сгенерируй в JSON код описание новых предметов (их должно быть не менее {playerNum} и не более {playerNumXthree}), которые могут располагаться на территории ранее описанной локации. Описания сокровища возьми из руководства D&D 5 редакции. Структурируй JSON так, чтобы каждый предмет был представлен объектом “items” с ключами "id_item", "name", и "description".
-Инструкции: Оставь в качестве результата ТОЛЬКО JSON код, без дополнительного комментария
-{{
-    "items": [
-        {{
-            "name": "Кольцо защиты",
-            "description": "Это кольцо сделано из тусклого металла и украшено гравировкой в виде щита. Оно кажется холодным на ощупь."
-        }},
-        {{
-            "name": "Амулет мудрости",
-            "description": "Этот амулет сделан из кости и украшен изображением змеи, кусающей свой хвост. Он кажется тёплым на ощупь."
-        }},
-        {{
-            "name": "Меч-молния",
-            "description": "Клинок этого меча сделан из серебристого металла и украшен гравировкой в виде молний. Рукоять меча сделана из чёрного дерева."
-        }},
-        {{
-            "name": "Щит-невидимка",
-            "description": "На поверхности этого щита нет никаких украшений, но он кажется полупрозрачным. Щит выглядит лёгким и прочным."
-        }}
-    ]
-}}"""
+items_regeneration_prompt = """"""
 
 items_regeneration_concrete_prompt = """"""
 
-characters_regeneration_prompts = """На основе описания ключа “description” из объекта "location", cгенерируй в JSON формат, внутриигровых персонажей (их должно быть не менее {playerNum} и не более {playerNumXthree}) с именем, обширным описанием квеста, с учётом: расы, характера, поведения к игрокам и привяжи его к квесту и локации для пункта предметы. Структурируй JSON так, чтобы каждый предмет был представлен объектом “character” с ключами: “name” - имя персонажа, “description” - обширное описание персонажа, "location" - название локации привязанный к данному персонажу.
-Инструкции: Оставь в качестве результата ТОЛЬКО JSON код, без дополнительного комментария
-{{
-  "players": [
-    {{
-      "name": "Барри",
-      "description": "Барри — это добродушный и отзывчивый персонаж, который всегда готов прийти на помощь. Он обладает острым умом и находчивостью, что помогает ему решать самые сложные задачи. Барри любит приключения и не боится рисковать. Его характерная черта — это оптимизм и вера в лучшее."
-    }},
-    {{
-      "name": "Элис",
-      "description": "Элис — это загадочная и таинственная девушка, которая обладает необычными способностями. Она может видеть будущее и предсказывать события. Элис очень умна и образованна, но она также может быть непредсказуемой и опасной. Ее поведение часто вызывает недоумение и страх у окружающих."
-    }},
-    {{
-      "name": "Джон",
-      "description": "Джон — это опытный воин и мастер боевых искусств. Он силен и вынослив, а его навыки боя делают его опасным противником. Джон всегда готов к бою и не отступает перед трудностями. Его поведение отличается решительностью и уверенностью в себе."
-    }},
-    {{
-      "name": "Сара",
-      "description": "Сара — это талантливый ученый и изобретатель. Она обладает глубокими знаниями в области науки и техники. Сара всегда стремится к новым открытиям и изобретениям. Ее характер отличается спокойствием и рассудительностью."
-    }},
-    {{
-      "name": "Майкл",
-      "description": "Майкл — это молодой и амбициозный предприниматель. Он всегда ищет новые возможности для бизнеса и готов рисковать ради успеха. Майкл обладает лидерскими качествами и умеет мотивировать других. Его поведение характеризуется уверенностью и решительностью."
-    }}
-  ]
-}}"""
+characters_regeneration_prompt = """"""
 
 characters_regeneration_concrete_prompt = """"""
+
+quests_regeneration_prompt = """"""
+
+quests_regeneration_concrete_prompt = """"""
+
+# ======================================== Template Prompts ======================================================
+
+adventure_info_prompts_messages = [
+    Message(
+        type=MessageType.system, content=instruction_system
+    ),
+    Message(type=MessageType.user, content=adventure_info_prompt),
+]
+
+items_prompts_messages = adventure_info_prompts_messages + [
+    Message(
+        type=MessageType.assistant, content=adventure_info_answer
+    ),
+    Message(type=MessageType.user, content=items_prompt),
+]
+
+characters_prompts_messages = items_prompts_messages + [
+    Message(type=MessageType.assistant, content=items_answer),
+    Message(type=MessageType.user, content=characters_prompt),
+]
+
+quests_prompts_messages = items_prompts_messages + [
+    Message(type=MessageType.assistant, content=quests_prompt),
+    Message(type=MessageType.user, content=quests_answer),
+]
+
+full_context_prompts_messages = quests_prompts_messages + [
+    Message(type=MessageType.assistant, content=quests_answer),
+]
+
+items_regenerate_prompts_messages = full_context_prompts_messages + [
+    Message(type=MessageType.user, content=items_regeneration_prompt),
+]
+
+items_concrete_regenerate_prompts_messages = full_context_prompts_messages + [
+    Message(type=MessageType.user, content=items_regeneration_concrete_prompt),
+]
+
+characters_regenerate_prompts_messages = full_context_prompts_messages + [
+    Message(type=MessageType.user, content=characters_regeneration_prompt),
+]
+
+characters_concrete_regenerate_prompts_messages = full_context_prompts_messages + [
+    Message(type=MessageType.user, content=characters_regeneration_concrete_prompt),
+]
+
+quests_regenerate_prompts_messages = full_context_prompts_messages + [
+    Message(type=MessageType.user, content=quests_regeneration_prompt),
+]
+
+quests_concrete_regenerate_prompts_messages = full_context_prompts_messages + [
+    Message(type=MessageType.user, content=quests_regeneration_concrete_prompt),
+]
+
+# ======================================== Image Prompts =========================================================
 
 character_image_generation = """Нарисуй аватар персонажа по имени: «{char_name}» по описанию: 
 {char_description}"""
