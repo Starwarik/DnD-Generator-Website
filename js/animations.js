@@ -3,6 +3,7 @@ gsap.registerPlugin(ScrollTrigger);
 // АНИМАЦИЯ ИНТЕРФЕЙСА
 // Анимация навбара
 
+let descriptionItem_list = document.getElementsByClassName("description-item")
 let navMenus = gsap.utils.toArray(".navmenu");
 let sections = [
 	"head",
@@ -78,7 +79,23 @@ gsap.utils.toArray(".description-item").forEach(description => {
 		tl.timeScale(1).reverse());
 });
 
+// ТРИГГЕРЫ
+
+
+
 // УПРАВЛЕНИЕ РАЗРЕШЕНИЯМИ ЭКРАНОВ
+
+window.addEventListener("resize", () => {
+	if (window.matchMedia('(min-width: 1024px)').matches) {
+		
+	} else if (window.matchMedia('(min-width: 601px)').matches) {
+		
+	} else if (window.matchMedia('(min-width: 340px)').matches) {
+
+	} else {
+
+	}
+}, true);
 
 if (window.matchMedia('(min-width: 1024px)').matches) {
 	window.addEventListener('load', () => {
@@ -459,4 +476,4 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 			accountAnimMobile.restart();
 		});
 	});
-} 
+}
