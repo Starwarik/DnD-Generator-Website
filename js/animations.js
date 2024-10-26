@@ -3,7 +3,6 @@ gsap.registerPlugin(ScrollTrigger);
 // АНИМАЦИЯ ИНТЕРФЕЙСА
 // Анимация навбара
 
-let descriptionItem_list = document.getElementsByClassName("description-item")
 let navMenus = gsap.utils.toArray(".navmenu");
 let sections = [
 	"head",
@@ -79,26 +78,161 @@ gsap.utils.toArray(".description-item").forEach(description => {
 		tl.timeScale(1).reverse());
 });
 
-// ТРИГГЕРЫ
+mm = gsap.matchMedia();
 
+mm.add('(min-width: 1024px)', (context) => {
 
+	headOnStartAnimPC = gsap.timeline();
+	headOnStartAnimPC.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
+	headOnStartAnimPC.from("#phone-2", { yPercent: 150, ease: "expo.out", duration: 1.07 }, "<");
+	headOnStartAnimPC.from("#head-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
+	headOnStartAnimPC.from("#download-1", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+	headOnStartAnimPC.from("#nav", { opacity: 0, ease: "expo.out", duration: 2 }, "<");
+	headOnStartAnimPC.restart();
+
+	headHidePhonesAnimPC = gsap.timeline();
+	headHidePhonesAnimPC.from("#phone-1", { xPercent: -220, ease: "expo.out", duration: 0.5 });
+	headHidePhonesAnimPC.from("#phone-2", { xPercent: -220, ease: "expo.out", duration: 0.5 }, "<");
+
+	whatIsAnimPC = gsap.timeline().pause();
+	whatIsAnimPC.from("#what-is h2", { yPercent: -100, opacity: 0, ease: "expo.out", duration: 1.5});
+	whatIsAnimPC.from("#what-is p", { yPercent: 30, opacity: 0, ease: "expo.out", duration: 1});
+
+	advantagesAnimPC = gsap.timeline().pause();
+	advantagesAnimPC.from(".overflow-wrapper h2", { yPercent: -100, opacity: 0, duration: 1 });
+	advantagesAnimPC.to("#advantages", { rowGap: 120, duration: 0.7 }, "<");
+	advantagesAnimPC.to(".description-item:nth-child(even)", { xPercent: 27, duration: 0.7 }, "<");
+	advantagesAnimPC.to(".description-item:nth-child(odd)", { xPercent: -27, duration: 0.7 }, "<");
+
+	buyTokensAnimPC = gsap.timeline().pause();
+	buyTokensAnimPC.from(".buy-tokens__title", { yPercent: -30, opacity: 0, ease: "expo.out", duration: 0.7});
+	buyTokensAnimPC.from(".buy-tokens-form", { yPercent: 100, opacity: 0, ease: "expo.out", duration: 1});
+	buyTokensAnimPC.from(".tokens-description", { yPercent: 100, opacity: 0, ease: "expo.out", duration: 1}, "<");
+
+	hornAnimPC = gsap.from("#horn", {
+		yPercent: 150,
+		duration: 0.7,
+		ease: "power4.out"
+	}).pause();
+
+	tailOnScrollAnimPC = gsap.timeline().pause();
+	tailOnScrollAnimPC.from("#phone-4", { yPercent: 50, ease: "expo.out", duration: 1 });
+	tailOnScrollAnimPC.from("#tail-title", { xPercent: -100, ease: "expo.out", duration: 1.07 }, "<");
+	tailOnScrollAnimPC.from("#download-2", { yPercent: 170, ease: "expo.out", duration: 1.07 }, "<");
+
+	tailHidePhoneAnimPC = gsap.timeline();
+	tailHidePhoneAnimPC.to("#phone-4", { xPercent: -160, ease: "expo.in", duration: 0.5 });
+
+	accountMenuAnimPC = gsap.timeline().pause();
+	accountMenuAnimPC.to(".account-navbar-menu", { opacity: 1, y: 596, ease: "expo.inout", duration: 0.5 });
+	accountMenuAnimPC.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
+
+	headHidePhonesTriggerPC = ScrollTrigger.create({
+		trigger: "#head",
+		start: "80% 10%",
+		end: "80% 10%",
+		onEnter: () => {headHidePhonesAnimPC.reverse();},
+		onEnterBack: () => {headHidePhonesAnimPC.restart();}
+	});
+
+	advantagesAnimTriggerPC = ScrollTrigger.create({
+		trigger: "#our-advantage",
+		start: "top 20%",
+		onEnter: () => {advantagesAnimPC.play();},
+		once: true
+	});
+
+	whatIsAnimTriggerPC = ScrollTrigger.create({
+		trigger: "#what-is",
+		start: "top top",
+		onEnter: () => {whatIsAnimPC.play();},
+		once: true
+	});
+
+	buyTokensAnimTriggerPC = ScrollTrigger.create({
+		trigger: "#buy-tokens",
+		start: "top top",
+		onEnter: () => {buyTokensAnimPC.play();},
+		once: true
+	});
+
+	hornAnimTriggerPC = ScrollTrigger.create({
+		trigger: "#horn",
+		start: "top 30%",
+		onEnter: () => {hornAnimPC.play();},
+		once: true
+	});
+
+	tailOnScrollAnimTriggerPC = ScrollTrigger.create({
+		trigger: ".tail-coloriser",
+		start: "30% 10%",
+		onEnter: () => {tailOnScrollAnimPC.play();},
+		once: true
+	});
+
+	tailHidePhoneTriggerPC = ScrollTrigger.create({
+		trigger: "#tail",
+		start: "50% 70%",
+		end: "50% 70%",
+		onEnter: () => {tailHidePhoneAnimPC.reverse();},
+		onEnterBack: () => {tailHidePhoneAnimPC.restart();}
+	});
+
+	context.add("accMenuAnimPC_reverse", () => {
+		accountMenuAnimPC.reverse();
+	});
+
+	context.add("accMenuAnimPC_restart", () => {
+		accountMenuAnimPC.restart();
+	});
+
+	context.add("accAnimPC1_play", () => {
+		accountAnimPC1.play();
+	});
+
+	context.add("accAnimPC1_reverse", () => {
+		accountAnimPC1.reverse();
+	});
+
+	context.add("accAnimPC2_play", () => {
+		accountAnimPC2.play();
+	});
+
+	context.add("accAnimPC2_reverse", () => {
+		accountAnimPC2.reverse();
+	});
+
+	document.querySelector(".account-navbar-menu-exit").addEventListener("mousedown", context.accMenuAnimPC_reverse);
+
+	document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", context.accMenuAnimPC_restart);
+	
+	accountAnimPC1 = gsap.to("#account-navbar-noname .account-navbar__text", { width: 65, marginLeft: 10 }).pause();
+	accountAnimPC2 = gsap.to("#account-navbar-auth .account-navbar__text", { width: 100, marginLeft: 10 }).pause();
+
+	document.querySelector("#account-navbar-noname").addEventListener("mouseenter", context.accAnimPC1_play);
+
+	document.querySelector("#account-navbar-noname").addEventListener("mouseleave", context.accAnimPC1_reverse);
+
+	document.querySelector("#account-navbar-auth").addEventListener("mouseenter", context.accAnimPC2_play);
+
+	document.querySelector("#account-navbar-auth").addEventListener("mouseleave", context.accAnimPC2_reverse);
+
+	// В конце убрать обработчики событий из контекста
+
+	return () => {
+		document.querySelector(".account-navbar-menu-exit").removeEventListener("mousedown", context.accMenuAnimPC_reverse);
+		document.querySelector("#account-navbar-auth .account-wrapper").removeEventListener("mousedown", context.accMenuAnimPC_restart);
+		document.querySelector("#account-navbar-noname").removeEventListener("mouseenter", context.accAnimPC1_play);
+		document.querySelector("#account-navbar-noname").removeEventListener("mouseleave", context.accAnimPC1_reverse);
+		document.querySelector("#account-navbar-auth").removeEventListener("mouseenter", context.accAnimPC2_play);
+		document.querySelector("#account-navbar-auth").removeEventListener("mouseleave", context.accAnimPC2_reverse);
+	}
+});
 
 // УПРАВЛЕНИЕ РАЗРЕШЕНИЯМИ ЭКРАНОВ
 
-window.addEventListener("resize", () => {
-	if (window.matchMedia('(min-width: 1024px)').matches) {
-		
-	} else if (window.matchMedia('(min-width: 601px)').matches) {
-		
-	} else if (window.matchMedia('(min-width: 340px)').matches) {
-
-	} else {
-
-	}
-}, true);
-
 if (window.matchMedia('(min-width: 1024px)').matches) {
-	window.addEventListener('load', () => {
+	/*window.addEventListener('load', () => {
 
 		headHidePhonesTriggerPC = ScrollTrigger.create({
 			trigger: "#head",
@@ -226,7 +360,7 @@ if (window.matchMedia('(min-width: 1024px)').matches) {
 		});
 		
 	});
-
+*/
 } else if (window.matchMedia('(min-width: 601px)').matches) {
 	window.addEventListener('load', () => {
 
