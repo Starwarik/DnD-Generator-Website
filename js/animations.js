@@ -264,6 +264,9 @@ mm.add('(min-width: 601px) and (max-width: 1023px)', (context) => {
 	tailAnimMobile.from("#phone-4", { yPercent: 100, ease: "expo.out", duration: 1 });
 	tailAnimMobile.from("#tail-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
 	tailAnimMobile.from("#download-2", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
+	tailAnimMobile.call(() => {
+		tailAnimMobile.revert();
+	});
 
 	whatIsAnimTriggerMobile = ScrollTrigger.create({
 		trigger: "#what-is",
@@ -342,6 +345,9 @@ mm.add('(min-width: 340px) and (max-width: 600px)', (context) => {
 	headOnStartAnimMobile.from("#head-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
 	headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
 	headOnStartAnimMobile.from(".account-navbar", { yPercent: -200, ease: "expo.out", duration: 1.07 }, "<");
+	headOnStartAnimMobile.call(() => {
+		headOnStartAnimMobile.revert();
+	});
 
 	navAnimMobile = gsap.timeline().pause();
 	navAnimMobile.set("#nav", { display: "block" });
@@ -363,8 +369,11 @@ mm.add('(min-width: 340px) and (max-width: 600px)', (context) => {
 
 	tailAnimMobile = gsap.timeline().pause();
 	tailAnimMobile.from("#phone-4", { yPercent: 100, ease: "expo.out", duration: 1 });
-	tailAnimMobile.from("#tail-title", { xPercent: -150, ease: "expo.out", duration: 1 }, "<");
+	tailAnimMobile.from("#tail-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
 	tailAnimMobile.from("#download-2", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
+	tailAnimMobile.call(() => {
+		tailAnimMobile.revert();
+	});
 
 	whatIsAnimTriggerMobile = ScrollTrigger.create({
 		trigger: "#what-is",
@@ -442,6 +451,9 @@ mm.add('(max-width: 339px)', (context) => {
 	headOnStartAnimMobile.from("#head-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
 	headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
 	headOnStartAnimMobile.from(".account-navbar", { yPercent: -200, ease: "expo.out", duration: 1.07 }, "<");
+	headOnStartAnimMobile.call(() => {
+		headOnStartAnimMobile.revert();
+	});
 
 	navAnimMobile = gsap.timeline().pause();
 	navAnimMobile.set("#nav", { display: "block" });
@@ -464,6 +476,9 @@ mm.add('(max-width: 339px)', (context) => {
 	tailAnimMobile = gsap.timeline().pause();
 	tailAnimMobile.from("#tail-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
 	tailAnimMobile.from("#download-2", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
+	tailAnimMobile.call(() => {
+		tailAnimMobile.revert();
+	});
 
 	whatIsAnimTriggerMobile = ScrollTrigger.create({
 		trigger: "#what-is",
