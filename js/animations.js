@@ -437,174 +437,100 @@ mm.add('(min-width: 340px) and (max-width: 600px)', (context) => {
 
 });
 
-// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// УПРАВЛЕНИЕ РАЗРЕШЕНИЯМИ ЭКРАНОВ
+mm.add('(max-width: 339px)', (context) => {
+	headOnStartAnimMobile = gsap.timeline();
+	headOnStartAnimMobile.from("#head-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
+	headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
+	headOnStartAnimMobile.from(".account-navbar", { yPercent: -200, ease: "expo.out", duration: 1.07 }, "<");
 
-if (window.matchMedia('(min-width: 340px)').matches) {
-	/*
-	window.addEventListener('load', () => {
+	navAnimMobile = gsap.timeline().pause();
+	navAnimMobile.set("#nav", { display: "block" });
+	navAnimMobile.to(".nav-wrapper", { opacity: 1, backgroundColor: "#00000011", pointerEvents: "all" }, "<");
 
-		whatIsAnimTriggerMobile = ScrollTrigger.create({
-			trigger: "#what-is",
-			start: "top 30%",
-			onEnter: () => {whatIsAnimMobile.play();},
-			once: true
-		});
+	whatIsAnimMobile = gsap.timeline().pause();
+	whatIsAnimMobile.from("#what-is h2", { yPercent: 900, duration: 1, ease: "expo.out" });
+	whatIsAnimMobile.from(".phone__what-is", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
+	whatIsAnimMobile.from("#what-is p", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
 
-		advantagesAnimTriggerMobile = ScrollTrigger.create({
-			trigger: "#our-advantage",
-			start: "top 30%",
-			onEnter: () => {advantagesAnimMobile.play();},
-			once: true
-		});
+	advantagesAnimMobile = gsap.timeline().pause();
+	advantagesAnimMobile.from("#phone-3", { xPercent: -70, yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+	advantagesAnimMobile.from("#advantages-mobile", { xPercent: -70, yPercent: 100, duration: 1, ease: "expo.out" });
 
-		buyTokensAnimTriggerMobile = ScrollTrigger.create({
-			trigger: "#buy-tokens",
-			start: "top 30%",
-			onEnter: () => {buyTokensAnimMobile.play();},
-			once: true
-		});
+	buyTokensAnimMobile = gsap.timeline().pause();
+	buyTokensAnimMobile.from(".buy-tokens__title", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
+	buyTokensAnimMobile.from(".buy-tokens-form", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" });
+	buyTokensAnimMobile.from(".tokens-description", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
 
-		tailAnimTriggerMobile = ScrollTrigger.create({
-			trigger: "#tail",
-			start: "top 30%",
-			onEnter: () => {tailAnimMobile.play();},
-			once: true
-		});
+	tailAnimMobile = gsap.timeline().pause();
+	tailAnimMobile.from("#tail-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
+	tailAnimMobile.from("#download-2", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
 
-		headOnStartAnimMobile = gsap.timeline();
-		headOnStartAnimMobile.from("#phones-mobile", { yPercent: 100, ease: "expo.out", duration: 1 });
-		headOnStartAnimMobile.from("#head-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
-		headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
-		headOnStartAnimMobile.from(".account-navbar", { yPercent: -200, ease: "expo.out", duration: 1.07 }, "<");
-
-		navAnimMobile = gsap.timeline().pause();
-		navAnimMobile.set("#nav", { display: "block" });
-		navAnimMobile.to(".nav-wrapper", { opacity: 1, backgroundColor: "#00000011", pointerEvents: "all" }, "<");
-
-		whatIsAnimMobile = gsap.timeline().pause();
-		whatIsAnimMobile.from("#what-is h2", { yPercent: 900, duration: 1, ease: "expo.out" });
-		whatIsAnimMobile.from(".phone__what-is", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
-		whatIsAnimMobile.from("#what-is p", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
-
-		advantagesAnimMobile = gsap.timeline().pause();
-		advantagesAnimMobile.from("#phone-3", { xPercent: -70, yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
-		advantagesAnimMobile.from("#advantages-mobile", { xPercent: -70, yPercent: 100, duration: 1, ease: "expo.out" });
-
-		buyTokensAnimMobile = gsap.timeline().pause();
-		buyTokensAnimMobile.from(".buy-tokens__title", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
-		buyTokensAnimMobile.from(".buy-tokens-form", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" });
-		buyTokensAnimMobile.from(".tokens-description", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
-
-		tailAnimMobile = gsap.timeline().pause();
-		tailAnimMobile.from("#phone-4", { yPercent: 100, ease: "expo.out", duration: 1 });
-		tailAnimMobile.from("#tail-title", { xPercent: -150, ease: "expo.out", duration: 1 }, "<");
-		tailAnimMobile.from("#download-2", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
-
-		document.querySelector(".nav-wrapper").addEventListener("mousedown", () => {
-			navAnimMobile.reverse();
-		});
-
-		gsap.utils.toArray(".partitions-image__wrapper").forEach(partitions => {
-			partitions.addEventListener("mousedown", () => {
-				navAnimMobile.play();
-			});
-		});
-
-		accountAnimMobile = gsap.timeline().pause();
-		accountAnimMobile.from(".account-navbar-menu", { opacity: 0, yPercent: 200, ease: "expo.inout", duration: 0.5 });
-		accountAnimMobile.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
-
-		document.querySelector(".account-navbar-menu-exit").addEventListener("mousedown", () => {
-			accountAnimMobile.reverse();
-		});
-
-		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
-			accountAnimMobile.restart();
-		});
-
-	});*/
-} else {
-	window.addEventListener('load', () => {
-
-		whatIsAnimTriggerMobile = ScrollTrigger.create({
-			trigger: "#what-is",
-			start: "top 30%",
-			onEnter: () => {whatIsAnimMobile.play();},
-			once: true
-		});
-
-		advantagesAnimTriggerMobile = ScrollTrigger.create({
-			trigger: "#our-advantage",
-			start: "top 30%",
-			onEnter: () => {advantagesAnimMobile.play();},
-			once: true
-		});
-
-		buyTokensAnimTriggerMobile = ScrollTrigger.create({
-			trigger: "#buy-tokens",
-			start: "top 30%",
-			onEnter: () => {buyTokensAnimMobile.play();},
-			once: true
-		});
-
-		tailAnimTriggerMobile = ScrollTrigger.create({
-			trigger: "#tail",
-			start: "top 30%",
-			onEnter: () => {tailAnimMobile.play();},
-			once: true
-		});
-
-		headOnStartAnimMobile = gsap.timeline();
-		headOnStartAnimMobile.from("#head-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
-		headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
-		headOnStartAnimMobile.from(".account-navbar", { yPercent: -200, ease: "expo.out", duration: 1.07 }, "<");
-
-		navAnimMobile = gsap.timeline().pause();
-		navAnimMobile.set("#nav", { display: "block" });
-		navAnimMobile.to(".nav-wrapper", { opacity: 1, backgroundColor: "#00000011", pointerEvents: "all" }, "<");
-
-		whatIsAnimMobile = gsap.timeline().pause();
-		whatIsAnimMobile.from("#what-is h2", { yPercent: 900, duration: 1, ease: "expo.out" });
-		whatIsAnimMobile.from(".phone__what-is", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
-		whatIsAnimMobile.from("#what-is p", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
-
-		advantagesAnimMobile = gsap.timeline().pause();
-		advantagesAnimMobile.from("#phone-3", { xPercent: -70, yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
-		advantagesAnimMobile.from("#advantages-mobile", { xPercent: -70, yPercent: 100, duration: 1, ease: "expo.out" });
-
-		buyTokensAnimMobile = gsap.timeline().pause();
-		buyTokensAnimMobile.from(".buy-tokens__title", { yPercent: 200, opacity: 0, duration: 1, ease: "expo.out" });
-		buyTokensAnimMobile.from(".buy-tokens-form", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" });
-		buyTokensAnimMobile.from(".tokens-description", { xPercent: -200, opacity: 0, duration: 1, ease: "expo.out" }, "<");
-
-		tailAnimMobile = gsap.timeline().pause();
-		tailAnimMobile.from("#tail-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
-		tailAnimMobile.from("#download-2", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
-
-		document.querySelector(".nav-wrapper").addEventListener("mousedown", () => {
-			navAnimMobile.reverse();
-		});
-
-		gsap.utils.toArray(".partitions-image__wrapper").forEach(partitions => {
-			partitions.addEventListener("mousedown", () => {
-				navAnimMobile.play();
-			});
-		});
-
-		accountAnimMobile = gsap.timeline().pause();
-		accountAnimMobile.from(".account-navbar-menu", { opacity: 0, yPercent: 200, ease: "expo.inout", duration: 0.5 });
-		accountAnimMobile.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
-
-		document.querySelector(".account-navbar-menu-exit").addEventListener("mousedown", () => {
-			accountAnimMobile.reverse();
-		});
-
-		document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", () => {
-			accountAnimMobile.restart();
-		});
+	whatIsAnimTriggerMobile = ScrollTrigger.create({
+		trigger: "#what-is",
+		start: "top 30%",
+		onEnter: () => {whatIsAnimMobile.play();},
+		once: true
 	});
-}
+
+	advantagesAnimTriggerMobile = ScrollTrigger.create({
+		trigger: "#our-advantage",
+		start: "top 30%",
+		onEnter: () => {advantagesAnimMobile.play();},
+		once: true
+	});
+
+	buyTokensAnimTriggerMobile = ScrollTrigger.create({
+		trigger: "#buy-tokens",
+		start: "top 30%",
+		onEnter: () => {buyTokensAnimMobile.play();},
+		once: true
+	});
+
+	tailAnimTriggerMobile = ScrollTrigger.create({
+		trigger: "#tail",
+		start: "top 30%",
+		onEnter: () => {tailAnimMobile.play();},
+		once: true
+	});
+
+	context.add("navAnimMobile_reverse", () => {
+		navAnimMobile.reverse();
+	});
+
+	context.add("navAnimMobile_play", () => {
+		navAnimMobile.play();
+	});
+
+	accountAnimMobile = gsap.timeline().pause();
+	accountAnimMobile.from(".account-navbar-menu", { opacity: 0, yPercent: 200, ease: "expo.inout", duration: 0.5 });
+	accountAnimMobile.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
+
+	context.add("accAnimMobile_reverse", () => {
+		accountAnimMobile.reverse();
+	});
+
+	context.add("accAnimMobile_restart", () => {
+		accountAnimMobile.restart();
+	});
+
+	document.querySelector(".nav-wrapper").addEventListener("mousedown", context.navAnimMobile_reverse);
+
+	gsap.utils.toArray(".partitions-image__wrapper").forEach(partitions => {
+		partitions.addEventListener("mousedown", context.navAnimMobile_play);
+	});
+
+	document.querySelector(".account-navbar-menu-exit").addEventListener("mousedown", context.accAnimMobile_reverse);
+
+	document.querySelector("#account-navbar-auth .account-wrapper").addEventListener("mousedown", context.accAnimMobile_restart);
+
+	return () => {
+		document.querySelector(".nav-wrapper").removeEventListener("mousedown", context.navAnimMobile_reverse);
+		
+		gsap.utils.toArray(".partitions-image__wrapper").forEach(partitions => {
+			partitions.removeEventListener("mousedown", context.navAnimMobile_play);
+		});
+		
+		document.querySelector(".account-navbar-menu-exit").removeEventListener("mousedown", context.accAnimMobile_reverse);
+		document.querySelector("#account-navbar-auth .account-wrapper").removeEventListener("mousedown", context.accAnimMobile_restart);
+	}
+});
