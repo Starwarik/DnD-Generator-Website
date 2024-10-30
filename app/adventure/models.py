@@ -1,8 +1,6 @@
 from sqlmodel import Field, SQLModel
 from enum import Enum
 
-from app.adventure.schemas import AdventureInfo
-
 
 class AdventureState(Enum):
     not_ready = 0

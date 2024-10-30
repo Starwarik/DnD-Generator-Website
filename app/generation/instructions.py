@@ -10,6 +10,7 @@ import json
 from app.adventure.schemas import *
 from app.generation.schemas import *
 
+
 def calc_default_config(adventure: AdventureInfo) -> dict[str, str]:
     return {
         "nameLocation": adventure.location,
@@ -18,9 +19,11 @@ def calc_default_config(adventure: AdventureInfo) -> dict[str, str]:
         "playerNumXthree": str(adventure.playerNum * 3),
     }
 
+
 def calc_description_answer_config(adventure: AdventureInfo) -> dict[str, str]:
     description = {(i + 1): x for i, x in enumerate(adventure.description)}
     return {"description_json_answer": json.dumps(description, indent=4)}
+
 
 def calc_items_answer_config(adventure: AdventureInfo) -> dict[str, str]:
     items = {
@@ -30,14 +33,15 @@ def calc_items_answer_config(adventure: AdventureInfo) -> dict[str, str]:
     }
     return {"items_json_answer": json.dumps(items, indent=4)}
 
+
 def calc_characters_answer_config(adventure: AdventureInfo) -> dict[str, str]:
     characters = {
         "players": [
-            {"name": x.name, "description": x.description}
-            for x in adventure.characters
+            {"name": x.name, "description": x.description} for x in adventure.characters
         ]
     }
     return {"characters_json_answer": json.dumps(characters, indent=4)}
+
 
 class TextGenerationInstruction(ABC):
     @abstractmethod
@@ -141,73 +145,9 @@ class QuestsInstruction(TextGenerationInstruction):
         ]
         return adventure
 
-@final
-class ItemsRegenerateInstruction(TextGenerationInstruction):
-    def get_prompts(self) -> list[Message]:
-        return prompts_template.items_regenerate_prompts_messages
 
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        config.update(calc_characters_answer_config(adventure))
-        return config
+# ============================= QUESTS ========================
 
-    def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
-    ) -> AdventureInfo:
-        raise NotImplementedError()
-
-@final
-class ItemsConcreteRegenerateInstruction(TextGenerationInstruction):
-    def get_prompts(self) -> list[Message]:
-        return prompts_template.items_concrete_regenerate_prompts_messages
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        config.update(calc_characters_answer_config(adventure))
-        return config
-
-    def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
-    ) -> AdventureInfo:
-        raise NotImplementedError()
-
-@final
-class CharactersRegenerateInstruction(TextGenerationInstruction):
-    def get_prompts(self) -> list[Message]:
-        return prompts_template.characters_regenerate_prompts_messages
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        config.update(calc_characters_answer_config(adventure))
-        return config
-
-    def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
-    ) -> AdventureInfo:
-        raise NotImplementedError()
-
-@final
-class CharactersConcreteRegenerateInstruction(TextGenerationInstruction):
-    def get_prompts(self) -> list[Message]:
-        return prompts_template.characters_concrete_regenerate_prompts_messages
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        config.update(calc_characters_answer_config(adventure))
-        return config
-
-    def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
-    ) -> AdventureInfo:
-        raise NotImplementedError()
 
 @final
 class QuestsRegenerateInstruction(TextGenerationInstruction):
@@ -226,10 +166,104 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
     ) -> AdventureInfo:
         raise NotImplementedError()
 
+
 @final
 class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
+    index: int
+
+    def __init__(self, index: int):
+        self.index = index
+
     def get_prompts(self) -> list[Message]:
         return prompts_template.quests_concrete_regenerate_prompts_messages
+
+    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
+        config = calc_default_config(adventure)
+        config.update(calc_description_answer_config(adventure))
+        config.update(calc_items_answer_config(adventure))
+        config.update(calc_characters_answer_config(adventure))
+        return config
+
+    def change_adventure_on_success(
+        self, adventure: AdventureInfo, result: JSONGenerationResult
+    ) -> AdventureInfo:
+        raise NotImplementedError()
+
+
+# ================================ CHARACTERS ===========================
+
+
+@final
+class CharactersRegenerateInstruction(TextGenerationInstruction):
+    def get_prompts(self) -> list[Message]:
+        return prompts_template.characters_regenerate_prompts_messages
+
+    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
+        config = calc_default_config(adventure)
+        config.update(calc_description_answer_config(adventure))
+        config.update(calc_items_answer_config(adventure))
+        config.update(calc_characters_answer_config(adventure))
+        return config
+
+    def change_adventure_on_success(
+        self, adventure: AdventureInfo, result: JSONGenerationResult
+    ) -> AdventureInfo:
+        raise NotImplementedError()
+
+
+@final
+class CharactersConcreteRegenerateInstruction(TextGenerationInstruction):
+    index: int
+
+    def __init__(self, index: int):
+        self.index = index
+
+    def get_prompts(self) -> list[Message]:
+        return prompts_template.characters_concrete_regenerate_prompts_messages
+
+    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
+        config = calc_default_config(adventure)
+        config.update(calc_description_answer_config(adventure))
+        config.update(calc_items_answer_config(adventure))
+        config.update(calc_characters_answer_config(adventure))
+        return config
+
+    def change_adventure_on_success(
+        self, adventure: AdventureInfo, result: JSONGenerationResult
+    ) -> AdventureInfo:
+        raise NotImplementedError()
+
+
+# ================================== ITEMS ======================================
+
+
+@final
+class ItemsRegenerateInstruction(TextGenerationInstruction):
+    def get_prompts(self) -> list[Message]:
+        return prompts_template.items_regenerate_prompts_messages
+
+    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
+        config = calc_default_config(adventure)
+        config.update(calc_description_answer_config(adventure))
+        config.update(calc_items_answer_config(adventure))
+        config.update(calc_characters_answer_config(adventure))
+        return config
+
+    def change_adventure_on_success(
+        self, adventure: AdventureInfo, result: JSONGenerationResult
+    ) -> AdventureInfo:
+        raise NotImplementedError()
+
+
+@final
+class ItemsConcreteRegenerateInstruction(TextGenerationInstruction):
+    index: int
+
+    def __init__(self, index: int):
+        self.index = index
+
+    def get_prompts(self) -> list[Message]:
+        return prompts_template.items_concrete_regenerate_prompts_messages
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         config = calc_default_config(adventure)
