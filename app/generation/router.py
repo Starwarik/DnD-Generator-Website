@@ -3,9 +3,13 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlmodel import Session
 from typing_extensions import Annotated
 
-from app.adventure.service import convert_adventure_to_public, get_adventure
+from app.adventure.service import (
+    convert_adventure_to_public,
+    get_adventure,
+    create_adventure,
+)
 from app.database.database import get_session
-from app.adventure.models import AdventurePublic
+from app.adventure.models import Adventure, AdventurePublic
 from app.user.models import User
 from app.auth.dependencies import get_current_user
 
@@ -33,30 +37,6 @@ from app.generation.client_text import text_generation_model
 generation_router = APIRouter(tags=["generation"])
 
 
-"""
-@generation_router.get("/api/generate_test")
-def generate_adventure(
-    num_players: int,
-    location_name: str,
-    setting: str,
-    background_tasks: BackgroundTasks,
-    current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
-) -> AdventurePublic:
-    adventure = create_adventure(current_user.id, session)
-    background_tasks.add_task(
-        generate_adventure_test,
-        location_name,
-        setting,
-        num_players,
-        adventure.id,
-        background_tasks,
-        session,
-    )
-    return convert_adventure_to_public(adventure)
-"""
-
-
 @generation_router.post("/api/adventure")
 def generate_adventure(
     num_players: int,
@@ -68,7 +48,34 @@ def generate_adventure(
 ) -> AdventurePublic:
     adventure = create_adventure(current_user.id, session)
 
-    def inner_command():
+    def inner_command(adventure: Adventure):
+        adventure = generate_new_test_adventure_json(
+            location_name,
+            setting,
+            num_players,
+            adventure,
+            session,
+        )
+        adventure = generate_images_adventure(adventure, session)
+        adventure = generate_images_characters(adventure, session)
+        generate_images_items(adventure, session)
+
+    background_tasks.add_task(inner_command, adventure)
+    return convert_adventure_to_public(adventure)
+
+
+@generation_router.post("/api/generate_test")
+def generate_test_adventure(
+    num_players: int,
+    location_name: str,
+    setting: str,
+    background_tasks: BackgroundTasks,
+    current_user: Annotated[User, Depends(get_current_user)],
+    session: Session = Depends(get_session),
+) -> AdventurePublic:
+    adventure = create_adventure(current_user.id, session)
+
+    def inner_command(adventure: Adventure):
         adventure = generate_new_adventure_json(
             location_name,
             setting,
@@ -77,11 +84,11 @@ def generate_adventure(
             adventure,
             session,
         )
-        adventure = generate_images_adventure(adventure, session)
-        adventure = generate_images_characters(adventure, session)
-        generate_images_items(adventure, session)
+        adventure = generate_test_images_adventure(adventure, session)
+        adventure = generate_test_images_characters(adventure, session)
+        generate_test_images_items(adventure, session)
 
-    background_tasks.add_task(inner_command)
+    background_tasks.add_task(inner_command, adventure)
     return convert_adventure_to_public(adventure)
 
 
@@ -139,7 +146,7 @@ def regenerate_characters(
 ) -> AdventurePublic:
     adventure = get_adventure(id_adventure, current_user.id, session)
 
-    def inner_command():
+    def inner_command(adventure: Adventure):
         adventure = regenerate_characters_json(
             adventure,
             text_generation_model,
@@ -147,7 +154,7 @@ def regenerate_characters(
         )
         generate_images_characters(adventure, session)
 
-    background_tasks.add_task(inner_command)
+    background_tasks.add_task(inner_command, adventure)
     return convert_adventure_to_public(adventure)
 
 
@@ -165,7 +172,7 @@ def regenerate_characters_concrete(
     if index_character < 0 or index_character >= len(adventure_info.characters):
         return HTTPException(status_code=400, detail="Index out of range")
 
-    def inner_command():
+    def inner_command(adventure: Adventure):
         adventure = regenerate_character_concrete_json(
             index_character,
             adventure,
@@ -174,7 +181,7 @@ def regenerate_characters_concrete(
         )
         generate_images_characters(adventure, session)
 
-    background_tasks.add_task(inner_command)
+    background_tasks.add_task(inner_command, adventure)
     return convert_adventure_to_public(adventure)
 
 
@@ -190,7 +197,7 @@ def regenerate_items(
 ) -> AdventurePublic:
     adventure = get_adventure(id_adventure, current_user.id, session)
 
-    def inner_command():
+    def inner_command(adventure: Adventure):
         adventure = regenerate_items_json(
             adventure,
             text_generation_model,
@@ -198,7 +205,7 @@ def regenerate_items(
         )
         generate_images_items(adventure, session)
 
-    background_tasks.add_task(inner_command)
+    background_tasks.add_task(inner_command, adventure)
     return convert_adventure_to_public(adventure)
 
 
@@ -216,7 +223,7 @@ def regenerate_items_concrete(
     if index_item < 0 or index_item >= len(adventure_info.items):
         return HTTPException(status_code=400, detail="Index out of range")
 
-    def inner_command():
+    def inner_command(adventure: Adventure):
         adventure = regenerate_item_concrete_json(
             index_item,
             adventure,
@@ -225,24 +232,5 @@ def regenerate_items_concrete(
         )
         generate_images_items(adventure, session)
 
-    background_tasks.add_task(inner_command)
-    return convert_adventure_to_public(adventure)
-
-
-# ======================================================================================
-
-
-@generation_router.get("/api/refresh_images")
-def refresh_images(
-    id_adventure: int,
-    background_tasks: BackgroundTasks,
-    current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
-) -> AdventurePublic:
-    adventure = get_adventure(id_adventure, current_user.id, session)
-    background_tasks.add_task(
-        generate_all_images,
-        adventure,
-        session,
-    )
+    background_tasks.add_task(inner_command, adventure)
     return convert_adventure_to_public(adventure)
