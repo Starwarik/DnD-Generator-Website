@@ -280,29 +280,25 @@
 	/* ADVANTAGES */
 
 	#advantages {
-		display: none;
-	}
-
-	#advantages-mobile {
 		display: flex;
 		grid-column: 3 / 5;
 	}
 
-	.description-item-mobile {
+	.description-item {
 		width: 100%;
 		height: fit-content;
 	}
 
-	.see-more-arrow-mobile {
+	.see-more-arrow {
 		display: none;
 	}
 
-	#advantages-mobile dt {
+	#advantages dt {
 		padding-top: 10%;
 		padding-bottom: 7%;
 	}
 
-	#advantages-mobile dd {
+	#advantages dd {
 		opacity: 1;
 		height: fit-content;
 		padding-bottom: 7%;

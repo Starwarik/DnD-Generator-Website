@@ -59,25 +59,6 @@ for (let i = 0; i < navMenus.length; i++) {
 	}
 }
 
-// Анимация плашек с описаниями (PC)
-
-gsap.utils.toArray(".description-item").forEach(description => {
-	let header = description.querySelector("dt"),
-			text = description.querySelector("dd"),
-			arrow = description.querySelector(".see-more-arrow"),
-			tl = gsap.timeline({ paused: true });
-
-	tl.to(description, { width: "69%" });
-	tl.to(header, { yPercent: -30 }, "<");
-	tl.to(text, { opacity: 1, height: "auto" }, "<");
-	tl.to(arrow, { opacity: 0 }, "<");
-
-	description.addEventListener("mouseenter", () =>
-		tl.timeScale(1).play());
-	description.addEventListener("mouseleave", () =>
-		tl.timeScale(1).reverse());
-});
-
 mm = gsap.matchMedia();
 
 mm.add('(min-width: 1024px)', (context) => {
@@ -178,6 +159,29 @@ mm.add('(min-width: 1024px)', (context) => {
 		onEnterBack: () => {tailHidePhoneAnimPC.restart();}
 	});
 
+	gsap.utils.toArray(".description-item").forEach(description => {
+		let header = description.querySelector("dt"),
+				text = description.querySelector("dd"),
+				arrow = description.querySelector(".see-more-arrow"),
+				tl = gsap.timeline({ paused: true });
+	
+		tl.to(description, { width: "69%" });
+		tl.to(header, { yPercent: -30 }, "<");
+		tl.to(text, { opacity: 1, height: "auto" }, "<");
+		tl.to(arrow, { opacity: 0 }, "<");
+		
+		context.add("descriptionItem_play", () => {
+			tl.timeScale(1).play();
+		});
+
+		context.add("descriptionItem_reverse", () => {
+			tl.timeScale(1).reverse();
+		});
+
+		description.addEventListener("mouseenter", context.descriptionItem_play)
+		description.addEventListener("mouseleave", context.descriptionItem_reverse);
+	});
+
 	context.add("accMenuAnimPC_reverse", () => {
 		accountMenuAnimPC.reverse();
 	});
@@ -226,6 +230,10 @@ mm.add('(min-width: 1024px)', (context) => {
 		document.querySelector("#account-navbar-noname").removeEventListener("mouseleave", context.accAnimPC1_reverse);
 		document.querySelector("#account-navbar-auth").removeEventListener("mouseenter", context.accAnimPC2_play);
 		document.querySelector("#account-navbar-auth").removeEventListener("mouseleave", context.accAnimPC2_reverse);
+		gsap.utils.toArray(".description-item").forEach(description => {
+			description.removeEventListener("mouseenter", context.descriptionItem_play)
+			description.removeEventListener("mouseleave", context.descriptionItem_reverse);
+		});
 	}
 });
 
