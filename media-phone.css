@@ -272,31 +272,39 @@
 
 	/* ADVANTAGES */
 
+	#advantages {
+		display: none;
+	}
+
 	#our-advantage {
 		grid-template-rows: max-content max-content max-content;
 	}
 
-	#advantages {
+	#advantages-mobile {
 		display: flex;
 		grid-column: 1 / 5;
 		grid-row: 3 / 4;
 	}
 
-	.description-item {
+	#advantages {
+		grid-column: 1 / 5;
+	}
+
+	.description-item-mobile {
 		width: 100%;
 		height: fit-content;
 	}
 
-	.see-more-arrow {
+	.see-more-arrow-mobile {
 		display: none;
 	}
 
-	#advantages dt {
+	#advantages-mobile dt {
 		padding-top: 10%;
 		padding-bottom: 7%;
 	}
 
-	#advantages dd {
+	#advantages-mobile dd {
 		opacity: 1;
 		height: fit-content;
 		padding-bottom: 7%;
