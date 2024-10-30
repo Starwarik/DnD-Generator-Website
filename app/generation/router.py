@@ -63,7 +63,7 @@ def generate_adventure(
 
 
 @generation_router.put("/api/adventure/{id_adventure}/quests")
-def regenerate_quest(
+def regenerate_quests(
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -79,7 +79,7 @@ def regenerate_quest(
 
 
 @generation_router.put("/api/adventure/{id_adventure}/quests/{index_quest}")
-def regenerate_quest_concrete(
+def regenerate_quests_concrete(
     index_quest: int,
     id_adventure: int,
     background_tasks: BackgroundTasks,

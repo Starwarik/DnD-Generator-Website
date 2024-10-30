@@ -51,7 +51,7 @@ def generate_text_with_tries(
 
 def generate_new_adventure(
     location_name: str, setting: str, num_players: int, model: TextGenerationModel
-):
+) -> AdventureInfo:
     adventure_info = AdventureInfo(
         name=location_name,
         location=location_name,
@@ -71,4 +71,69 @@ def generate_new_adventure(
         QuestsInstruction(),
     ]
 
+    return generate_text_with_tries(instructions, adventure_info, model)
+
+
+def regenerate_new_adventure(
+    adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureInfo:
+    return generate_new_adventure(
+        adventure_info.location, adventure_info.setting, adventure_info.playerNum, model
+    )
+
+
+# ============================= QUESTS ========================
+
+
+def regenerate_quests(
+    adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureInfo:
+    instructions: list[TextGenerationInstruction] = [QuestsRegenerateInstruction()]
+    return generate_text_with_tries(instructions, adventure_info, model)
+
+
+def regenerate_quest_concrete(
+    index_quest: int, adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureInfo:
+    instructions: list[TextGenerationInstruction] = [
+        QuestsConcreteRegenerateInstruction(index_quest)
+    ]
+    return generate_text_with_tries(instructions, adventure_info, model)
+
+
+# ================================ CHARACTERS ===========================
+
+
+def regenerate_characters(
+    adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureInfo:
+    instructions: list[TextGenerationInstruction] = [CharactersRegenerateInstruction()]
+    return generate_text_with_tries(instructions, adventure_info, model)
+
+
+def regenerate_character_concrete(
+    index_character: int, adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureInfo:
+    instructions: list[TextGenerationInstruction] = [
+        CharactersConcreteRegenerateInstruction(index_character)
+    ]
+    return generate_text_with_tries(instructions, adventure_info, model)
+
+
+# ================================== ITEMS ======================================
+
+
+def regenerate_items(
+    adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureInfo:
+    instructions: list[TextGenerationInstruction] = [ItemsRegenerateInstruction()]
+    return generate_text_with_tries(instructions, adventure_info, model)
+
+
+def regenerate_item_concrete(
+    index_item: int, adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureInfo:
+    instructions: list[TextGenerationInstruction] = [
+        ItemsConcreteRegenerateInstruction(index_item)
+    ]
     return generate_text_with_tries(instructions, adventure_info, model)
