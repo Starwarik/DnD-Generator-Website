@@ -5,7 +5,7 @@ from app.database.database import create_db_and_tables
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-from app.app.config import app_setting
+from app.configs.app import app_setting
 
 
 @asynccontextmanager

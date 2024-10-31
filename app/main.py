@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
 
-from app.app.app import app
+from app.application import *
 from app.database.crud import *
 from app.auth.router import auth_router
 from app.user.router import user_router
