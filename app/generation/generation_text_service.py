@@ -8,6 +8,8 @@ from sqlmodel import Session
 from app.adventure.models import Adventure, AdventureState
 from app.adventure.service import create_adventure, update_state_content_adventure
 
+class MaxAttemptsExced(Exception):
+    pass
 
 def parse_json_garbage(s: str) -> dict[str, Any]:
     s = s[next(idx for idx, c in enumerate(s) if c in "{[") :]
@@ -40,7 +42,7 @@ def generate_text_with_tries(
                 print(_, "try failed")
                 print(e)
         if generated_result is None:
-            raise Exception("Max tries")
+            raise MaxAttemptsExced("Max tries")
         print("Success")
         generated_json = JSONGenerationResult(
             content=parse_json_garbage(generated_result.content),
