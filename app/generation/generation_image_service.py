@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 
 from app.adventure.models import Adventure, AdventureState
 from app.adventure.service import update_state_content_adventure

@@ -6,11 +6,11 @@ from app.user.models import User
 from app.database.database import get_session
 from app.auth.dependencies import get_current_user
 
-from sqlmodel import Session
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from app.database.crud import change_balance_on_value
 
-from sqlmodel import select
 
 user_router = APIRouter(tags=["user"])
 
@@ -50,6 +50,6 @@ def spend_balance(
 # @user_router.get("/api/get_users")
 def get_all_users(session: Session = Depends(get_session)):
     statement = select(User)
-    results = session.exec(statement)
+    results = session.execute(statement)
     result = results.all()
     return result

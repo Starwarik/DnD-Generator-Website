@@ -1,4 +1,6 @@
-from sqlmodel import Field, SQLModel
+from app.database.database import Base
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import ForeignKey
 from enum import Enum
 
 
@@ -11,14 +13,12 @@ class AdventureState(Enum):
     ready = 5
 
 
-class AdventurePublic(SQLModel):
-    id: int | None
-    state: AdventureState
-    content: str | None
+class AdventurePublic(Base):
+    id: Mapped[int | None]
+    content: Mapped[str | None]
 
 
-class Adventure(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    user_id: int | None = Field(foreign_key="user.id")
-    state: AdventureState = Field(default=AdventureState.not_ready)
-    content: str | None = Field(default=None)
+class Adventure(Base):
+    id: Mapped[int | None] = mapped_column(primary_key=True, default=None)
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("user.id"))
+    content: Mapped[str | None] = mapped_column(default=None)

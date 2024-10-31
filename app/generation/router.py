@@ -1,6 +1,6 @@
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 from typing_extensions import Annotated
 
 from app.adventure.service import (
