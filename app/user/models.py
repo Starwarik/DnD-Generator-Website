@@ -1,10 +1,12 @@
 from sqlalchemy.sql.schema import Column
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import String
 from app.database.database import Base
 from sqlalchemy.orm import Mapped, mapped_column
 
 
 class User(Base):
+    __tablename__ = "user_account"
+
     id: Mapped[int | None] = mapped_column(primary_key=True, default=None)
     username = Column('username', String, unique=True, index=True)
     password: Mapped[str]

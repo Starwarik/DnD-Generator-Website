@@ -1,4 +1,5 @@
 from app.database.database import Base
+from pydantic import BaseModel
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import ForeignKey
 from enum import Enum
@@ -13,12 +14,14 @@ class AdventureState(Enum):
     ready = 5
 
 
-class AdventurePublic(Base):
-    id: Mapped[int | None]
-    content: Mapped[str | None]
+class AdventurePublic(BaseModel):
+    id: int | None
+    content: str | None
 
 
 class Adventure(Base):
+    __tablename__ = "adventure"
+
     id: Mapped[int | None] = mapped_column(primary_key=True, default=None)
-    user_id: Mapped[int | None] = mapped_column(ForeignKey("user.id"))
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("user_account.id"))
     content: Mapped[str | None] = mapped_column(default=None)
