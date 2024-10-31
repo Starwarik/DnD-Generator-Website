@@ -53,6 +53,7 @@ def generate_adventure(
             location_name,
             setting,
             num_players,
+            text_generation_model,
             adventure,
             session,
         )
@@ -80,7 +81,6 @@ def generate_test_adventure(
             location_name,
             setting,
             num_players,
-            text_generation_model,
             adventure,
             session,
         )
