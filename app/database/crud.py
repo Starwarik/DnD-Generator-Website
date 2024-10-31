@@ -9,21 +9,27 @@ def get_user_by_id(id: str, session: Session) -> User | None:
     statement = select(User).where(User.id == id)
     results = session.execute(statement)
     result = results.first()
-    return result
+    if result is None:
+        return None
+    return result[0]
 
 
 def get_user_by_username(username: str, session: Session) -> User | None:
     statement = select(User).where(User.username == username)
     results = session.execute(statement)
     result = results.first()
-    return result
+    if result is None:
+        return None
+    return result[0]
 
 
 def get_user_by_email(email: str, session: Session) -> User | None:
     statement = select(User).where(User.email == email)
     results = session.execute(statement)
     result = results.first()
-    return result
+    if result is None:
+        return None
+    return result[0]
 
 
 def get_user_by_email_or_username(
@@ -34,7 +40,9 @@ def get_user_by_email_or_username(
     )
     results = session.execute(statement)
     result = results.first()
-    return result
+    if result is None:
+        return None
+    return result[0]
 
 
 # CREATE method

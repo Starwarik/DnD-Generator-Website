@@ -18,9 +18,9 @@ def upload_image(container: ImageContainer, user_id: int, session: Session) -> I
 
 
 def get_image_by_id(image_id: int, user_id: int, session: Session) -> Image | None:
-    command = select(Image).where(
-        Image.user_id == user_id, 
-        Image.id == image_id
-    )
+    command = select(Image).where(Image.user_id == user_id, Image.id == image_id)
     results = session.execute(command)
-    return results.first()
+    result = results.first()
+    if result is None:
+        return None
+    return result[0]
