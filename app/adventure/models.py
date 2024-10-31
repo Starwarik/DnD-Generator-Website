@@ -22,6 +22,6 @@ class AdventurePublic(BaseModel):
 class Adventure(Base):
     __tablename__ = "adventure"
 
-    id: Mapped[int | None] = mapped_column(primary_key=True, default=None)
-    user_id: Mapped[int | None] = mapped_column(ForeignKey("user.id"))
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     content: Mapped[str | None] = mapped_column(default=None)
