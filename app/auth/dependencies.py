@@ -2,7 +2,7 @@ from typing_extensions import Annotated
 from fastapi import Depends, HTTPException, status
 
 from app.database.database import get_session
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError

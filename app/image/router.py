@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 from typing_extensions import Annotated
 from fastapi import APIRouter, Depends, Response
 

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 
-from sqlmodel import Session, select
+from sqlalchemy.orm import Session
+from sqlalchemy import select
 from typing_extensions import Annotated
 
 from app.adventure.schemas import AdventureInfo
@@ -22,7 +23,7 @@ def get_user_adventure(
     session: Session = Depends(get_session),
 ) -> list[AdventurePublic]:
     command = select(Adventure).where(Adventure.user_id == current_user.id)
-    results = session.exec(command)
+    results = session.execute(command)
     results = results.all()
     return list(map(convert_adventure_to_public, results))
 
@@ -33,12 +34,11 @@ def get_adventure(
     adventure_id: int,
     session: Session = Depends(get_session),
 ) -> AdventurePublic:
-    command = (
-        select(Adventure)
-        .where(Adventure.user_id == current_user.id)
-        .where(Adventure.id == adventure_id)
+    command = select(Adventure).where(
+        Adventure.user_id == current_user.id, 
+        Adventure.id == adventure_id
     )
-    results = session.exec(command)
+    results = session.execute(command)
     result = results.first()
     if result is None:
         raise Exception()
@@ -52,12 +52,11 @@ def change_annotation(
     current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
 ) -> AdventurePublic:
-    command = (
-        select(Adventure)
-        .where(Adventure.user_id == current_user.id)
-        .where(Adventure.id == id_adventure)
+    command = select(Adventure).where(
+        Adventure.user_id == current_user.id, 
+        Adventure.id == id_adventure
     )
-    results = session.exec(command)
+    results = session.execute(command)
     adventure = results.first()
     content = AdventureInfo.model_validate_json(adventure.content)
     content.annotation = new_annotation

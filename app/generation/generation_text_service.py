@@ -4,7 +4,7 @@ from app.generation.instructions import *
 from app.generation.client_text import TextGenerationModel
 from app.generation.schemas import JSONGenerationResult
 import json
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 from app.adventure.models import Adventure, AdventureState
 from app.adventure.service import create_adventure, update_state_content_adventure
 

@@ -1,4 +1,5 @@
-from sqlmodel import Session, select, and_
+from sqlalchemy import select 
+from sqlalchemy.orm import Session
 from app.adventure.models import Adventure, AdventurePublic, AdventureState
 from app.adventure.schemas import AdventureInfo
 
@@ -17,9 +18,9 @@ def get_adventure(
     session: Session,
 ) -> Adventure:
     command = select(Adventure).where(
-        and_(Adventure.id == id, Adventure.user_id == user_id)
+        Adventure.id == id, Adventure.user_id == user_id
     )
-    results = session.exec(command)
+    results = session.execute(command)
     result = results.first()
     if result is None:
         raise Exception()
@@ -33,7 +34,7 @@ def update_state_content_adventure(
     session: Session,
 ):
     command = select(Adventure).where(Adventure.id == id)
-    results = session.exec(command)
+    results = session.execute(command)
     result = results.first()
     if result is None:
         raise Exception()

@@ -1,11 +1,16 @@
-from sqlmodel import Field, SQLModel
-from sqlalchemy.sql.schema import Column
 from sqlalchemy import String
+from app.database.database import Base
+from sqlalchemy.orm import Mapped, mapped_column
 
 
-class User(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    username: str = Field(sa_column=Column("username", String, unique=True, index=True))
-    password: str
-    email: str = Field(sa_column=Column("email", String, unique=True, index=True))
-    balance: float = Field(default=0.0)
+class User(Base):
+    __tablename__ = "user"
+
+    id: Mapped[int | None] = mapped_column(primary_key=True, autoincrement=True)
+    username: Mapped[str] = mapped_column(String, unique=True, index=True)
+    password: Mapped[str]
+    email: Mapped[str] = mapped_column(String, unique=True, index=True)
+    balance: Mapped[float] = mapped_column(default=0.0)
+
+    def __repr__(self):
+        return f"User(id={self.id!r}, username={self.username!r}, password={self.password!r}, balance={self.balance!r})"

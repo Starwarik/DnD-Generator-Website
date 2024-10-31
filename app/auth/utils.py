@@ -33,6 +33,7 @@ def authenticate_user(
     username_or_email: str, password: str, session: Session
 ) -> User | None:
     user = get_user_by_email_or_username(username_or_email, session)
+    print(user)
     if user is None:
         return None
     if not verify_password(password, user.password):

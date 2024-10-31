@@ -1,4 +1,7 @@
-from sqlmodel import Field, SQLModel
+from app.database.database import Base
+from pydantic import BaseModel
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import ForeignKey
 from enum import Enum
 
 
@@ -11,14 +14,14 @@ class AdventureState(Enum):
     ready = 5
 
 
-class AdventurePublic(SQLModel):
+class AdventurePublic(BaseModel):
     id: int | None
-    state: AdventureState
     content: str | None
 
 
-class Adventure(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    user_id: int | None = Field(foreign_key="user.id")
-    state: AdventureState = Field(default=AdventureState.not_ready)
-    content: str | None = Field(default=None)
+class Adventure(Base):
+    __tablename__ = "adventure"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    content: Mapped[str | None] = mapped_column(default=None)
