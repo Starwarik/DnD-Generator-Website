@@ -23,5 +23,5 @@ class Adventure(Base):
     __tablename__ = "adventure"
 
     id: Mapped[int | None] = mapped_column(primary_key=True, default=None)
-    user_id: Mapped[int | None] = mapped_column(ForeignKey("user_account.id"))
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("user.id"))
     content: Mapped[str | None] = mapped_column(default=None)
