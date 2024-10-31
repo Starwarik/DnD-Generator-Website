@@ -49,7 +49,7 @@ def generate_adventure(
     adventure = create_adventure(current_user.id, session)
 
     def inner_command(adventure: Adventure):
-        adventure = generate_new_test_adventure_json(
+        adventure = generate_new_adventure_json(
             location_name,
             setting,
             num_players,
@@ -76,7 +76,7 @@ def generate_test_adventure(
     adventure = create_adventure(current_user.id, session)
 
     def inner_command(adventure: Adventure):
-        adventure = generate_new_adventure_json(
+        adventure = generate_new_test_adventure_json(
             location_name,
             setting,
             num_players,
