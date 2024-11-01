@@ -3,7 +3,7 @@ from email.message import EmailMessage
 
 from abc import ABC, abstractmethod
 
-from app.notification.config import NotificationServiceChoice, notification_setting
+from app.configs.notifications import NotificationServiceChoice, notification_setting
 
 
 class NotificationService(ABC):

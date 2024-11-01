@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from .config import generation_setting
+from app.configs.generation import generation_setting
 
 from langchain_core.output_parsers import StrOutputParser
 from langchain.schema import HumanMessage, SystemMessage, AIMessage
@@ -9,7 +9,7 @@ from langchain_community.chat_models.gigachat import GigaChat
 from app.generation.schemas import Message, MessageType, TextGenerationResult
 import requests
 
-from typing import Any, final, cast
+from typing import Any, final
 
 message_type = HumanMessage | SystemMessage | AIMessage
 

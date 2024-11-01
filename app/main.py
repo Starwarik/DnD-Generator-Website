@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
 
-from app.app.app import app
+from app.application import *
 from app.database.crud import *
 from app.auth.router import auth_router
 from app.user.router import user_router
@@ -17,11 +17,11 @@ class TokenData(BaseModel):
     username: Union[str, None] = None
 
 
-app.include_router(auth_router)
-app.include_router(user_router)
-app.include_router(generation_router)
-app.include_router(adventure_router)
-app.include_router(image_router)
+routers = (auth_router, user_router, generation_router, adventure_router, image_router)
+
+for router in routers:
+    app.include_router(router)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
