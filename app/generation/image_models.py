@@ -12,12 +12,23 @@ import re
 
 
 class ImageGeneration(ABC):
+    """
+    Абстрактный класс модели для генерации картинок.
+    """
     @abstractmethod
-    def generate_image(self, system_prompt, user_prompt) -> ImageContainer:
+    def generate_image(self, system_prompt: str | None, user_prompt: str | None) -> ImageContainer:
+        """
+        По заданному промпту генерирует картинку.
+        :param system_prompt: Системный промпт. Может не указываться
+        :param user_prompt: Системный промпт. Может не указываться
+        """
         pass
 
 
 class GigaChatImage(ImageGeneration):
+    """
+    Класс для генерации модели с использованием Гигачата.
+    """
     def __init__(self):
         self.model = GigaChat(
             credentials=generation_setting.gigachat_credentials, verify_ssl_certs=False
@@ -27,6 +38,11 @@ class GigaChatImage(ImageGeneration):
     def generate_image(
         self, system_prompt: str | None, user_prompt: str | None
     ) -> ImageContainer:
+        """
+        По заданному промпту генерирует картинку.
+        :param system_prompt: Системный промпт. Может не указываться
+        :param user_prompt: Системный промпт. Может не указываться
+        """
         messages = []
         if system_prompt:
             messages.append(SystemMessage(system_prompt))

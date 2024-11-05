@@ -15,6 +15,9 @@ message_type = HumanMessage | SystemMessage | AIMessage
 
 
 class TextGenerationModel(ABC):
+    """
+    Абстрактный класс модели для генерации картинок.
+    """
     @abstractmethod
     def generate_text(self, prompts: list[Message]) -> TextGenerationResult:
         raise NotImplementedError()
@@ -22,6 +25,9 @@ class TextGenerationModel(ABC):
 
 @final
 class GigaChatText(TextGenerationModel):
+    """
+    Класс модели для генерации текстов с Гигачатом.
+    """
     def __init__(self):
         self.model = GigaChat(
             credentials=generation_setting.gigachat_credentials, verify_ssl_certs=False
@@ -54,6 +60,9 @@ class GigaChatText(TextGenerationModel):
 
 @final
 class YandexGPTTextSync(TextGenerationModel):
+    """
+    Класс модели для генерации текстов с ЯндексГПТ в синхроном режиме.
+    """
     def __init__(
         self,
         url_to_server: str = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion",
