@@ -32,7 +32,7 @@ from app.generation.generation_text_service import (
     regenerate_items_json,
     regenerate_item_concrete_json,
 )
-from app.generation.client_text import text_generation_model
+from app.generation.text_models import text_generation_model
 
 generation_router = APIRouter(tags=["generation"])
 

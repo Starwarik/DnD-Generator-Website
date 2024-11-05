@@ -1,7 +1,7 @@
 from typing import Any
 from app.adventure.schemas import *
 from app.generation.instructions import *
-from app.generation.client_text import TextGenerationModel
+from app.generation.text_models import TextGenerationModel
 from app.generation.schemas import JSONGenerationResult
 import json
 from sqlalchemy.orm import Session
@@ -12,6 +12,9 @@ class MaxAttemptsExced(Exception):
     pass
 
 def parse_json_garbage(s: str) -> dict[str, Any]:
+    """
+    Пытается найти json среди str. Если не получается возращает ошибку JSONDecodeError.
+    """
     s = s[next(idx for idx, c in enumerate(s) if c in "{[") :]
     try:
         return json.loads(s)
@@ -29,6 +32,14 @@ def generate_text_with_tries(
     model: TextGenerationModel,
     n_tries: int = 3,
 ) -> AdventureInfo:
+    """
+    Изменение информации приключения по данным инструкциям. На выходе выдает новое приключение.
+
+    :param instructions: Инструкции, по которым будет меняться приключение.
+    :param adventure: Изначальное содержание приключения.
+    :param model: модель для генрации текста
+    :param n_tries: количество попыток генерации перед выбросом ошибки.
+    """
     for instruction in instructions:
         prompts = instruction.get_prompts()
         config = instruction.get_config(adventure)
@@ -62,6 +73,17 @@ def generate_new_adventure_json(
     adventure: Adventure,
     session: Session,
 ) -> Adventure:
+    """
+    Генерирует полноценное приключение с нуля.
+
+    :param location_name: название локации
+    :param setting: сеттинг
+    :param num_players: кол-во игроков
+    :param model: модель для генерации текста
+    :param adventure: модель приключения из бд
+    :param session: для бд
+    """
+
     adventure_info = AdventureInfo(
         name=location_name,
         location=location_name,
@@ -95,6 +117,15 @@ def generate_new_test_adventure_json(
     adventure: Adventure,
     session: Session,
 ) -> Adventure:
+    """
+    Генерирует фиктивное приключение для тестирования.
+    :param location_name: название локации
+    :param setting: сеттинг
+    :param num_players: кол-во игроков
+    :param adventure: модель приключения из бд
+    :param session: для бд
+    """
+
     dummy_adventure = {
         "name": "Test adventure",
         "annotation": "",
@@ -155,6 +186,13 @@ def generate_new_test_adventure_json(
 def regenerate_new_adventure_json(
     adventure: Adventure, model: TextGenerationModel, session: Session
 ) -> Adventure:
+    """
+    Перегенерировать всё приключение заново.
+
+    :param adventure: модель приключения из бд
+    :param model: модель для генерации текста
+    :param session: для бд
+    """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     adventure_info = AdventureInfo(
         name=adventure_info.location,
@@ -188,6 +226,13 @@ def regenerate_new_adventure_json(
 def regenerate_quests_json(
     adventure: Adventure, model: TextGenerationModel, session: Session
 ) -> Adventure:
+    """
+    Перегенерировать все квесты заново. Только текстовое содержание.
+
+    :param adventure: модель приключения из бд
+    :param model: модель для генерации текста
+    :param session: для бд
+    """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [QuestsRegenerateInstruction()]
     adventure_info = generate_text_with_tries(instructions, adventure_info, model)
@@ -200,6 +245,14 @@ def regenerate_quests_json(
 def regenerate_quest_concrete_json(
     index_quest: int, adventure: Adventure, model: TextGenerationModel, session: Session
 ) -> Adventure:
+    """
+    Перегенерировать конкретный квест заново. Только текстовое содержание.
+
+    :param index_quest: индекс квеста, которого нужно перегенерировать.
+    :param adventure: модель приключения из бд
+    :param model: модель для генерации текста
+    :param session: для бд
+    """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [
         QuestsConcreteRegenerateInstruction(index_quest)
@@ -217,6 +270,13 @@ def regenerate_quest_concrete_json(
 def regenerate_characters_json(
     adventure: Adventure, model: TextGenerationModel, session: Session
 ) -> Adventure:
+    """
+    Перегенерировать всех персонажей заново. Только текстовое содержание.
+
+    :param adventure: модель приключения из бд
+    :param model: модель для генерации текста
+    :param session: для бд
+    """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [CharactersRegenerateInstruction()]
     adventure_info = generate_text_with_tries(instructions, adventure_info, model)
@@ -232,6 +292,14 @@ def regenerate_character_concrete_json(
     model: TextGenerationModel,
     session: Session,
 ) -> Adventure:
+    """
+    Перегенерировать конкретный персонажа заново. Только текстовое содержание.
+
+    :param index_character: индекс персонажа, которого нужно перегенерировать.
+    :param adventure: модель приключения из бд
+    :param model: модель для генерации текста
+    :param session: для бд
+    """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [
         CharactersConcreteRegenerateInstruction(index_character)
@@ -249,6 +317,13 @@ def regenerate_character_concrete_json(
 def regenerate_items_json(
     adventure: Adventure, model: TextGenerationModel, session: Session
 ) -> Adventure:
+    """
+    Перегенерировать все предметы заново. Только текстовое содержание.
+
+    :param adventure: модель приключения из бд
+    :param model: модель для генерации текста
+    :param session: для бд
+    """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [ItemsRegenerateInstruction()]
     adventure_info = generate_text_with_tries(instructions, adventure_info, model)
@@ -261,6 +336,14 @@ def regenerate_items_json(
 def regenerate_item_concrete_json(
     index_item: int, adventure: Adventure, model: TextGenerationModel, session: Session
 ) -> Adventure:
+    """
+    Перегенерировать конкретный предмет заново. Только текстовое содержание.
+
+    :param index_item: индекс предмет, которого нужно перегенерировать.
+    :param adventure: модель приключения из бд
+    :param model: модель для генерации текста
+    :param session: для бд
+    """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [
         ItemsConcreteRegenerateInstruction(index_item)

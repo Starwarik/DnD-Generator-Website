@@ -6,7 +6,17 @@ from enum import Enum
 
 
 class AdventureState(Enum):
-    not_ready = 0
+    """
+    Хранит состояние генерации приключения
+
+    1. not_ready - Не готово
+    2. generating_text - Происходит генерация текста.
+    3. image_adventure - Просиходит генерация обложки и карты приключения.
+    4. image_items - Генерация картинок для предметов
+    5. image_characters - Генерация картинок для персонажей
+    6. ready - Приключение готово
+    """
+    not_ready = 0 
     generating_text = 1
     image_adventure = 2
     image_items = 3
@@ -16,6 +26,8 @@ class AdventureState(Enum):
 
 class IntEnum(TypeDecorator):
     """
+    Нужен, чтобы хранить в бд Enum как int. Служебный класс.
+
     Enables passing in a Python enum and storing the enum's *value* in the db.
     The default would have stored the enum's *name* (ie the string).
     """

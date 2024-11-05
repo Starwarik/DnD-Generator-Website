@@ -5,7 +5,7 @@ from app.adventure.service import update_state_content_adventure
 from app.adventure.schemas import AdventureInfo
 from app.generation.prompts import *
 
-from app.generation.client_image import image_model
+from app.generation.image_models import image_model
 
 import time
 
@@ -27,6 +27,13 @@ def generate_images_adventure(
     session: Session,
     state: AdventureState = AdventureState.image_characters,
 ) -> Adventure:
+    """
+    Генерация обложки и карты для всего приключения.
+
+    :param adventure: Приключение, для которого генерируется картинка.
+    :param session: для бд
+    :param state: состояние, в которое нужно установить приключение, после конца генерации.
+    """
     content = AdventureInfo.model_validate_json(adventure.content)
     try:
         if content.map_image_id == -1:
@@ -64,6 +71,13 @@ def generate_test_images_adventure(
     session: Session,
     state: AdventureState = AdventureState.image_characters,
 ):
+    """
+    Тестовая генерация обложек и карты. Вставляются id -42 для изображений.
+
+    :param adventure: Приключение, для которого генерируется картинка.
+    :param session: для бд
+    :param state: состояние, в которое нужно установить приключение, после конца генерации.
+    """
     content = AdventureInfo.model_validate_json(adventure.content)
     content.adventure_image_id = -42
     content.map_image_id = -42
@@ -77,6 +91,13 @@ def generate_images_characters(
     session: Session,
     state: AdventureState = AdventureState.image_items,
 ):
+    """
+    Генерация картинок персонажей.
+
+    :param adventure: Приключение, для которого генерируется картинка.
+    :param session: для бд
+    :param state: состояние, в которое нужно установить приключение, после конца генерации.
+    """
     content = AdventureInfo.model_validate_json(adventure.content)
     for i in range(len(content.characters)):
         char = content.characters[i]
@@ -101,6 +122,13 @@ def generate_test_images_characters(
     session: Session,
     state: AdventureState = AdventureState.image_items,
 ):
+    """
+    Тестовая генерация картинок персонажей. Вставляются id -42 для изображений персонажей.
+
+    :param adventure: Приключение, для которого генерируется картинка.
+    :param session: для бд
+    :param state: состояние, в которое нужно установить приключение, после конца генерации.
+    """
     content = AdventureInfo.model_validate_json(adventure.content)
     new_items = content.items
     for i, x in enumerate(new_items):
@@ -114,6 +142,13 @@ def generate_test_images_characters(
 def generate_images_items(
     adventure: Adventure, session: Session, state: AdventureState = AdventureState.ready
 ):
+    """
+    Генерация картинок предметов.
+    
+    :param adventure: Приключение, для которого генерируется картинка.
+    :param session: для бд
+    :param state: состояние, в которое нужно установить приключение, после конца генерации.
+    """
     content = AdventureInfo.model_validate_json(adventure.content)
     for i in range(len(content.items)):
         item = content.items[i]
@@ -136,6 +171,13 @@ def generate_images_items(
 def generate_test_images_items(
     adventure: Adventure, session: Session, state: AdventureState = AdventureState.ready
 ):
+    """
+    Тестовая генерация картинок предметов. Вставляются id -42 для изображений предме6тов.
+
+    :param adventure: Приключение, для которого генерируется картинка.
+    :param session: для бд
+    :param state: состояние, в которое нужно установить приключение, после конца генерации.
+    """
     content = AdventureInfo.model_validate_json(adventure.content)
     new_characters = content.characters
     for i, x in enumerate(new_characters):
