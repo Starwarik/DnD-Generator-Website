@@ -16,7 +16,8 @@ class AdventureState(Enum):
     5. image_characters - Генерация картинок для персонажей
     6. ready - Приключение готово
     """
-    not_ready = 0 
+
+    not_ready = 0
     generating_text = 1
     image_adventure = 2
     image_items = 3
@@ -49,8 +50,16 @@ class IntEnum(TypeDecorator):
 
 
 class AdventurePublic(BaseModel):
+    """
+    Модель, которая будет отправляться пользователю, так как fastapi работает с pydantic.
+    """
+
     id: int | None
+    state: AdventureState | None
     content: str | None
+
+    class Config:
+        from_attributes = True
 
 
 class Adventure(Base):
@@ -58,5 +67,7 @@ class Adventure(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    state: Mapped[AdventureState] = mapped_column(IntEnum(AdventureState))
-    content: Mapped[str | None] = mapped_column(default=None)
+    state: Mapped[AdventureState] = mapped_column(
+        IntEnum(AdventureState), default=AdventureState.not_ready
+    )
+    content: Mapped[str] = mapped_column(default="{}")
