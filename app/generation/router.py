@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from typing_extensions import Annotated
 
 from app.adventure.service import (
-    convert_adventure_to_public,
     get_adventure,
     create_adventure,
 )
@@ -37,7 +36,7 @@ from app.generation.text_models import text_generation_model
 generation_router = APIRouter(tags=["generation"])
 
 
-@generation_router.post("/api/adventure")
+@generation_router.post("/api/adventure", response_model=AdventurePublic)
 def generate_adventure(
     num_players: int,
     location_name: str,
@@ -45,7 +44,7 @@ def generate_adventure(
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
-) -> AdventurePublic:
+):
     adventure = create_adventure(current_user.id, session)
 
     def inner_command(adventure: Adventure):
@@ -62,10 +61,10 @@ def generate_adventure(
         generate_images_items(adventure, session)
 
     background_tasks.add_task(inner_command, adventure)
-    return convert_adventure_to_public(adventure)
+    return adventure
 
 
-@generation_router.post("/api/generate_test")
+@generation_router.post("/api/generate_test", response_model=AdventurePublic)
 def generate_test_adventure(
     num_players: int,
     location_name: str,
@@ -73,7 +72,7 @@ def generate_test_adventure(
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
-) -> AdventurePublic:
+):
     adventure = create_adventure(current_user.id, session)
 
     def inner_command(adventure: Adventure):
@@ -89,13 +88,15 @@ def generate_test_adventure(
         generate_test_images_items(adventure, session)
 
     background_tasks.add_task(inner_command, adventure)
-    return convert_adventure_to_public(adventure)
+    return adventure
 
 
 # ============================= QUESTS ========================
 
 
-@generation_router.put("/api/adventure/{id_adventure}/quests")
+@generation_router.put(
+    "/api/adventure/{id_adventure}/quests", response_model=AdventurePublic
+)
 def regenerate_quests(
     id_adventure: int,
     background_tasks: BackgroundTasks,
@@ -107,10 +108,12 @@ def regenerate_quests(
     background_tasks.add_task(
         regenerate_quests_json, adventure, text_generation_model, session
     )
-    return convert_adventure_to_public(adventure)
+    return adventure
 
 
-@generation_router.put("/api/adventure/{id_adventure}/quests/{index_quest}")
+@generation_router.put(
+    "/api/adventure/{id_adventure}/quests/{index_quest}", response_model=AdventurePublic
+)
 def regenerate_quests_concrete(
     index_quest: int,
     id_adventure: int,
@@ -131,13 +134,15 @@ def regenerate_quests_concrete(
         text_generation_model,
         session,
     )
-    return convert_adventure_to_public(adventure)
+    return adventure
 
 
 # ================================ CHARACTERS ===========================
 
 
-@generation_router.put("/api/adventure/{id_adventure}/characters")
+@generation_router.put(
+    "/api/adventure/{id_adventure}/characters", response_model=AdventurePublic
+)
 def regenerate_characters(
     id_adventure: int,
     background_tasks: BackgroundTasks,
@@ -155,17 +160,20 @@ def regenerate_characters(
         generate_images_characters(adventure, session)
 
     background_tasks.add_task(inner_command, adventure)
-    return convert_adventure_to_public(adventure)
+    return adventure
 
 
-@generation_router.put("/api/adventure/{id_adventure}/characters/{index_character}")
+@generation_router.put(
+    "/api/adventure/{id_adventure}/characters/{index_character}",
+    response_model=AdventurePublic,
+)
 def regenerate_characters_concrete(
     id_adventure: int,
     index_character: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
-) -> AdventurePublic:
+):
     adventure = get_adventure(id_adventure, current_user.id, session)
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
 
@@ -182,19 +190,21 @@ def regenerate_characters_concrete(
         generate_images_characters(adventure, session)
 
     background_tasks.add_task(inner_command, adventure)
-    return convert_adventure_to_public(adventure)
+    return adventure
 
 
 # ================================== ITEMS ======================================
 
 
-@generation_router.put("/api/adventure/{id_adventure}/items")
+@generation_router.put(
+    "/api/adventure/{id_adventure}/items", response_model=AdventurePublic
+)
 def regenerate_items(
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
-) -> AdventurePublic:
+):
     adventure = get_adventure(id_adventure, current_user.id, session)
 
     def inner_command(adventure: Adventure):
@@ -206,17 +216,19 @@ def regenerate_items(
         generate_images_items(adventure, session)
 
     background_tasks.add_task(inner_command, adventure)
-    return convert_adventure_to_public(adventure)
+    return adventure
 
 
-@generation_router.put("/api/adventure/{id_adventure}/items/{index_item}")
+@generation_router.put(
+    "/api/adventure/{id_adventure}/items/{index_item}", response_model=AdventurePublic
+)
 def regenerate_items_concrete(
     index_item: int,
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
-) -> AdventurePublic:
+):
     adventure = get_adventure(id_adventure, current_user.id, session)
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
 
@@ -233,4 +245,4 @@ def regenerate_items_concrete(
         generate_images_items(adventure, session)
 
     background_tasks.add_task(inner_command, adventure)
-    return convert_adventure_to_public(adventure)
+    return adventure

@@ -1,4 +1,4 @@
-from sqlalchemy import select 
+from sqlalchemy import RowMapping, select, update
 from sqlalchemy.orm import Session
 from app.adventure.models import Adventure, AdventurePublic, AdventureState
 from app.adventure.schemas import AdventureInfo
@@ -17,10 +17,8 @@ def get_adventure(
     user_id: int,
     session: Session,
 ) -> Adventure:
-    command = select(Adventure).where(
-        Adventure.id == id, Adventure.user_id == user_id
-    )
-    results = session.execute(command)
+    command = select(Adventure).where(Adventure.id == id, Adventure.user_id == user_id)
+    results = session.execute(command).scalars()
     result = results.first()
     if result is None:
         raise Exception()
@@ -32,30 +30,20 @@ def update_state_content_adventure(
     state: AdventureState | None,
     content: AdventureInfo | None,
     session: Session,
-):
-    command = select(Adventure).where(Adventure.id == id)
-    results = session.execute(command)
-    result = results.first()
-    if result is None:
-        raise Exception()
+) -> Adventure:
+    new_values = {}
     if state:
-        result.state = state
+        new_values["state"] = state
     if content:
-        result.content = content.model_dump_json()
-    else:
-        result.content = None
-    session.add(result)
+        new_values["content"] = content.model_dump_json()
+
+    command = (
+        update(Adventure)
+        .where(Adventure.id == id)
+        .values(**new_values)
+        .returning(Adventure)
+    )
+    results = session.execute(command).scalars()
+    result = results.one()
     session.commit()
-    session.refresh(result)
     return result
-
-
-def convert_adventure_to_public(adventure: Adventure) -> AdventurePublic:
-    adventure_transcript = adventure.model_dump()
-    """
-    if not (adventure_transcript["content"] is None):
-        adventure_transcript["content"] = AdventureInfo.model_validate_json(
-            adventure_transcript["content"]
-        )
-    """
-    return AdventurePublic.model_validate(adventure_transcript)
