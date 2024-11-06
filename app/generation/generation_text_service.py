@@ -8,8 +8,10 @@ from sqlalchemy.orm import Session
 from app.adventure.models import Adventure, AdventureState
 from app.adventure.service import create_adventure, update_state_content_adventure
 
+
 class MaxAttemptsExced(Exception):
     pass
+
 
 def parse_json_garbage(s: str) -> dict[str, Any]:
     """
@@ -129,7 +131,7 @@ def generate_new_test_adventure_json(
     dummy_adventure = {
         "name": "Test adventure",
         "annotation": "",
-        "description": "Test location description",
+        "description": ["Key point 1", "Key point 2", "Key point 3"],
         "location": location_name,
         "setting": setting,
         "playerNum": num_players,
