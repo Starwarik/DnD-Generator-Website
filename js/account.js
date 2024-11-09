@@ -9,7 +9,7 @@ async function setUserInfo(token) {
         document.getElementById('account-navbar-menu__login').textContent = user_info.username;
         document.getElementById('account-info-form__username').textContent = user_info.username;
         document.getElementById('account-navbar-menu__email').textContent = user_info.email;
-        document.getElementById('account-navbar-menu__balance').textContent = user_info.balance;
+        //document.getElementById('account-navbar-menu__balance').textContent = user_info.balance;
         document.getElementById('buy-tokens-form__balance').textContent = user_info.balance;
     } else {
         deleteCookie('access_token');
