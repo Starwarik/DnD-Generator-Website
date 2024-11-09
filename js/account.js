@@ -10,7 +10,7 @@ async function setUserInfo(token) {
         document.getElementById('account-info-form__username').textContent = user_info.username;
         document.getElementById('account-navbar-menu__email').textContent = user_info.email;
         document.getElementById('account-navbar-menu__balance').textContent = user_info.balance;
-        document.getElementById('buy-tokens-form__fields__amount-panel__balance').textContent = user_info.balance;
+        document.getElementById('buy-tokens-form__balance').textContent = user_info.balance;
     } else {
         deleteCookie('access_token');
         account_navbar_auth.classList.add('no-seen');
