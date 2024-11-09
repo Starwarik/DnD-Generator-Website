@@ -21,8 +21,13 @@
 
     background-color: black;
     pointer-events: all;
+    cursor: pointer;
 
     z-index: 30;
+}
+
+.partitions-image {
+    cursor: pointer;
 }
 
 .partitions-image__wrapper {
@@ -342,6 +347,7 @@
 
     background-color: var(--accent);
     color: var(--substrate);
+    cursor: pointer;
 
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
@@ -532,10 +538,13 @@ form-submit:hover {
     z-index: 100;
 }
 
+
+
 .dialog__exit-button {
     width: fit-content;
     height: fit-content;
     margin-left: 95%;
+    cursor: pointer;
 }
 
 .dialog-viewport {
@@ -611,6 +620,7 @@ form-submit:hover {
 
 .dialog-form__info_higlited {
     color: var(--accent);
+    cursor: pointer;
 }
 
 .dialog-login-form__reset-password {
