@@ -54,7 +54,12 @@
 						<label class="form-label">Текущий счёт</label>
 						<p class="buy-tokens-form__fields__amount-panel__balance"><span id="account-navbar-menu__balance">...</span> ток.</p>
 					</div>
-					<a class="form-submit" href="#buy-tokens" onclick="hide_navbar_menu()">Пополнить счет</a>
+					<div class="buy-tokens-form__fields__input_balance">
+						<label class="form-label">Сумма от 100 р.</label>
+						<input class="form-input" type="number" name="amount" placeholder="Ваша сумма" required>
+					</div>
+					<p class="buy-tokens-form__tokens_count">Кол-во токенов: <span class="tokens-converter">0</span></p>
+					<button class="form-submit" type="submit">Пополнить счёт</button>
 					<div class="account-navbar-menu__exit-menu" onclick="logout()">
 						<img src="images/exit_icon.svg">
 						<p>Выйти</p>
@@ -321,7 +326,7 @@
 									<input class="form-input" type="number" name="amount" placeholder="Ваша сумма" required>
 								</div>
 							</fieldset>
-							<p class="buy-tokens-form__tokens_count">Кол-во токенов: <span>1000</span></p>
+							<p class="buy-tokens-form__tokens_count">Кол-во токенов: <span class="tokens-converter">0</span></p>
 							<button class="form-submit" type="submit">Пополнить счёт</button>
 						</form>
 						<aside class="tokens-description">
