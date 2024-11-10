@@ -1,14 +1,14 @@
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 from datetime import timedelta
 
 from app.database.database import get_session
 from app.database.crud import *
 from app.notification.notifications import notification_service
 from .utils import *
-from .config import auth_setting
+from app.configs.auth import auth_setting
 
 from pydantic import BaseModel
 

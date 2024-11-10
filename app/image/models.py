@@ -1,8 +1,12 @@
-from sqlmodel import Field, SQLModel
+from app.database.database import Base
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import ForeignKey
 
 
-class Image(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    user_id: int | None = Field(foreign_key="user.id")
-    image: bytes
-    media_type: str
+class Image(Base):
+    __tablename__ = "image"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    image: Mapped[bytes]
+    media_type: Mapped[str]

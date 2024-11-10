@@ -1,28 +1,35 @@
 from app.user.models import User
-from sqlmodel import Session, select, or_
+from sqlalchemy.orm import Session
+from sqlalchemy import select, or_
 
 # READ method
 
 
 def get_user_by_id(id: str, session: Session) -> User | None:
     statement = select(User).where(User.id == id)
-    results = session.exec(statement)
+    results = session.execute(statement)
     result = results.first()
-    return result
+    if result is None:
+        return None
+    return result[0]
 
 
 def get_user_by_username(username: str, session: Session) -> User | None:
     statement = select(User).where(User.username == username)
-    results = session.exec(statement)
+    results = session.execute(statement)
     result = results.first()
-    return result
+    if result is None:
+        return None
+    return result[0]
 
 
 def get_user_by_email(email: str, session: Session) -> User | None:
     statement = select(User).where(User.email == email)
-    results = session.exec(statement)
+    results = session.execute(statement)
     result = results.first()
-    return result
+    if result is None:
+        return None
+    return result[0]
 
 
 def get_user_by_email_or_username(
@@ -31,9 +38,11 @@ def get_user_by_email_or_username(
     statement = select(User).where(
         or_(User.email == email_or_username, User.username == email_or_username)
     )
-    results = session.exec(statement)
+    results = session.execute(statement)
     result = results.first()
-    return result
+    if result is None:
+        return None
+    return result[0]
 
 
 # CREATE method

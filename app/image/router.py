@@ -1,14 +1,13 @@
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 from typing_extensions import Annotated
 from fastapi import APIRouter, Depends, Response
 
 from app.auth.dependencies import get_current_user
 from app.database.database import get_session
-from app.image.models import Image
 from app.image.service import get_image_by_id
 from app.user.models import User
 from fastapi.responses import FileResponse
-from app.image.config import image_setting
+from app.configs.image import image_setting
 
 image_router = APIRouter(tags=["image"])
 
