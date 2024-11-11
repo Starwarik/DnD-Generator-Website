@@ -7,6 +7,8 @@ class GenerationSettings(BaseSettings):
     yandexchat_api_key: SecretStr
     yandexchat_folder_id: str
 
+    min_balance_to_generate: float
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
