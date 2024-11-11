@@ -3,7 +3,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing_extensions import Annotated
 
-from adventure.schemas import AdventureInfo
+from app.adventure.schemas import AdventureInfo
 from app.adventure.service import (
     get_adventure,
     create_adventure,

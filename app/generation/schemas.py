@@ -2,6 +2,7 @@ from typing import Any
 from pydantic import BaseModel
 from enum import Enum
 
+
 class MessageType(Enum):
     assistant = 0
     user = 1
@@ -17,6 +18,31 @@ class Message(BaseModel):
     content: str
 
 
+class TextTokensGenerationCounts(BaseModel):
+    gigachat_prompt_token_count: int = 0
+    gigachat_assistant_token_count: int = 0
+    yandexgpt_prompt_token_count: int = 0
+    yandexgpt_assistant_token_count: int = 0
+
+    def __add__(self, other):
+        if not isinstance(other, TextTokensGenerationCounts):
+            raise ValueError("Неправильный тип", str(type(other)))
+
+        return TextTokensGenerationCounts(
+            gigachat_prompt_token_count=self.gigachat_prompt_token_count
+            + other.gigachat_prompt_token_count,
+            gigachat_assistant_token_count=self.gigachat_assistant_token_count
+            + other.gigachat_assistant_token_count,
+            yandexgpt_prompt_token_count=self.yandexgpt_prompt_token_count
+            + other.yandexgpt_prompt_token_count,
+            yandexgpt_assistant_token_count=self.yandexgpt_assistant_token_count
+            + other.yandexgpt_assistant_token_count,
+        )
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+
 class TextGenerationResult(BaseModel):
     """
     Текстовый результат модели.
@@ -24,23 +50,13 @@ class TextGenerationResult(BaseModel):
     * prompt_token_count - кол-во токенов инструкции, потраченных на генерацию.
     * assistant_token_count - кол-во токенов, которые сгенерировала модель.
     """
+
     content: str
-    prompt_token_count: int
-    assistant_token_count: int
+    count_tokens: TextTokensGenerationCounts
 
-
-class JSONGenerationResult(BaseModel):
-    """
-    Json результат модели.
-    * content - результат в виде словаря.
-    * prompt_token_count - кол-во токенов инструкции, потраченных на генерацию.
-    * assistant_token_count - кол-во токенов, которые сгенерировала модель.
-    """
-    content: dict[str, Any]
-    prompt_token_count: int
-    assistant_token_count: int
 
 # ======================== Ответы для инструкций ==============================
+
 
 class AdventureInfoInstructionAnswer(BaseModel):
     description: dict[int | str, str] | list[str] | str
