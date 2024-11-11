@@ -66,9 +66,9 @@ def change_password(id: int, new_password_hash: str, session: Session):
     session.refresh(user)
 
 
-def change_balance_on_value(id: int, balance: int, session: Session):
+def change_balance_on_value(id: int, diff_balance: float, session: Session):
     user = get_user_by_id(id, session)
-    user.balance += balance
+    user.balance += diff_balance
     session.add(user)
     session.commit()
     session.refresh(user)

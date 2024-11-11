@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
     notification_service.stop()
 
 
-if app_setting.is_adding_docs:
+if app_setting.is_test:
     app = FastAPI(
         lifespan=lifespan,
         openapi_url=app_setting.openapi_url,
