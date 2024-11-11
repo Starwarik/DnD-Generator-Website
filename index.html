@@ -56,7 +56,7 @@
 					</div>
 					<div class="buy-tokens-form__fields__input_balance">
 						<label class="form-label">Сумма от 100 р.</label>
-						<input class="form-input" type="number" name="amount" placeholder="Ваша сумма" required>
+						<input class="form-input value-input__account-menu" oninput="tokens_converter('value-input__account-menu')" type="number" name="amount" placeholder="Ваша сумма" required>
 					</div>
 					<p class="buy-tokens-form__tokens_count">Кол-во токенов: <span class="tokens-converter">0</span></p>
 					<button class="form-submit" type="submit">Пополнить счёт</button>
@@ -323,7 +323,7 @@
 								</div>
 								<div class="buy-tokens-form__fields__input_balance">
 									<label class="form-label">Сумма от 100 р.</label>
-									<input class="form-input" type="number" name="amount" placeholder="Ваша сумма" required oninput="">
+									<input class="form-input value-input__form" oninput="tokens_converter('value-input__form')" type="number" name="amount" placeholder="Ваша сумма" required>
 								</div>
 							</fieldset>
 							<p class="buy-tokens-form__tokens_count">Кол-во токенов: <span class="tokens-converter">0</span></p>
@@ -393,7 +393,6 @@
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 		<script src="./js/animations.js"></script>
-		<!--<script src="./js/account_navbar.js"></script>-->
 		<script src="./js/cookie.js"></script>
 		<script src="./js/api.js"></script>
 		<script src="./js/account.js"></script>

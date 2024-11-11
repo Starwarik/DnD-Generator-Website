@@ -1,12 +1,20 @@
-function tokens_converter_form (target, rubles) {
-	tokens = rubles * 3;
-	target.textContent = tokens;
-}
-
-function tokens_converter_menu (target, rubles) {
-	tokens = rubles * 3;
-	target.textContent = tokens;
-}
-
-let valueInputList = document.getElementsByClassName("form-input");
 let tokensConverterList = document.getElementsByClassName("tokens-converter");
+
+function tokens_converter (className) {
+	let element = document.getElementsByClassName(className)[0];
+
+	switch (className) {
+		case "value-input__account-menu":
+			var tokensConverterElement = tokensConverterList[0];
+			var rubles = element.value;
+			var tokens = rubles / 6;
+			tokensConverterElement.textContent = tokens.toFixed(2);
+			break;
+		case "value-input__form":
+			var tokensConverterElement = tokensConverterList[1];
+			var rubles = element.value;
+			var tokens = rubles / 6;
+			tokensConverterElement.textContent = tokens.toFixed(2);
+			break;
+	}
+}
