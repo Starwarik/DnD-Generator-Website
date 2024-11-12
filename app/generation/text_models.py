@@ -10,7 +10,7 @@ from app.generation.schemas import (
     Message,
     MessageType,
     TextGenerationResult,
-    TextTokensGenerationCounts,
+    SpentedTokensCounts,
 )
 import requests
 
@@ -56,7 +56,7 @@ class GigaChatText(TextGenerationModel):
     def generate_text(self, prompts: list[Message]) -> TextGenerationResult:
         messages = self._convert_messages(prompts)
         response = self.model.invoke(messages)
-        count_token = TextTokensGenerationCounts(
+        count_token = SpentedTokensCounts(
             gigachat_prompt_token_count=response.response_metadata[
                 "token_usage"
             ].prompt_tokens,
@@ -121,7 +121,7 @@ class YandexGPTTextSync(TextGenerationModel):
             json=self._create_payload(messages),
         )
         answer_json = answer.json()
-        count_token = TextTokensGenerationCounts(
+        count_token = SpentedTokensCounts(
             yandexgpt_prompt_token_count=answer_json["result"]["usage"][
                 "inputTextTokens"
             ],

@@ -18,17 +18,18 @@ class Message(BaseModel):
     content: str
 
 
-class TextTokensGenerationCounts(BaseModel):
+class SpentedTokensCounts(BaseModel):
     gigachat_prompt_token_count: int = 0
     gigachat_assistant_token_count: int = 0
     yandexgpt_prompt_token_count: int = 0
     yandexgpt_assistant_token_count: int = 0
+    image_generated: int = 0
 
     def __add__(self, other):
-        if not isinstance(other, TextTokensGenerationCounts):
+        if not isinstance(other, SpentedTokensCounts):
             raise ValueError("Неправильный тип", str(type(other)))
 
-        return TextTokensGenerationCounts(
+        return SpentedTokensCounts(
             gigachat_prompt_token_count=self.gigachat_prompt_token_count
             + other.gigachat_prompt_token_count,
             gigachat_assistant_token_count=self.gigachat_assistant_token_count
@@ -37,6 +38,7 @@ class TextTokensGenerationCounts(BaseModel):
             + other.yandexgpt_prompt_token_count,
             yandexgpt_assistant_token_count=self.yandexgpt_assistant_token_count
             + other.yandexgpt_assistant_token_count,
+            image_generated=self.image_generated + other.image_generated,
         )
 
     def __radd__(self, other):
@@ -52,7 +54,7 @@ class TextGenerationResult(BaseModel):
     """
 
     content: str
-    count_tokens: TextTokensGenerationCounts
+    count_tokens: SpentedTokensCounts
 
 
 # ======================== Ответы для инструкций ==============================

@@ -2,6 +2,9 @@ from app.user.models import User
 from sqlalchemy.orm import Session
 from sqlalchemy import select, or_
 
+from app.generation.schemas import SpentedTokensCounts
+from app.configs.generation import generation_setting
+
 # READ method
 
 
@@ -72,3 +75,20 @@ def change_balance_on_value(id: int, diff_balance: float, session: Session):
     session.add(user)
     session.commit()
     session.refresh(user)
+
+
+def spend_balance_on_tokens(
+    id: int, tokens_count: SpentedTokensCounts, session: Session
+):
+    diff_balance = (
+        tokens_count.gigachat_assistant_token_count
+        * generation_setting.gigachat_assistant_token_cost
+        + tokens_count.gigachat_prompt_token_count
+        * generation_setting.gigachat_prompt_token_cost
+        + tokens_count.yandexgpt_assistant_token_count
+        * generation_setting.yandexgpt_assistant_token_cost
+        + tokens_count.yandexgpt_prompt_token_count
+        * generation_setting.yandexgpt_prompt_token_cost
+        + tokens_count.image_generated * generation_setting.image_generated_cost
+    )
+    change_balance_on_value(id, -diff_balance, session)
