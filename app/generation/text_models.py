@@ -6,7 +6,12 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.schema import HumanMessage, SystemMessage, AIMessage
 from langchain_community.chat_models.gigachat import GigaChat
 
-from app.generation.schemas import Message, MessageType, TextGenerationResult
+from app.generation.schemas import (
+    Message,
+    MessageType,
+    TextGenerationResult,
+    SpentedTokensCounts,
+)
 import requests
 
 from typing import Any, final
@@ -18,6 +23,7 @@ class TextGenerationModel(ABC):
     """
     Абстрактный класс модели для генерации картинок.
     """
+
     @abstractmethod
     def generate_text(self, prompts: list[Message]) -> TextGenerationResult:
         raise NotImplementedError()
@@ -28,6 +34,7 @@ class GigaChatText(TextGenerationModel):
     """
     Класс модели для генерации текстов с Гигачатом.
     """
+
     def __init__(self):
         self.model = GigaChat(
             credentials=generation_setting.gigachat_credentials, verify_ssl_certs=False
@@ -49,13 +56,15 @@ class GigaChatText(TextGenerationModel):
     def generate_text(self, prompts: list[Message]) -> TextGenerationResult:
         messages = self._convert_messages(prompts)
         response = self.model.invoke(messages)
-        return TextGenerationResult(
-            content=response.content,
-            prompt_token_count=response.response_metadata["token_usage"].prompt_tokens,
-            assistant_token_count=response.response_metadata[
+        count_token = SpentedTokensCounts(
+            gigachat_prompt_token_count=response.response_metadata[
+                "token_usage"
+            ].prompt_tokens,
+            gigachat_assistant_token_count=response.response_metadata[
                 "token_usage"
             ].completion_tokens,
         )
+        return TextGenerationResult(content=response.content, count_tokens=count_token)
 
 
 @final
@@ -63,6 +72,7 @@ class YandexGPTTextSync(TextGenerationModel):
     """
     Класс модели для генерации текстов с ЯндексГПТ в синхроном режиме.
     """
+
     def __init__(
         self,
         url_to_server: str = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion",
@@ -111,10 +121,17 @@ class YandexGPTTextSync(TextGenerationModel):
             json=self._create_payload(messages),
         )
         answer_json = answer.json()
+        count_token = SpentedTokensCounts(
+            yandexgpt_prompt_token_count=answer_json["result"]["usage"][
+                "inputTextTokens"
+            ],
+            yandexgpt_assistant_token_count=answer_json["result"]["usage"][
+                "completionTokens"
+            ],
+        )
         return TextGenerationResult(
             content=answer_json["result"]["alternatives"][0]["message"]["text"],
-            prompt_token_count=answer_json["result"]["usage"]["inputTextTokens"],
-            assistant_token_count=answer_json["result"]["usage"]["completionTokens"],
+            count_tokens=count_token,
         )
 
 

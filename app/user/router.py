@@ -6,10 +6,10 @@ from app.user.models import User
 from app.database.database import get_session
 from app.auth.dependencies import get_current_user
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
-from app.database.crud import change_balance_on_value
+from app.configs.app import app_setting
 
 
 user_router = APIRouter(tags=["user"])
@@ -24,34 +24,22 @@ def get_user_info(current_user: Annotated[User, Depends(get_current_user)]):
         "balance": current_user.balance,
     }
 
-'''
-Вырезанный функционал
 
-@user_router.post("/api/spend_balance")
-def spend_balance(
-    money: float,
-    current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
-) -> float:
-    if money < 0:
-        raise HTTPException(
-            status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail={"status": False},
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    if money - current_user.balance > 0:
-        raise HTTPException(
-            status_code=status.HTTP_402_PAYMENT_REQUIRED,
-            detail={"status": False},
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    change_balance_on_value(current_user.id, -money, session)
-    return current_user.balance - money
+if app_setting.is_test:
 
-@user_router.get("/api/get_users")
-def get_all_users(session: Session = Depends(get_session)):
-    statement = select(User)
-    results = session.execute(statement)
-    result = results.all()
-    return result
-'''
+    @user_router.get("/api/get_users")
+    def get_all_users(session: Session = Depends(get_session)):
+        statement = select(User)
+        results = session.execute(statement)
+        result = results.scalars().all()
+        return result
+
+    @user_router.post("/api/infinite_money/{user_id}")
+    def get_infinite_money(user_id: int, session: Session = Depends(get_session)):
+        statement = (
+            update(User)
+            .where(User.id == user_id)
+            .values(balance=99999999999999999999999999)
+        )
+        session.execute(statement)
+        session.commit()
