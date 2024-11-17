@@ -219,22 +219,34 @@ main {
 #download__buttons-wrapper {
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: space-around;
+	flex-wrap: wrap;
 	column-gap: 30px;
+	row-gap: 15px;
 	margin-left: 15px;
 	margin-right: 15px;
 }
 
-#download__appgallery {
-	width: 60%;
-	max-width: 170px;
+#download__buttons-wrapper:nth-child(1),
+#download__buttons-wrapper:nth-child(2) {
+	flex: 1 0 50%;
 }
 
-#download__googleplay {
-	width: 60%;
-	max-width: 170px;
+#download__buttons-wrapper:last-child {
+	flex-basis: 100%;
 }
 
+.download__button {
+	width: 60%;
+	max-width: 170px;
+	max-height: 51px;
+}
+
+.download__image {
+	width: 100%;
+	height: 100%;
+	object-fit: fill;
+}
 .download h2 {
 	font-family: 'Raleway', sans-serif;
 	font-size: calc(20px + 20 * (100vw / 1440)); 
