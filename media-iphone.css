@@ -376,17 +376,8 @@
 		margin-top: -100px;
 	}
 
-	#download__buttons-wrapper {
-		flex-wrap: wrap;
-		row-gap: 15px;
-	}
-
-	#download__appgallery {
-		width: 60%;
-	}
-
-	#download__googleplay {
-		width: 60%;
+	#download__buttons-wrapper .download__button:last-child {
+		max-width: 110px;
 	}
 
 	/* FOOTER */

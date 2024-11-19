@@ -385,23 +385,6 @@
 		margin-left: 0;
 	}
 
-	#download__buttons-wrapper {
-		flex-wrap: wrap;
-		row-gap: 15px;
-		padding-left: 4%;
-		padding-right: 4%;
-	}
-
-	#download__appgallery {
-		width: 60%;
-		max-width: 170px;
-	}
-
-	#download__googleplay {
-		width: 60%;
-		max-width: 170px;
-	}
-
 	/* FOOTER */
 
 	.footer {
