@@ -47,6 +47,7 @@ class TextGenerationInstruction(ABC):
     """
     Абстрактный класс для текстовых инструкции.
     """
+
     @abstractmethod
     def get_prompts(self) -> list[Message]:
         """
@@ -65,7 +66,7 @@ class TextGenerationInstruction(ABC):
 
     @abstractmethod
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
+        self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -81,6 +82,7 @@ class AdventureInfoInstruction(TextGenerationInstruction):
     """
     Класс инструкции для генерация описания всего приключения.
     """
+
     def get_prompts(self) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
@@ -96,7 +98,7 @@ class AdventureInfoInstruction(TextGenerationInstruction):
         return calc_default_config(adventure)
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
+        self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -104,7 +106,7 @@ class AdventureInfoInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        generated_answer = AdventureInfoInstructionAnswer.model_validate(result.content)
+        generated_answer = AdventureInfoInstructionAnswer.model_validate(result)
         generated_description = generated_answer.description
         if type(generated_description) is str:
             adventure.description = generated_description.split("/n")
@@ -120,6 +122,7 @@ class ItemsInstruction(TextGenerationInstruction):
     """
     Класс инструкции для генерация текстового описания предметов.
     """
+
     def get_prompts(self) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
@@ -137,7 +140,7 @@ class ItemsInstruction(TextGenerationInstruction):
         return config
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
+        self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -145,7 +148,7 @@ class ItemsInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        generated_answer = ItemInstructionAnswer.model_validate(result.content)
+        generated_answer = ItemInstructionAnswer.model_validate(result)
         adventure.items = [
             Item(name=x.name, description=x.description) for x in generated_answer.items
         ]
@@ -157,6 +160,7 @@ class CharactersInstruction(TextGenerationInstruction):
     """
     Класс инструкции для генерация текстового описания персонажей.
     """
+
     def get_prompts(self) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
@@ -175,7 +179,7 @@ class CharactersInstruction(TextGenerationInstruction):
         return config
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
+        self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -183,7 +187,7 @@ class CharactersInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        generated_answer = CharactersInstructionAnswer.model_validate(result.content)
+        generated_answer = CharactersInstructionAnswer.model_validate(result)
         adventure.characters = [
             Character(name=x.name, description=x.description)
             for x in generated_answer.players
@@ -196,6 +200,7 @@ class QuestsInstruction(TextGenerationInstruction):
     """
     Класс инструкции для генерация текстового описания квестов.
     """
+
     def get_prompts(self) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
@@ -215,7 +220,7 @@ class QuestsInstruction(TextGenerationInstruction):
         return config
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
+        self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -223,7 +228,7 @@ class QuestsInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        generated_answer = QuestsInstructionAnswer.model_validate(result.content)
+        generated_answer = QuestsInstructionAnswer.model_validate(result)
         adventure.quests = [
             Quest(name=x.name, description=x.description, goal=x.goal)
             for x in generated_answer.quests
@@ -239,6 +244,7 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
     """
     Класс инструкции для перегенерация текстового описания всех квестов.
     """
+
     def get_prompts(self) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
@@ -258,7 +264,7 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
         return config
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
+        self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -299,7 +305,7 @@ class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
         return config
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
+        self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -318,6 +324,7 @@ class CharactersRegenerateInstruction(TextGenerationInstruction):
     """
     Класс инструкции для перегенерация текстового описания всех персонажей.
     """
+
     def get_prompts(self) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
@@ -337,7 +344,7 @@ class CharactersRegenerateInstruction(TextGenerationInstruction):
         return config
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
+        self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -378,7 +385,7 @@ class CharactersConcreteRegenerateInstruction(TextGenerationInstruction):
         return config
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
+        self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -397,6 +404,7 @@ class ItemsRegenerateInstruction(TextGenerationInstruction):
     """
     Класс инструкции для перегенерация текстового описания всех предметов.
     """
+
     def get_prompts(self) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
@@ -416,7 +424,7 @@ class ItemsRegenerateInstruction(TextGenerationInstruction):
         return config
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
+        self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -457,7 +465,7 @@ class ItemsConcreteRegenerateInstruction(TextGenerationInstruction):
         return config
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: JSONGenerationResult
+        self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.

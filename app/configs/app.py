@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class AppSettings(BaseSettings):
-    is_adding_docs: bool
+    is_test: bool
     docs_url: str
     openapi_url: str
 
