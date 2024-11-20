@@ -34,7 +34,7 @@ from app.generation.generation_text_service import (
 )
 from app.generation.text_models import text_generation_model
 from app.configs.generation import generation_setting
-from database.crud import spend_balance_on_tokens
+from app.database.crud import spend_balance_on_tokens
 
 generation_router = APIRouter(tags=["generation"])
 
