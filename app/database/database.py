@@ -14,7 +14,8 @@ async def create_db_and_tables():
 
 async def get_session():
     try:
-        yield async_session_maker
+        async with async_session_maker() as session:
+            yield session
     except SQLAlchemyError as e:
         pass
 

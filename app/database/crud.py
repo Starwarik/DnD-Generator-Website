@@ -71,7 +71,7 @@ async def change_password(id: int, new_password_hash: str, session: AsyncSession
 
 async def change_balance_on_value(id: int, diff_balance: float, session: AsyncSession):
     async with session.begin():
-        user = get_user_by_id(id, session)
+        user = await get_user_by_id(id, session)
         user.balance += diff_balance
         session.add(user)
 
