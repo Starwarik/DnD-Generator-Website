@@ -15,20 +15,35 @@ class ImageGeneration(ABC):
     """
     Абстрактный класс модели для генерации картинок.
     """
+
     @abstractmethod
-    def generate_image(self, system_prompt: str | None, user_prompt: str | None) -> ImageContainer:
+    def generate_image(
+        self, system_prompt: str | None, user_prompt: str | None
+    ) -> ImageContainer:
         """
         По заданному промпту генерирует картинку.
         :param system_prompt: Системный промпт. Может не указываться
         :param user_prompt: Системный промпт. Может не указываться
         """
-        pass
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def async_generate_image(
+        self, system_prompt: str | None, user_prompt: str | None
+    ) -> ImageContainer:
+        """
+        По заданному промпту генерирует картинку.
+        :param system_prompt: Системный промпт. Может не указываться
+        :param user_prompt: Системный промпт. Может не указываться
+        """
+        raise NotImplementedError()
 
 
 class GigaChatImage(ImageGeneration):
     """
     Класс для генерации модели с использованием Гигачата.
     """
+
     def __init__(self):
         self.model = GigaChat(
             credentials=generation_setting.gigachat_credentials, verify_ssl_certs=False
@@ -60,6 +75,36 @@ class GigaChatImage(ImageGeneration):
         )
         image_uuid = re.search(r'img src="(.+?)"', response.content).group(1)
         image = self.model.get_file(image_uuid).content
+        image = b64decode(image)
+        image = ImageContainer(content=image, media_type="image/jpeg")
+        return image
+
+    async def async_generate_image(
+        self, system_prompt: str | None, user_prompt: str | None
+    ) -> ImageContainer:
+        """
+        По заданному промпту генерирует картинку.
+        :param system_prompt: Системный промпт. Может не указываться
+        :param user_prompt: Системный промпт. Может не указываться
+        """
+        messages = []
+        if system_prompt:
+            messages.append(SystemMessage(system_prompt))
+        if user_prompt:
+            messages.append(HumanMessage(user_prompt))
+        response = await self.model.ainvoke(messages)
+
+        print(
+            "INPUT IMAGE TOKENS",
+            response.response_metadata["token_usage"].prompt_tokens,
+            "COMPLETION IMAGE TOKENS",
+            response.response_metadata["token_usage"].completion_tokens,
+            "COMPLETION IMAGE TOKENS",
+            response.response_metadata["token_usage"].total_tokens,
+        )
+        image_uuid: str = re.search(r'img src="(.+?)"', response.content).group(1)
+        file = await self.model.aget_file(image_uuid)
+        image = file.content
         image = b64decode(image)
         image = ImageContainer(content=image, media_type="image/jpeg")
         return image

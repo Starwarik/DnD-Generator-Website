@@ -62,9 +62,9 @@ async def generate_adventure(
             adventure,
             session,
         )
-        adventure = generate_images_adventure(adventure, session)
-        adventure = generate_images_characters(adventure, session)
-        generate_images_items(adventure, session)
+        adventure = await generate_images_adventure(adventure, session)
+        adventure = await generate_images_characters(adventure, session)
+        await generate_images_items(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
@@ -93,9 +93,9 @@ async def generate_test_adventure(
             adventure,
             session,
         )
-        adventure = generate_test_images_adventure(adventure, session)
-        adventure = generate_test_images_characters(adventure, session)
-        generate_test_images_items(adventure, session)
+        adventure = await generate_test_images_adventure(adventure, session)
+        adventure = await generate_test_images_characters(adventure, session)
+        await generate_test_images_items(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
@@ -181,7 +181,7 @@ async def regenerate_characters(
             text_generation_model,
             session,
         )
-        generate_images_characters(adventure, session)
+        await generate_images_characters(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
@@ -215,7 +215,7 @@ async def regenerate_characters_concrete(
             text_generation_model,
             session,
         )
-        generate_images_characters(adventure, session)
+        await generate_images_characters(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
@@ -245,7 +245,7 @@ async def regenerate_items(
             text_generation_model,
             session,
         )
-        generate_images_items(adventure, session)
+        await generate_images_items(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
@@ -278,7 +278,7 @@ async def regenerate_items_concrete(
             text_generation_model,
             session,
         )
-        generate_images_items(adventure, session)
+        await generate_images_items(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
