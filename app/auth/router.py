@@ -1,13 +1,13 @@
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import timedelta
 
 from app.database.database import get_session
 from app.database.crud import *
 from app.notification.notifications import notification_service
-from .utils import *
+from app.auth.utils import *
 from app.configs.auth import auth_setting
 
 from pydantic import BaseModel
@@ -40,11 +40,11 @@ auth_router = APIRouter(tags=["auth"])
 
 @auth_router.post("/token")
 @auth_router.post("/api/token")
-def login_for_access_token(
+async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ) -> Token:
-    user = authenticate_user(form_data.username, form_data.password, session)
+    user = await authenticate_user(form_data.username, form_data.password, session)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -59,8 +59,8 @@ def login_for_access_token(
 
 
 @auth_router.get("/api/reset_token")
-def reset_password(email: str, session: Session = Depends(get_session)) -> None:
-    user = get_user_by_email(email, session)
+async def reset_token(email: str, session: AsyncSession = Depends(get_session)) -> None:
+    user = await get_user_by_email(email, session)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -75,9 +75,11 @@ def reset_password(email: str, session: Session = Depends(get_session)) -> None:
 
 
 @auth_router.post("/api/register")
-def register(user: UserRegisterForm, session: Session = Depends(get_session)):
-    user_username = get_user_by_username(user.username, session)
-    user_email = get_user_by_email(user.email, session)
+async def register(
+    user: UserRegisterForm, session: AsyncSession = Depends(get_session)
+):
+    user_username = await get_user_by_username(user.username, session)
+    user_email = await get_user_by_email(user.email, session)
     current_user = user_username or user_email
     if not (current_user is None):
         raise HTTPException(
@@ -86,7 +88,7 @@ def register(user: UserRegisterForm, session: Session = Depends(get_session)):
             headers={"WWW-Authenticate": "Bearer"},
         )
     try:
-        create_user(
+        await create_user(
             email=user.email,
             username=user.username,
             password_hash=get_password_hash(user.password),
@@ -99,8 +101,8 @@ def register(user: UserRegisterForm, session: Session = Depends(get_session)):
 
 
 @auth_router.post("/api/reset_password")
-def reset_password(
-    reset_form: RestPasswordForm, session: Session = Depends(get_session)
+async def reset_password(
+    reset_form: RestPasswordForm, session: AsyncSession = Depends(get_session)
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -116,5 +118,7 @@ def reset_password(
         raise credentials_exception
     # if user is None:
     #    raise credentials_exception
-    change_password(user_id, get_password_hash(reset_form.new_password), session)
+    await change_password(
+        int(user_id), get_password_hash(reset_form.new_password), session
+    )
     return {"status": True}

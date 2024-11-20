@@ -29,11 +29,10 @@ def jwt_decode(content):
     )
 
 
-def authenticate_user(
-    username_or_email: str, password: str, session: Session
+async def authenticate_user(
+    username_or_email: str, password: str, session: AsyncSession
 ) -> User | None:
-    user = get_user_by_email_or_username(username_or_email, session)
-    print(user)
+    user = await get_user_by_email_or_username(username_or_email, session)
     if user is None:
         return None
     if not verify_password(password, user.password):

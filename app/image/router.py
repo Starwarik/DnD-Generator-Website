@@ -8,7 +8,7 @@ from app.image.service import get_image_by_id
 from app.user.models import User
 from fastapi.responses import FileResponse
 from app.configs.image import image_setting
-from image.models import Image
+from app.image.models import Image
 
 image_router = APIRouter(tags=["image"])
 
