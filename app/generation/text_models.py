@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+import aiohttp
+
 from app.configs.generation import generation_setting
 
 from langchain_core.output_parsers import StrOutputParser
@@ -26,6 +28,10 @@ class TextGenerationModel(ABC):
 
     @abstractmethod
     def generate_text(self, prompts: list[Message]) -> TextGenerationResult:
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def async_generate_text(self, prompts: list[Message]) -> TextGenerationResult:
         raise NotImplementedError()
 
 
@@ -56,6 +62,19 @@ class GigaChatText(TextGenerationModel):
     def generate_text(self, prompts: list[Message]) -> TextGenerationResult:
         messages = self._convert_messages(prompts)
         response = self.model.invoke(messages)
+        count_token = SpentedTokensCounts(
+            gigachat_prompt_token_count=response.response_metadata[
+                "token_usage"
+            ].prompt_tokens,
+            gigachat_assistant_token_count=response.response_metadata[
+                "token_usage"
+            ].completion_tokens,
+        )
+        return TextGenerationResult(content=response.content, count_tokens=count_token)
+
+    async def async_generate_text(self, prompts: list[Message]) -> TextGenerationResult:
+        messages = self._convert_messages(prompts)
+        response = await self.model.ainvoke(messages)
         count_token = SpentedTokensCounts(
             gigachat_prompt_token_count=response.response_metadata[
                 "token_usage"
@@ -121,6 +140,28 @@ class YandexGPTTextSync(TextGenerationModel):
             json=self._create_payload(messages),
         )
         answer_json = answer.json()
+        count_token = SpentedTokensCounts(
+            yandexgpt_prompt_token_count=answer_json["result"]["usage"][
+                "inputTextTokens"
+            ],
+            yandexgpt_assistant_token_count=answer_json["result"]["usage"][
+                "completionTokens"
+            ],
+        )
+        return TextGenerationResult(
+            content=answer_json["result"]["alternatives"][0]["message"]["text"],
+            count_tokens=count_token,
+        )
+
+    async def async_generate_text(self, prompts: list[Message]) -> TextGenerationResult:
+        messages = self._convert_messages(prompts)
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                self.url_to_server,
+                headers=self._create_header(),
+                json=self._create_payload(messages),
+            ) as resp:
+                answer_json = await resp.json()
         count_token = SpentedTokensCounts(
             yandexgpt_prompt_token_count=answer_json["result"]["usage"][
                 "inputTextTokens"

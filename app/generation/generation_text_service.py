@@ -51,7 +51,7 @@ async def generate_text_with_tries(
         generated_result = None
         for _ in range(n_tries):
             try:
-                generated_result = model.generate_text(prompts)
+                generated_result = await model.async_generate_text(prompts)
                 generated_json: dict[str, Any] = parse_json_garbage(
                     generated_result.content
                 )
