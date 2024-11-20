@@ -113,7 +113,7 @@ async def regenerate_quests(
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
-) -> AdventurePublic:
+):
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
@@ -169,7 +169,7 @@ async def regenerate_characters(
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
     session: Session = Depends(get_session),
-) -> AdventurePublic:
+):
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
