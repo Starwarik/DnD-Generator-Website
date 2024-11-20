@@ -40,7 +40,7 @@ generation_router = APIRouter(tags=["generation"])
 
 
 @generation_router.post("/api/adventure", response_model=AdventurePublic)
-def generate_adventure(
+async def generate_adventure(
     num_players: int,
     location_name: str,
     setting: str,
@@ -72,7 +72,7 @@ def generate_adventure(
 
 
 @generation_router.post("/api/generate_test", response_model=AdventurePublic)
-def generate_test_adventure(
+async def generate_test_adventure(
     num_players: int,
     location_name: str,
     setting: str,
@@ -108,7 +108,7 @@ def generate_test_adventure(
 @generation_router.put(
     "/api/adventure/{id_adventure}/quests", response_model=AdventurePublic
 )
-def regenerate_quests(
+async def regenerate_quests(
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -132,7 +132,7 @@ def regenerate_quests(
 @generation_router.put(
     "/api/adventure/{id_adventure}/quests/{index_quest}", response_model=AdventurePublic
 )
-def regenerate_quests_concrete(
+async def regenerate_quests_concrete(
     index_quest: int,
     id_adventure: int,
     background_tasks: BackgroundTasks,
@@ -164,7 +164,7 @@ def regenerate_quests_concrete(
 @generation_router.put(
     "/api/adventure/{id_adventure}/characters", response_model=AdventurePublic
 )
-def regenerate_characters(
+async def regenerate_characters(
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -192,7 +192,7 @@ def regenerate_characters(
     "/api/adventure/{id_adventure}/characters/{index_character}",
     response_model=AdventurePublic,
 )
-def regenerate_characters_concrete(
+async def regenerate_characters_concrete(
     id_adventure: int,
     index_character: int,
     background_tasks: BackgroundTasks,
@@ -228,7 +228,7 @@ def regenerate_characters_concrete(
 @generation_router.put(
     "/api/adventure/{id_adventure}/items", response_model=AdventurePublic
 )
-def regenerate_items(
+async def regenerate_items(
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -255,7 +255,7 @@ def regenerate_items(
 @generation_router.put(
     "/api/adventure/{id_adventure}/items/{index_item}", response_model=AdventurePublic
 )
-def regenerate_items_concrete(
+async def regenerate_items_concrete(
     index_item: int,
     id_adventure: int,
     background_tasks: BackgroundTasks,
