@@ -53,7 +53,7 @@ async def generate_adventure(
 
     adventure: Adventure = await create_adventure(current_user.id, session)
 
-    def inner_command(adventure: Adventure):
+    async def inner_command(adventure: Adventure):
         adventure, spented_tokens_counts = generate_new_adventure_json(
             location_name,
             setting,
@@ -85,7 +85,7 @@ async def generate_test_adventure(
 
     adventure: Adventure = await create_adventure(current_user.id, session)
 
-    def inner_command(adventure: Adventure):
+    async def inner_command(adventure: Adventure):
         adventure, spented_tokens_counts = generate_new_test_adventure_json(
             location_name,
             setting,
@@ -117,7 +117,7 @@ async def regenerate_quests(
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
-    def inner_command(adventure: Adventure):
+    async def inner_command(adventure: Adventure):
         adventure, spented_tokens_counts = regenerate_quests_json(
             adventure, text_generation_model, session
         )
@@ -142,7 +142,7 @@ async def regenerate_quests_concrete(
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
-    def inner_command(adventure: Adventure, index_quest: int):
+    async def inner_command(adventure: Adventure, index_quest: int):
         adventure, spented_tokens_counts = regenerate_quest_concrete_json(
             index_quest, adventure, text_generation_model, session
         )
@@ -175,7 +175,7 @@ async def regenerate_characters(
 
     adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
 
-    def inner_command(adventure: Adventure):
+    async def inner_command(adventure: Adventure):
         adventure, spented_tokens_counts = regenerate_characters_json(
             adventure,
             text_generation_model,
@@ -208,7 +208,7 @@ async def regenerate_characters_concrete(
     if index_character < 0 or index_character >= len(adventure_info.characters):
         return HTTPException(status_code=400, detail="Index out of range")
 
-    def inner_command(adventure: Adventure):
+    async def inner_command(adventure: Adventure):
         adventure, spented_tokens_counts = regenerate_character_concrete_json(
             index_character,
             adventure,
@@ -239,7 +239,7 @@ async def regenerate_items(
 
     adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
 
-    def inner_command(adventure: Adventure):
+    async def inner_command(adventure: Adventure):
         adventure, spented_tokens_counts = regenerate_items_json(
             adventure,
             text_generation_model,
@@ -271,7 +271,7 @@ async def regenerate_items_concrete(
     if index_item < 0 or index_item >= len(adventure_info.items):
         return HTTPException(status_code=400, detail="Index out of range")
 
-    def inner_command(adventure: Adventure):
+    async def inner_command(adventure: Adventure):
         adventure, spented_tokens_counts = regenerate_item_concrete_json(
             index_item,
             adventure,
