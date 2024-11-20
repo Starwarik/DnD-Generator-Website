@@ -11,7 +11,7 @@ from app.configs.app import app_setting
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global notification_service
-    create_db_and_tables()
+    await create_db_and_tables()
     notification_service.start()
     yield
     notification_service.stop()

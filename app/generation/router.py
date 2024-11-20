@@ -1,6 +1,6 @@
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from typing_extensions import Annotated
 
 from app.adventure.schemas import AdventureInfo
@@ -34,27 +34,27 @@ from app.generation.generation_text_service import (
 )
 from app.generation.text_models import text_generation_model
 from app.configs.generation import generation_setting
-from database.crud import spend_balance_on_tokens
+from app.database.crud import spend_balance_on_tokens
 
 generation_router = APIRouter(tags=["generation"])
 
 
 @generation_router.post("/api/adventure", response_model=AdventurePublic)
-def generate_adventure(
+async def generate_adventure(
     num_players: int,
     location_name: str,
     setting: str,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
-    adventure = create_adventure(current_user.id, session)
+    adventure: Adventure = await create_adventure(current_user.id, session)
 
-    def inner_command(adventure: Adventure):
-        adventure, spented_tokens_counts = generate_new_adventure_json(
+    async def inner_command(adventure: Adventure):
+        adventure, spented_tokens_counts = await generate_new_adventure_json(
             location_name,
             setting,
             num_players,
@@ -62,9 +62,9 @@ def generate_adventure(
             adventure,
             session,
         )
-        adventure = generate_images_adventure(adventure, session)
-        adventure = generate_images_characters(adventure, session)
-        generate_images_items(adventure, session)
+        adventure = await generate_images_adventure(adventure, session)
+        adventure = await generate_images_characters(adventure, session)
+        await generate_images_items(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
@@ -72,30 +72,30 @@ def generate_adventure(
 
 
 @generation_router.post("/api/generate_test", response_model=AdventurePublic)
-def generate_test_adventure(
+async def generate_test_adventure(
     num_players: int,
     location_name: str,
     setting: str,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
-    adventure = create_adventure(current_user.id, session)
+    adventure: Adventure = await create_adventure(current_user.id, session)
 
-    def inner_command(adventure: Adventure):
-        adventure, spented_tokens_counts = generate_new_test_adventure_json(
+    async def inner_command(adventure: Adventure):
+        adventure, spented_tokens_counts = await generate_new_test_adventure_json(
             location_name,
             setting,
             num_players,
             adventure,
             session,
         )
-        adventure = generate_test_images_adventure(adventure, session)
-        adventure = generate_test_images_characters(adventure, session)
-        generate_test_images_items(adventure, session)
+        adventure = await generate_test_images_adventure(adventure, session)
+        adventure = await generate_test_images_characters(adventure, session)
+        await generate_test_images_items(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
@@ -108,22 +108,22 @@ def generate_test_adventure(
 @generation_router.put(
     "/api/adventure/{id_adventure}/quests", response_model=AdventurePublic
 )
-def regenerate_quests(
+async def regenerate_quests(
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
-) -> AdventurePublic:
+    session: AsyncSession = Depends(get_session),
+):
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
-    def inner_command(adventure: Adventure):
-        adventure, spented_tokens_counts = regenerate_quests_json(
+    async def inner_command(adventure: Adventure):
+        adventure, spented_tokens_counts = await regenerate_quests_json(
             adventure, text_generation_model, session
         )
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
-    adventure = get_adventure(id_adventure, current_user.id, session)
+    adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
 
     background_tasks.add_task(inner_command, adventure)
     return adventure
@@ -132,23 +132,23 @@ def regenerate_quests(
 @generation_router.put(
     "/api/adventure/{id_adventure}/quests/{index_quest}", response_model=AdventurePublic
 )
-def regenerate_quests_concrete(
+async def regenerate_quests_concrete(
     index_quest: int,
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
-    def inner_command(adventure: Adventure, index_quest: int):
-        adventure, spented_tokens_counts = regenerate_quest_concrete_json(
+    async def inner_command(adventure: Adventure, index_quest: int):
+        adventure, spented_tokens_counts = await regenerate_quest_concrete_json(
             index_quest, adventure, text_generation_model, session
         )
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
-    adventure = get_adventure(id_adventure, current_user.id, session)
+    adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
 
     if index_quest < 0 or index_quest >= len(adventure_info.quests):
@@ -164,24 +164,24 @@ def regenerate_quests_concrete(
 @generation_router.put(
     "/api/adventure/{id_adventure}/characters", response_model=AdventurePublic
 )
-def regenerate_characters(
+async def regenerate_characters(
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
-) -> AdventurePublic:
+    session: AsyncSession = Depends(get_session),
+):
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
-    adventure = get_adventure(id_adventure, current_user.id, session)
+    adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
 
-    def inner_command(adventure: Adventure):
-        adventure, spented_tokens_counts = regenerate_characters_json(
+    async def inner_command(adventure: Adventure):
+        adventure, spented_tokens_counts = await regenerate_characters_json(
             adventure,
             text_generation_model,
             session,
         )
-        generate_images_characters(adventure, session)
+        await generate_images_characters(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
@@ -192,30 +192,30 @@ def regenerate_characters(
     "/api/adventure/{id_adventure}/characters/{index_character}",
     response_model=AdventurePublic,
 )
-def regenerate_characters_concrete(
+async def regenerate_characters_concrete(
     id_adventure: int,
     index_character: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
-    adventure = get_adventure(id_adventure, current_user.id, session)
+    adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
 
     if index_character < 0 or index_character >= len(adventure_info.characters):
         return HTTPException(status_code=400, detail="Index out of range")
 
-    def inner_command(adventure: Adventure):
-        adventure, spented_tokens_counts = regenerate_character_concrete_json(
+    async def inner_command(adventure: Adventure):
+        adventure, spented_tokens_counts = await regenerate_character_concrete_json(
             index_character,
             adventure,
             text_generation_model,
             session,
         )
-        generate_images_characters(adventure, session)
+        await generate_images_characters(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
@@ -228,24 +228,24 @@ def regenerate_characters_concrete(
 @generation_router.put(
     "/api/adventure/{id_adventure}/items", response_model=AdventurePublic
 )
-def regenerate_items(
+async def regenerate_items(
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
-    adventure = get_adventure(id_adventure, current_user.id, session)
+    adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
 
-    def inner_command(adventure: Adventure):
-        adventure, spented_tokens_counts = regenerate_items_json(
+    async def inner_command(adventure: Adventure):
+        adventure, spented_tokens_counts = await regenerate_items_json(
             adventure,
             text_generation_model,
             session,
         )
-        generate_images_items(adventure, session)
+        await generate_images_items(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
@@ -255,30 +255,30 @@ def regenerate_items(
 @generation_router.put(
     "/api/adventure/{id_adventure}/items/{index_item}", response_model=AdventurePublic
 )
-def regenerate_items_concrete(
+async def regenerate_items_concrete(
     index_item: int,
     id_adventure: int,
     background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
-    session: Session = Depends(get_session),
+    session: AsyncSession = Depends(get_session),
 ):
     if current_user.balance < generation_setting.min_balance_to_generate:
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
-    adventure = get_adventure(id_adventure, current_user.id, session)
+    adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
 
     if index_item < 0 or index_item >= len(adventure_info.items):
         return HTTPException(status_code=400, detail="Index out of range")
 
-    def inner_command(adventure: Adventure):
-        adventure, spented_tokens_counts = regenerate_item_concrete_json(
+    async def inner_command(adventure: Adventure):
+        adventure, spented_tokens_counts = await regenerate_item_concrete_json(
             index_item,
             adventure,
             text_generation_model,
             session,
         )
-        generate_images_items(adventure, session)
+        await generate_images_items(adventure, session)
         spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)

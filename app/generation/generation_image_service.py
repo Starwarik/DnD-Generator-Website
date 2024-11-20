@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.adventure.models import Adventure, AdventureState
 from app.adventure.service import update_state_content_adventure
@@ -12,19 +12,19 @@ import time
 from app.image.service import upload_image
 
 
-def _generate_image(
+async def _generate_image(
     instruction: str,
     user_id: int,
-    session: Session,
+    session: AsyncSession,
 ):
-    image_container = image_model.generate_image(None, instruction)
-    image = upload_image(image_container, user_id, session)
+    image_container = await image_model.async_generate_image(None, instruction)
+    image = await upload_image(image_container, user_id, session)
     return image.id
 
 
-def generate_images_adventure(
+async def generate_images_adventure(
     adventure: Adventure,
-    session: Session,
+    session: AsyncSession,
     state: AdventureState = AdventureState.image_characters,
 ) -> Adventure:
     """
@@ -37,7 +37,7 @@ def generate_images_adventure(
     content = AdventureInfo.model_validate_json(adventure.content)
     try:
         if content.map_image_id == -1:
-            image_id = _generate_image(
+            image_id = await _generate_image(
                 map_image_generation.format(
                     location_name=content.location,
                     location_description="\n".join(content.description),
@@ -51,7 +51,7 @@ def generate_images_adventure(
         print(e)
     try:
         if content.adventure_image_id == -1:
-            image_id = _generate_image(
+            image_id = await _generate_image(
                 adventure_image_generation.format(
                     location_name=content.location,
                     location_description="\n".join(content.description),
@@ -63,14 +63,14 @@ def generate_images_adventure(
             time.sleep(10)
     except Exception as e:
         print(e)
-    return update_state_content_adventure(adventure.id, state, content, session)
+    return await update_state_content_adventure(adventure.id, state, content, session)
 
 
-def generate_test_images_adventure(
+async def generate_test_images_adventure(
     adventure: Adventure,
-    session: Session,
+    session: AsyncSession,
     state: AdventureState = AdventureState.image_characters,
-):
+) -> Adventure:
     """
     Тестовая генерация обложек и карты. Вставляются id -42 для изображений.
 
@@ -81,16 +81,18 @@ def generate_test_images_adventure(
     content = AdventureInfo.model_validate_json(adventure.content)
     content.adventure_image_id = -42
     content.map_image_id = -42
-    adventure = update_state_content_adventure(adventure.id, state, content, session)
+    adventure = await update_state_content_adventure(
+        adventure.id, state, content, session
+    )
     time.sleep(5)
     return adventure
 
 
-def generate_images_characters(
+async def generate_images_characters(
     adventure: Adventure,
-    session: Session,
+    session: AsyncSession,
     state: AdventureState = AdventureState.image_items,
-):
+) -> Adventure:
     """
     Генерация картинок персонажей.
 
@@ -103,7 +105,7 @@ def generate_images_characters(
         char = content.characters[i]
         if char.image_id == -1:
             try:
-                image_id = _generate_image(
+                image_id = await _generate_image(
                     character_image_generation.format(
                         char_name=char.name, char_description=char.description
                     ),
@@ -114,14 +116,14 @@ def generate_images_characters(
                 time.sleep(10)
             except Exception as e:
                 print(e)
-    return update_state_content_adventure(adventure.id, state, content, session)
+    return await update_state_content_adventure(adventure.id, state, content, session)
 
 
-def generate_test_images_characters(
+async def generate_test_images_characters(
     adventure: Adventure,
-    session: Session,
+    session: AsyncSession,
     state: AdventureState = AdventureState.image_items,
-):
+) -> Adventure:
     """
     Тестовая генерация картинок персонажей. Вставляются id -42 для изображений персонажей.
 
@@ -134,17 +136,21 @@ def generate_test_images_characters(
     for i, x in enumerate(new_items):
         new_items[i].image_id = -42
     content.items = new_items
-    adventure = update_state_content_adventure(adventure.id, state, content, session)
+    adventure = await update_state_content_adventure(
+        adventure.id, state, content, session
+    )
     time.sleep(5)
     return adventure
 
 
-def generate_images_items(
-    adventure: Adventure, session: Session, state: AdventureState = AdventureState.ready
-):
+async def generate_images_items(
+    adventure: Adventure,
+    session: AsyncSession,
+    state: AdventureState = AdventureState.ready,
+) -> Adventure:
     """
     Генерация картинок предметов.
-    
+
     :param adventure: Приключение, для которого генерируется картинка.
     :param session: для бд
     :param state: состояние, в которое нужно установить приключение, после конца генерации.
@@ -154,7 +160,7 @@ def generate_images_items(
         item = content.items[i]
         if item.image_id == -1:
             try:
-                image_id = _generate_image(
+                image_id = await _generate_image(
                     item_image_generation.format(
                         item_name=item.name, item_description=item.description
                     ),
@@ -165,12 +171,14 @@ def generate_images_items(
                 time.sleep(10)
             except Exception as e:
                 print(e)
-    return update_state_content_adventure(adventure.id, state, content, session)
+    return await update_state_content_adventure(adventure.id, state, content, session)
 
 
-def generate_test_images_items(
-    adventure: Adventure, session: Session, state: AdventureState = AdventureState.ready
-):
+async def generate_test_images_items(
+    adventure: Adventure,
+    session: AsyncSession,
+    state: AdventureState = AdventureState.ready,
+) -> Adventure:
     """
     Тестовая генерация картинок предметов. Вставляются id -42 для изображений предме6тов.
 
@@ -183,6 +191,8 @@ def generate_test_images_items(
     for i, x in enumerate(new_characters):
         new_characters[i].image_id = -42
     content.characters = new_characters
-    adventure = update_state_content_adventure(adventure.id, state, content, session)
+    adventure = await update_state_content_adventure(
+        adventure.id, state, content, session
+    )
     time.sleep(5)
     return adventure

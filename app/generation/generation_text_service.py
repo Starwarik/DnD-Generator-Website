@@ -3,7 +3,7 @@ from app.adventure.schemas import *
 from app.generation.instructions import *
 from app.generation.text_models import TextGenerationModel
 import json
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.adventure.models import Adventure, AdventureState
 from app.adventure.service import create_adventure, update_state_content_adventure
 
@@ -27,7 +27,7 @@ def parse_json_garbage(s: str) -> dict[str, Any]:
             raise e
 
 
-def generate_text_with_tries(
+async def generate_text_with_tries(
     instructions: list[TextGenerationInstruction],
     adventure: AdventureInfo,
     model: TextGenerationModel,
@@ -51,7 +51,7 @@ def generate_text_with_tries(
         generated_result = None
         for _ in range(n_tries):
             try:
-                generated_result = model.generate_text(prompts)
+                generated_result = await model.async_generate_text(prompts)
                 generated_json: dict[str, Any] = parse_json_garbage(
                     generated_result.content
                 )
@@ -69,13 +69,13 @@ def generate_text_with_tries(
     return (adventure, spented_tokens_counts)
 
 
-def generate_new_adventure_json(
+async def generate_new_adventure_json(
     location_name: str,
     setting: str,
     num_players: int,
     model: TextGenerationModel,
     adventure: Adventure,
-    session: Session,
+    session: AsyncSession,
 ) -> tuple[Adventure, SpentedTokensCounts]:
     """
     Генерирует полноценное приключение с нуля.
@@ -107,21 +107,21 @@ def generate_new_adventure_json(
         QuestsInstruction(),
     ]
 
-    adventure_info, spented_tokens_counts = generate_text_with_tries(
+    adventure_info, spented_tokens_counts = await generate_text_with_tries(
         instructions, adventure_info, model
     )
-    adventure = update_state_content_adventure(
+    adventure = await update_state_content_adventure(
         adventure.id, AdventureState.image_adventure, adventure_info, session
     )
     return (adventure, spented_tokens_counts)
 
 
-def generate_new_test_adventure_json(
+async def generate_new_test_adventure_json(
     location_name: str,
     setting: str,
     num_players: int,
     adventure: Adventure,
-    session: Session,
+    session: AsyncSession,
 ) -> tuple[Adventure, SpentedTokensCounts]:
     """
     Генерирует фиктивное приключение для тестирования.
@@ -184,14 +184,14 @@ def generate_new_test_adventure_json(
     }
     spented_tokens_counts = SpentedTokensCounts()
     adventure_info = AdventureInfo.model_validate(dummy_adventure)
-    adventure = update_state_content_adventure(
+    adventure = await update_state_content_adventure(
         adventure.id, AdventureState.image_adventure, adventure_info, session
     )
     return (adventure, spented_tokens_counts)
 
 
-def regenerate_new_adventure_json(
-    adventure: Adventure, model: TextGenerationModel, session: Session
+async def regenerate_new_adventure_json(
+    adventure: Adventure, model: TextGenerationModel, session: AsyncSession
 ) -> tuple[Adventure, SpentedTokensCounts]:
     """
     Перегенерировать всё приключение заново.
@@ -220,10 +220,10 @@ def regenerate_new_adventure_json(
         QuestsInstruction(),
     ]
 
-    adventure_info, spented_tokens_counts = generate_text_with_tries(
+    adventure_info, spented_tokens_counts = await generate_text_with_tries(
         instructions, adventure_info, model
     )
-    adventure = update_state_content_adventure(
+    adventure = await update_state_content_adventure(
         adventure.id, AdventureState.image_adventure, adventure_info, session
     )
     return (adventure, spented_tokens_counts)
@@ -232,8 +232,8 @@ def regenerate_new_adventure_json(
 # ============================= QUESTS ========================
 
 
-def regenerate_quests_json(
-    adventure: Adventure, model: TextGenerationModel, session: Session
+async def regenerate_quests_json(
+    adventure: Adventure, model: TextGenerationModel, session: AsyncSession
 ) -> tuple[Adventure, SpentedTokensCounts]:
     """
     Перегенерировать все квесты заново. Только текстовое содержание.
@@ -244,17 +244,20 @@ def regenerate_quests_json(
     """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [QuestsRegenerateInstruction()]
-    adventure_info, spented_tokens_counts = generate_text_with_tries(
+    adventure_info, spented_tokens_counts = await generate_text_with_tries(
         instructions, adventure_info, model
     )
-    adventure = update_state_content_adventure(
+    adventure = await update_state_content_adventure(
         adventure.id, AdventureState.ready, adventure_info, session
     )
     return (adventure, spented_tokens_counts)
 
 
-def regenerate_quest_concrete_json(
-    index_quest: int, adventure: Adventure, model: TextGenerationModel, session: Session
+async def regenerate_quest_concrete_json(
+    index_quest: int,
+    adventure: Adventure,
+    model: TextGenerationModel,
+    session: AsyncSession,
 ) -> tuple[Adventure, SpentedTokensCounts]:
     """
     Перегенерировать конкретный квест заново. Только текстовое содержание.
@@ -268,10 +271,10 @@ def regenerate_quest_concrete_json(
     instructions: list[TextGenerationInstruction] = [
         QuestsConcreteRegenerateInstruction(index_quest)
     ]
-    adventure_info, spented_tokens_counts = generate_text_with_tries(
+    adventure_info, spented_tokens_counts = await generate_text_with_tries(
         instructions, adventure_info, model
     )
-    adventure = update_state_content_adventure(
+    adventure = await update_state_content_adventure(
         adventure.id, AdventureState.ready, adventure_info, session
     )
     return (adventure, spented_tokens_counts)
@@ -280,8 +283,8 @@ def regenerate_quest_concrete_json(
 # ================================ CHARACTERS ===========================
 
 
-def regenerate_characters_json(
-    adventure: Adventure, model: TextGenerationModel, session: Session
+async def regenerate_characters_json(
+    adventure: Adventure, model: TextGenerationModel, session: AsyncSession
 ) -> tuple[Adventure, SpentedTokensCounts]:
     """
     Перегенерировать всех персонажей заново. Только текстовое содержание.
@@ -292,20 +295,20 @@ def regenerate_characters_json(
     """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [CharactersRegenerateInstruction()]
-    adventure_info, spented_tokens_counts = generate_text_with_tries(
+    adventure_info, spented_tokens_counts = await generate_text_with_tries(
         instructions, adventure_info, model
     )
-    adventure = update_state_content_adventure(
+    adventure = await update_state_content_adventure(
         adventure.id, AdventureState.image_characters, adventure_info, session
     )
     return (adventure, spented_tokens_counts)
 
 
-def regenerate_character_concrete_json(
+async def regenerate_character_concrete_json(
     index_character: int,
     adventure: Adventure,
     model: TextGenerationModel,
-    session: Session,
+    session: AsyncSession,
 ) -> tuple[Adventure, SpentedTokensCounts]:
     """
     Перегенерировать конкретный персонажа заново. Только текстовое содержание.
@@ -319,10 +322,10 @@ def regenerate_character_concrete_json(
     instructions: list[TextGenerationInstruction] = [
         CharactersConcreteRegenerateInstruction(index_character)
     ]
-    adventure_info, spented_tokens_counts = generate_text_with_tries(
+    adventure_info, spented_tokens_counts = await generate_text_with_tries(
         instructions, adventure_info, model
     )
-    adventure = update_state_content_adventure(
+    adventure = await update_state_content_adventure(
         adventure.id, AdventureState.image_characters, adventure_info, session
     )
     return (adventure, spented_tokens_counts)
@@ -331,8 +334,8 @@ def regenerate_character_concrete_json(
 # ================================== ITEMS ======================================
 
 
-def regenerate_items_json(
-    adventure: Adventure, model: TextGenerationModel, session: Session
+async def regenerate_items_json(
+    adventure: Adventure, model: TextGenerationModel, session: AsyncSession
 ) -> tuple[Adventure, SpentedTokensCounts]:
     """
     Перегенерировать все предметы заново. Только текстовое содержание.
@@ -343,17 +346,20 @@ def regenerate_items_json(
     """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [ItemsRegenerateInstruction()]
-    adventure_info, spented_tokens_counts = generate_text_with_tries(
+    adventure_info, spented_tokens_counts = await generate_text_with_tries(
         instructions, adventure_info, model
     )
-    adventure = update_state_content_adventure(
+    adventure = await update_state_content_adventure(
         adventure.id, AdventureState.image_items, adventure_info, session
     )
     return (adventure, spented_tokens_counts)
 
 
-def regenerate_item_concrete_json(
-    index_item: int, adventure: Adventure, model: TextGenerationModel, session: Session
+async def regenerate_item_concrete_json(
+    index_item: int,
+    adventure: Adventure,
+    model: TextGenerationModel,
+    session: AsyncSession,
 ) -> tuple[Adventure, SpentedTokensCounts]:
     """
     Перегенерировать конкретный предмет заново. Только текстовое содержание.
@@ -367,10 +373,10 @@ def regenerate_item_concrete_json(
     instructions: list[TextGenerationInstruction] = [
         ItemsConcreteRegenerateInstruction(index_item)
     ]
-    adventure_info, spented_tokens_counts = generate_text_with_tries(
+    adventure_info, spented_tokens_counts = await enerate_text_with_tries(
         instructions, adventure_info, model
     )
-    adventure = update_state_content_adventure(
+    adventure = await update_state_content_adventure(
         adventure.id, AdventureState.image_items, adventure_info, session
     )
     return (adventure, spented_tokens_counts)
