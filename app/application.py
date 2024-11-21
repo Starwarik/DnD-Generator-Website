@@ -27,12 +27,10 @@ async def lifespan(app: FastAPI):
     notification_service.stop()
 
 
-if app_setting.is_test:
-    app = FastAPI(
+def create_application(is_test: bool):
+    return FastAPI(
         lifespan=lifespan,
-        openapi_url=app_setting.openapi_url,
-        docs_url=app_setting.docs_url,
+        openapi_url=app_setting.openapi_url if is_test else None,
+        docs_url=app_setting.docs_url if is_test else None,
         redoc_url=None,
     )
-else:
-    app = FastAPI(lifespan=lifespan, openapi_url=None, docs_url=None, redoc_url=None)

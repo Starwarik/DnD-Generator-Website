@@ -17,6 +17,8 @@ class TokenData(BaseModel):
     username: Union[str, None] = None
 
 
+app = create_application(app_setting.is_test)
+
 routers = (auth_router, user_router, generation_router, adventure_router, image_router)
 
 for router in routers:
