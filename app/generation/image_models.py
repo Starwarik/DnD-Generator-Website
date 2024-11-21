@@ -3,7 +3,7 @@ from base64 import b64decode
 
 from app.image.schemas import ImageContainer
 
-from app.configs.generation import generation_setting
+from app.generation.config import generation_setting
 
 from langchain.schema import HumanMessage, SystemMessage
 from langchain_community.chat_models.gigachat import GigaChat

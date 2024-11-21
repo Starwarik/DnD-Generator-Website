@@ -1,11 +1,21 @@
 from app.notification.notifications import notification_service
 from app.database.database import create_db_and_tables
 
-
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-from app.configs.app import app_setting
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class AppSettings(BaseSettings):
+    is_test: bool
+    docs_url: str
+    openapi_url: str
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+
+app_setting = AppSettings()
 
 
 @asynccontextmanager
