@@ -9,7 +9,7 @@ from app.auth.dependencies import get_current_user
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.configs.app import app_setting
+from app.application import app_setting
 
 
 user_router = APIRouter(tags=["user"])
