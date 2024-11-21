@@ -3,13 +3,7 @@ from fastapi import APIRouter, Depends
 from typing_extensions import Annotated
 
 from app.user.models import User
-from app.database.database import get_session
 from app.auth.dependencies import get_current_user
-
-from sqlalchemy import select, update
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.application import app_setting
 
 
 user_router = APIRouter(tags=["user"])
@@ -23,25 +17,3 @@ async def get_user_info(current_user: Annotated[User, Depends(get_current_user)]
         "email": current_user.email,
         "balance": current_user.balance,
     }
-
-
-if app_setting.is_test:
-
-    @user_router.get("/api/get_users")
-    async def get_all_users(session: AsyncSession = Depends(get_session)):
-        statement = select(User)
-        results = await session.execute(statement)
-        result = results.scalars().all()
-        return result
-
-    @user_router.post("/api/infinite_money/{user_id}")
-    async def get_infinite_money(
-        user_id: int, session: AsyncSession = Depends(get_session)
-    ):
-        async with session.begin():
-            statement = (
-                update(User)
-                .where(User.id == user_id)
-                .values(balance=99999999999999999999999999)
-            )
-            await session.execute(statement)
