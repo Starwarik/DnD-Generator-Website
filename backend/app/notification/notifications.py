@@ -3,13 +3,14 @@ from email.message import EmailMessage
 
 from abc import ABC, abstractmethod
 
-from app.configs.notifications import NotificationServiceChoice, notification_setting
+from app.notification.config import NotificationServiceChoice, notification_setting
 
 
 class NotificationService(ABC):
     """
     Абстрактный класс для отправки письмо о сбросе пароля.
     """
+
     @abstractmethod
     def start(self):
         """
@@ -41,6 +42,7 @@ class DummyNotification(NotificationService):
     """
     Класс для отправки письмо о сбросе пароля.. Ничего не делает и является затычкей для тестирования.
     """
+
     def start(self):
         """
         Метод запускается в начале приложения. Нужен для некоторых сервисов для запуска.
@@ -64,6 +66,7 @@ class SMTPNotification(NotificationService):
     """
     Класс для отправки письмо о сбросе пароля по протоколу SMTP.
     """
+
     def __init__(self):
         pass
 

@@ -61,12 +61,19 @@ class TextGenerationResult(BaseModel):
 
 
 class AdventureInfoInstructionAnswer(BaseModel):
-    description: dict[int | str, str] | list[str] | str
+    name: str
+    description_location: str
+    description_quests: list[str]
 
 
 class ItemAnswer(BaseModel):
+    id_items: int
     name: str
     description: str
+    values: str
+    type: str
+    damage: str | None
+    armor_class: str | None
 
 
 class ItemInstructionAnswer(BaseModel):
@@ -74,12 +81,14 @@ class ItemInstructionAnswer(BaseModel):
 
 
 class CharacterAnswer(BaseModel):
+    id_npc: str
     name: str
-    description: str
+    disc_costum: str
+    dic_life: str
 
 
 class CharactersInstructionAnswer(BaseModel):
-    players: list[CharacterAnswer]
+    npc: list[CharacterAnswer]
 
 
 class QuestAnswer(BaseModel):

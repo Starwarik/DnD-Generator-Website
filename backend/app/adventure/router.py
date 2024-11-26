@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from typing_extensions import Annotated
 
 from app.adventure.schemas import AdventureInfo
@@ -37,6 +37,24 @@ async def get_adventure(
     if result is None or result.user_id != current_user.id:
         raise Exception()
     return result
+
+
+@adventure_router.delete(
+    "/api/adventure/{adventure_id}",
+    response_model=AdventurePublic,
+    responses={200: {"model": None}},
+)
+async def delete_adventure(
+    current_user: Annotated[User, Depends(get_current_user)],
+    adventure_id: int,
+    session: AsyncSession = Depends(get_session),
+):
+    stmt = delete(Adventure).where(
+        (Adventure.id == adventure_id) & (Adventure.user_id == current_user.id)
+    )
+    await session.execute(stmt)
+    await session.commit()
+    return Response(status_code=200)
 
 
 @adventure_router.post(

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 import aiohttp
 
-from app.configs.generation import generation_setting
+from app.generation.config import generation_setting
 
 from langchain_core.output_parsers import StrOutputParser
 from langchain.schema import HumanMessage, SystemMessage, AIMessage

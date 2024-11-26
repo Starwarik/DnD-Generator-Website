@@ -2,14 +2,21 @@ from pydantic import BaseModel
 
 
 class Character(BaseModel):
+    id_npc: str
     name: str
-    description: str
+    disc_costum: str
+    dic_life: str
     image_id: int = -1
 
 
 class Item(BaseModel):
+    id_items: int
     name: str
     description: str
+    values: str
+    type: str
+    damage: str | None
+    armor_class: str | None
     image_id: int = -1
 
 
@@ -20,14 +27,18 @@ class Quest(BaseModel):
 
 
 class AdventureInfo(BaseModel):
-    name: str
-    annotation: str
-    description: list[str]
+    annotation: str = ""
     location: str
     setting: str
+    playerNum: int
+
+    name: str
+    description_location: str = ""
+    description_quests: list[str] = []
+
     adventure_image_id: int = -1
     map_image_id: int = -1
-    playerNum: int
-    characters: list[Character]
-    items: list[Item]
-    quests: list[Quest]
+
+    characters: list[Character] = []
+    items: list[Item] = []
+    quests: list[Quest] = []

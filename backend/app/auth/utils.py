@@ -5,7 +5,7 @@ from typing import Union
 
 from datetime import datetime, timedelta, timezone
 
-from app.configs.auth import auth_setting
+from app.auth.config import auth_setting
 from app.database.crud import *
 
 
