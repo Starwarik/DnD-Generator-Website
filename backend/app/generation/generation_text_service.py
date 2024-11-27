@@ -93,17 +93,12 @@ async def generate_new_adventure_json(
         location=location_name,
         setting=setting,
         playerNum=num_players,
-        annotation="",
-        description=[],
-        characters=[],
-        items=[],
-        quests=[],
     )
 
     instructions: list[TextGenerationInstruction] = [
         AdventureInfoInstruction(),
         ItemsInstruction(),
-        CharactersInstruction(),
+        NPCsInstruction(),
         QuestsInstruction(),
     ]
 
@@ -208,7 +203,7 @@ async def regenerate_new_adventure_json(
         playerNum=adventure_info.playerNum,
         annotation="",
         description=[],
-        characters=[],
+        npcs=[],
         items=[],
         quests=[],
     )

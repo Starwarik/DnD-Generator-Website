@@ -21,26 +21,28 @@ def calc_default_config(adventure: AdventureInfo) -> dict[str, str]:
 
 
 def calc_description_answer_config(adventure: AdventureInfo) -> dict[str, str]:
-    description = {(i + 1): x for i, x in enumerate(adventure.description)}
-    return {"description_json_answer": json.dumps(description, indent=4)}
+    description = AdventureInfoInstructionAnswer.model_validate(adventure)
+    return {"description_json_answer": description.model_dump_json(indent=4)}
 
 
 def calc_items_answer_config(adventure: AdventureInfo) -> dict[str, str]:
-    items = {
-        "items": [
-            {"name": x.name, "description": x.description} for x in adventure.items
-        ]
+    items = [
+        ItemAnswer.model_validate(x, from_attributes=True) for x in adventure.items
+    ]
+    return {
+        "items_json_answer": ItemInstructionAnswer(items=items).model_dump_json(
+            indent=4
+        )
     }
-    return {"items_json_answer": json.dumps(items, indent=4)}
 
 
-def calc_characters_answer_config(adventure: AdventureInfo) -> dict[str, str]:
-    characters = {
-        "players": [
-            {"name": x.name, "description": x.description} for x in adventure.characters
-        ]
+def calc_npcs_answer_config(adventure: AdventureInfo) -> dict[str, str]:
+    npc = [NPCAnswer.model_validate(x, from_attributes=True) for x in adventure.npcs]
+    return {
+        "characters_json_answer": NPCsInstructionAnswer(npc=npc).model_dump_json(
+            indent=4
+        )
     }
-    return {"characters_json_answer": json.dumps(characters, indent=4)}
 
 
 class TextGenerationInstruction(ABC):
@@ -107,13 +109,8 @@ class AdventureInfoInstruction(TextGenerationInstruction):
         :param result - результат генерации
         """
         generated_answer = AdventureInfoInstructionAnswer.model_validate(result)
-        generated_description = generated_answer.description
-        if type(generated_description) is str:
-            adventure.description = generated_description.split("/n")
-        elif type(generated_description) is list:
-            adventure.description = generated_description
-        elif type(generated_description) is dict:
-            adventure.description = list(generated_description.values())
+        adventure.description_location = generated_answer.description_location
+        adventure.description_places = generated_answer.description_places
         return adventure
 
 
@@ -150,13 +147,13 @@ class ItemsInstruction(TextGenerationInstruction):
         """
         generated_answer = ItemInstructionAnswer.model_validate(result)
         adventure.items = [
-            Item(name=x.name, description=x.description) for x in generated_answer.items
+            Item.model_validate(x, from_attributes=True) for x in generated_answer.items
         ]
         return adventure
 
 
 @final
-class CharactersInstruction(TextGenerationInstruction):
+class NPCsInstruction(TextGenerationInstruction):
     """
     Класс инструкции для генерация текстового описания персонажей.
     """
@@ -165,7 +162,7 @@ class CharactersInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.characters_prompts_messages
+        return prompts_template.npcs_prompts_messages
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -187,10 +184,9 @@ class CharactersInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        generated_answer = CharactersInstructionAnswer.model_validate(result)
-        adventure.characters = [
-            Character(name=x.name, description=x.description)
-            for x in generated_answer.players
+        generated_answer = NPCsInstructionAnswer.model_validate(result)
+        adventure.npcs = [
+            NPC.model_validate(x, from_attributes=True) for x in generated_answer.npc
         ]
         return adventure
 
@@ -216,7 +212,7 @@ class QuestsInstruction(TextGenerationInstruction):
         config = calc_default_config(adventure)
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
-        config.update(calc_characters_answer_config(adventure))
+        config.update(calc_npcs_answer_config(adventure))
         return config
 
     def change_adventure_on_success(
@@ -230,7 +226,7 @@ class QuestsInstruction(TextGenerationInstruction):
         """
         generated_answer = QuestsInstructionAnswer.model_validate(result)
         adventure.quests = [
-            Quest(name=x.name, description=x.description, goal=x.goal)
+            Quest.model_validate(x, from_attributes=True)
             for x in generated_answer.quests
         ]
         return adventure
@@ -260,7 +256,7 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
         config = calc_default_config(adventure)
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
-        config.update(calc_characters_answer_config(adventure))
+        config.update(calc_npcs_answer_config(adventure))
         return config
 
     def change_adventure_on_success(
@@ -301,7 +297,7 @@ class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
         config = calc_default_config(adventure)
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
-        config.update(calc_characters_answer_config(adventure))
+        config.update(calc_npcs_answer_config(adventure))
         return config
 
     def change_adventure_on_success(
@@ -340,7 +336,7 @@ class CharactersRegenerateInstruction(TextGenerationInstruction):
         config = calc_default_config(adventure)
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
-        config.update(calc_characters_answer_config(adventure))
+        config.update(calc_npcs_answer_config(adventure))
         return config
 
     def change_adventure_on_success(
@@ -381,7 +377,7 @@ class CharactersConcreteRegenerateInstruction(TextGenerationInstruction):
         config = calc_default_config(adventure)
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
-        config.update(calc_characters_answer_config(adventure))
+        config.update(calc_npcs_answer_config(adventure))
         return config
 
     def change_adventure_on_success(
@@ -420,7 +416,7 @@ class ItemsRegenerateInstruction(TextGenerationInstruction):
         config = calc_default_config(adventure)
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
-        config.update(calc_characters_answer_config(adventure))
+        config.update(calc_npcs_answer_config(adventure))
         return config
 
     def change_adventure_on_success(
@@ -461,7 +457,7 @@ class ItemsConcreteRegenerateInstruction(TextGenerationInstruction):
         config = calc_default_config(adventure)
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
-        config.update(calc_characters_answer_config(adventure))
+        config.update(calc_npcs_answer_config(adventure))
         return config
 
     def change_adventure_on_success(
