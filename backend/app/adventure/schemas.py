@@ -21,6 +21,7 @@ class Item(BaseModel):
 
 
 class Quest(BaseModel):
+    id_quest: int
     name: str
     description: str
     goal: str

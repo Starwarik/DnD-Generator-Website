@@ -67,7 +67,6 @@ class AdventureInfoInstructionAnswer(BaseModel):
 
 
 class ItemAnswer(BaseModel):
-    id_items: int
     name: str
     description: str
     values: str
@@ -81,7 +80,6 @@ class ItemInstructionAnswer(BaseModel):
 
 
 class NPCAnswer(BaseModel):
-    id_npc: int
     name: str
     disc_costum: str
     dic_life: str
@@ -99,3 +97,7 @@ class QuestAnswer(BaseModel):
 
 class QuestsInstructionAnswer(BaseModel):
     quests: list[QuestAnswer]
+
+
+class QuestsInstructionConcreteAnswer(BaseModel):
+    quests: QuestAnswer

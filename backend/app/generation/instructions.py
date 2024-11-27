@@ -5,8 +5,6 @@ import app.generation.prompts as prompts_template
 
 from typing import final
 
-import json
-
 from app.adventure.schemas import *
 from app.generation.schemas import *
 
@@ -147,7 +145,8 @@ class ItemsInstruction(TextGenerationInstruction):
         """
         generated_answer = ItemInstructionAnswer.model_validate(result)
         adventure.items = [
-            Item.model_validate(x, from_attributes=True) for x in generated_answer.items
+            Item.model_validate(x, from_attributes=True)
+            for i, x in enumerate(generated_answer.items)
         ]
         return adventure
 
@@ -268,6 +267,11 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
+        generated_answer = QuestsInstructionAnswer.model_validate(result)
+        adventure.quests = [
+            Quest.model_validate(x, from_attributes=True)
+            for x in generated_answer.quests
+        ]
         raise NotImplementedError()
 
 
@@ -298,6 +302,8 @@ class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
         config.update(calc_npcs_answer_config(adventure))
+        quest = [x for x in adventure.quests if x.id_quest == self.index][0]
+        config.update(name_quest=quest.name)
         return config
 
     def change_adventure_on_success(
@@ -309,6 +315,7 @@ class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
+        generated_answer = QuestsInstructionConcreteAnswer.model_validate(result)
         raise NotImplementedError()
 
 

@@ -275,7 +275,7 @@ async def regenerate_quest_concrete_json(
     return (adventure, spented_tokens_counts)
 
 
-# ================================ CHARACTERS ===========================
+# ================================ NPCS ===========================
 
 
 async def regenerate_characters_json(
