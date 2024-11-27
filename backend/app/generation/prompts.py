@@ -3,8 +3,6 @@
 from app.generation.schemas import Message, MessageType
 
 
-instruction_system = """Оставь в качестве результата ТОЛЬКО JSON код, результат должен быть отдельным объектом в коде и иметь конечный и креативный."""
-
 adventure_info_prompt = """Сгенерируй описание локации для ролевой настольной игры Dungeons & Dragons. Локация: "{nameLocation}", сеттинг: "{nameSetting}", количество участников: {playerNum}. Описание должно быть на русском языке в формате JSON и включать единственный ключ: "description" — текстовое обобщённое описание локации, в котором ключевые точки локации перечислены по номерам."""
 
 adventure_info_answer = "{description_json_answer}"
@@ -36,16 +34,11 @@ quests_regeneration_concrete_prompt = """"""
 # ======================================== Template Prompts ======================================================
 
 adventure_info_prompts_messages = [
-    Message(
-        type=MessageType.system, content=instruction_system
-    ),
     Message(type=MessageType.user, content=adventure_info_prompt),
 ]
 
 items_prompts_messages = adventure_info_prompts_messages + [
-    Message(
-        type=MessageType.assistant, content=adventure_info_answer
-    ),
+    Message(type=MessageType.assistant, content=adventure_info_answer),
     Message(type=MessageType.user, content=items_prompt),
 ]
 
