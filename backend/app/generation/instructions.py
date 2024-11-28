@@ -145,9 +145,10 @@ class ItemsInstruction(TextGenerationInstruction):
         """
         generated_answer = ItemInstructionAnswer.model_validate(result)
         adventure.items = [
-            Item.model_validate(x, from_attributes=True)
-            for i, x in enumerate(generated_answer.items)
+            Item.model_validate(x, from_attributes=True) for x in generated_answer.items
         ]
+        for i in range(len(adventure.items)):
+            adventure.items[i].id_items = i
         return adventure
 
 
@@ -187,6 +188,8 @@ class NPCsInstruction(TextGenerationInstruction):
         adventure.npcs = [
             NPC.model_validate(x, from_attributes=True) for x in generated_answer.npc
         ]
+        for i in range(len(adventure.npcs)):
+            adventure.npcs[i].id_npc = i
         return adventure
 
 
@@ -228,6 +231,8 @@ class QuestsInstruction(TextGenerationInstruction):
             Quest.model_validate(x, from_attributes=True)
             for x in generated_answer.quests
         ]
+        for i in range(len(adventure.quests)):
+            adventure.quests[i].id_quest = i
         return adventure
 
 
@@ -272,6 +277,8 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
             Quest.model_validate(x, from_attributes=True)
             for x in generated_answer.quests
         ]
+        for i in range(len(adventure.quests)):
+            adventure.quests[i].id_quest = i
         raise NotImplementedError()
 
 
@@ -302,7 +309,7 @@ class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
         config.update(calc_npcs_answer_config(adventure))
-        quest = [x for x in adventure.quests if x.id_quest == self.index][0]
+        quest = adventure.quests[self.index]
         config.update(name_quest=quest.name)
         return config
 
@@ -315,15 +322,18 @@ class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        generated_answer = QuestsInstructionConcreteAnswer.model_validate(result)
-        raise NotImplementedError()
+        generated_answer = QuestInstructionConcreteAnswer.model_validate(result)
+        quest = Quest.model_validate(generated_answer.quests, from_attributes=True)
+        quest.id_quest = self.index
+        adventure.quests[self.index] = quest
+        return adventure
 
 
 # ================================ CHARACTERS ===========================
 
 
 @final
-class CharactersRegenerateInstruction(TextGenerationInstruction):
+class NPCsRegenerateInstruction(TextGenerationInstruction):
     """
     Класс инструкции для перегенерация текстового описания всех персонажей.
     """
@@ -332,7 +342,7 @@ class CharactersRegenerateInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.characters_regenerate_prompts_messages
+        return prompts_template.npcs_regenerate_prompts_messages
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -355,11 +365,17 @@ class CharactersRegenerateInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        raise NotImplementedError()
+        generated_answer = NPCsInstructionAnswer.model_validate(result)
+        adventure.npcs = [
+            NPC.model_validate(x, from_attributes=True) for x in generated_answer.npc
+        ]
+        for i in range(len(adventure.npcs)):
+            adventure.npcs[i].id_npc = i
+        return adventure
 
 
 @final
-class CharactersConcreteRegenerateInstruction(TextGenerationInstruction):
+class NPCsConcreteRegenerateInstruction(TextGenerationInstruction):
     """
     Класс инструкции для перегенерация текстового описания конкретного персонажа.
     """
@@ -373,7 +389,7 @@ class CharactersConcreteRegenerateInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.characters_concrete_regenerate_prompts_messages
+        return prompts_template.npcs_concrete_regenerate_prompts_messages
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -385,6 +401,8 @@ class CharactersConcreteRegenerateInstruction(TextGenerationInstruction):
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
         config.update(calc_npcs_answer_config(adventure))
+        npc = adventure.quests[self.index]
+        config.update(nameNPC=npc.name)
         return config
 
     def change_adventure_on_success(
@@ -396,7 +414,11 @@ class CharactersConcreteRegenerateInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        raise NotImplementedError()
+        generated_answer = NPCInstructionConcreteAnswer.model_validate(result)
+        npc = NPC.model_validate(generated_answer.npc, from_attributes=True)
+        npc.id_npc = self.index
+        adventure.npcs[self.index] = npc
+        return adventure
 
 
 # ================================== ITEMS ======================================
@@ -435,7 +457,13 @@ class ItemsRegenerateInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        raise NotImplementedError()
+        generated_answer = ItemInstructionAnswer.model_validate(result)
+        adventure.items = [
+            Item.model_validate(x, from_attributes=True) for x in generated_answer.items
+        ]
+        for i in range(len(adventure.items)):
+            adventure.items[i].id_items = i
+        return adventure
 
 
 @final
@@ -465,6 +493,8 @@ class ItemsConcreteRegenerateInstruction(TextGenerationInstruction):
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
         config.update(calc_npcs_answer_config(adventure))
+        item = adventure.items[self.index]
+        config.update(nameItem=item.name)
         return config
 
     def change_adventure_on_success(
@@ -476,4 +506,8 @@ class ItemsConcreteRegenerateInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        raise NotImplementedError()
+        generated_answer = ItemInstructionConcreteAnswer.model_validate(result)
+        item = Item.model_validate(generated_answer.items, from_attributes=True)
+        item.id_items = self.index
+        adventure.items[self.index] = item
+        return adventure

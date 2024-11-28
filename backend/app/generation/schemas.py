@@ -99,5 +99,13 @@ class QuestsInstructionAnswer(BaseModel):
     quests: list[QuestAnswer]
 
 
-class QuestsInstructionConcreteAnswer(BaseModel):
+class QuestInstructionConcreteAnswer(BaseModel):
     quests: QuestAnswer
+
+
+class NPCInstructionConcreteAnswer(BaseModel):
+    npc: NPCAnswer
+
+
+class ItemInstructionConcreteAnswer(BaseModel):
+    items: ItemAnswer

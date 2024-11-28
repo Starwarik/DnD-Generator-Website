@@ -289,7 +289,7 @@ async def regenerate_characters_json(
     :param session: для бд
     """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
-    instructions: list[TextGenerationInstruction] = [CharactersRegenerateInstruction()]
+    instructions: list[TextGenerationInstruction] = [NPCsRegenerateInstruction()]
     adventure_info, spented_tokens_counts = await generate_text_with_tries(
         instructions, adventure_info, model
     )
@@ -315,7 +315,7 @@ async def regenerate_character_concrete_json(
     """
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [
-        CharactersConcreteRegenerateInstruction(index_character)
+        NPCsConcreteRegenerateInstruction(index_character)
     ]
     adventure_info, spented_tokens_counts = await generate_text_with_tries(
         instructions, adventure_info, model
