@@ -12,8 +12,8 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     restart: unless-stopped  
-    depends_on:
-      - redis
+#    depends_on:
+#      - redis
 
 #  worker:
 #    build: ./app
@@ -28,8 +28,8 @@ services:
 #      - web
 #      - redis
 
-  redis:
-    image: redis:7
+#  redis:
+#    image: redis:7
 
 volumes:
   data:
