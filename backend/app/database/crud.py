@@ -54,26 +54,26 @@ async def get_user_by_email_or_username(
 async def create_user(
     email: str, username: str, password_hash: str, session: AsyncSession
 ):
-    async with session.begin():
-        user = User(username=username, password=password_hash, email=email)
-        session.add(user)
+    user = User(username=username, password=password_hash, email=email)
+    session.add(user)
+    await session.commit()
 
 
 # UPDATE method
 
 
 async def change_password(id: int, new_password_hash: str, session: AsyncSession):
-    async with session.begin():
-        user = await get_user_by_id(id, session)
-        user.password = new_password_hash
-        session.add(user)
+    user = await get_user_by_id(id, session)
+    user.password = new_password_hash
+    session.add(user)
+    await session.commit()
 
 
 async def change_balance_on_value(id: int, diff_balance: float, session: AsyncSession):
-    async with session.begin():
-        user = await get_user_by_id(id, session)
-        user.balance += diff_balance
-        session.add(user)
+    user = await get_user_by_id(id, session)
+    user.balance += diff_balance
+    session.add(user)
+    await session.commit()
 
 
 async def spend_balance_on_tokens(

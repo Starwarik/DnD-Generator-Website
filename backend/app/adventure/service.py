@@ -37,13 +37,13 @@ async def update_state_content_adventure(
     if content:
         new_values["content"] = content.model_dump_json()
 
-    async with session.begin():
-        command = (
-            update(Adventure)
-            .where(Adventure.id == id)
-            .values(**new_values)
-            .returning(Adventure)
-        )
-        results = await session.execute(command)
-        result = results.scalars().one()
+    command = (
+        update(Adventure)
+        .where(Adventure.id == id)
+        .values(**new_values)
+        .returning(Adventure)
+    )
+    results = await session.execute(command)
+    result = results.scalars().one()
+    await session.commit()
     return result

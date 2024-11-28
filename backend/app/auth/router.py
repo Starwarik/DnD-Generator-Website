@@ -87,6 +87,7 @@ async def register(
             detail={"status": False},
             headers={"WWW-Authenticate": "Bearer"},
         )
+
     try:
         await create_user(
             email=user.email,

@@ -38,10 +38,10 @@ if app_setting.is_test:
     async def get_infinite_money(
         user_id: int, session: AsyncSession = Depends(get_session)
     ):
-        async with session.begin():
-            statement = (
-                update(User)
-                .where(User.id == user_id)
-                .values(balance=99999999999999999999999999)
-            )
-            await session.execute(statement)
+        statement = (
+            update(User)
+            .where(User.id == user_id)
+            .values(balance=99999999999999999999999999)
+        )
+        await session.execute(statement)
+        await session.commit()
