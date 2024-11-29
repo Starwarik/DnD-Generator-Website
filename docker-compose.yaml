@@ -4,9 +4,8 @@ services:
     build: ./backend
     ports:
       - 8004:8000
-    volumes:
-    #  - ./app/database.db:/code/app/database.db
-      - ./data/database.db:/code/data/database.db 
+    volumes: 
+      - data:/code/data
     env_file: ".env"
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
