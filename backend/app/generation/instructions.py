@@ -5,6 +5,8 @@ import app.generation.prompts as prompts_template
 
 from typing import final
 
+from copy import deepcopy
+
 from app.adventure.schemas import *
 from app.generation.schemas import *
 
@@ -19,7 +21,7 @@ def calc_default_config(adventure: AdventureInfo) -> dict[str, str]:
 
 
 def calc_description_answer_config(adventure: AdventureInfo) -> dict[str, str]:
-    description = AdventureInfoInstructionAnswer.model_validate(adventure)
+    description = AdventureInfoInstructionAnswer.model_validate(adventure, from_attributes=True)
     return {"description_json_answer": description.model_dump_json(indent=4)}
 
 
@@ -40,6 +42,12 @@ def calc_npcs_answer_config(adventure: AdventureInfo) -> dict[str, str]:
         "characters_json_answer": NPCsInstructionAnswer(npc=npc).model_dump_json(
             indent=4
         )
+    }
+
+def calc_quest_answer_config(adventure: AdventureInfo) -> dict[str, str]:
+    quests = [QuestAnswer.model_validate(x, from_attributes=True) for x in adventure.quests]
+    return {
+        "quests_json_answer": QuestsInstructionAnswer(quests=quests)
     }
 
 
@@ -87,7 +95,7 @@ class AdventureInfoInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.adventure_info_prompts_messages
+        return deepcopy(prompts_template.adventure_info_prompts_messages)
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -122,7 +130,7 @@ class ItemsInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.items_prompts_messages
+        return deepcopy(prompts_template.items_prompts_messages)
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -162,7 +170,7 @@ class NPCsInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.npcs_prompts_messages
+        return deepcopy(prompts_template.npcs_prompts_messages)
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -203,7 +211,7 @@ class QuestsInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.quests_prompts_messages
+        return deepcopy(prompts_template.quests_prompts_messages)
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -249,7 +257,7 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.quests_regenerate_prompts_messages
+        return deepcopy(prompts_template.quests_regenerate_prompts_messages)
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -261,6 +269,7 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
         config.update(calc_npcs_answer_config(adventure))
+        config.update(calc_quest_answer_config(adventure))
         return config
 
     def change_adventure_on_success(
@@ -297,7 +306,7 @@ class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.quests_concrete_regenerate_prompts_messages
+        return deepcopy(prompts_template.quests_concrete_regenerate_prompts_messages)
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -309,6 +318,7 @@ class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
         config.update(calc_npcs_answer_config(adventure))
+        config.update(calc_quest_answer_config(adventure))
         quest = adventure.quests[self.index]
         config.update(name_quest=quest.name)
         return config
@@ -342,7 +352,7 @@ class NPCsRegenerateInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.npcs_regenerate_prompts_messages
+        return deepcopy(prompts_template.npcs_regenerate_prompts_messages)
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -354,6 +364,7 @@ class NPCsRegenerateInstruction(TextGenerationInstruction):
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
         config.update(calc_npcs_answer_config(adventure))
+        config.update(calc_quest_answer_config(adventure))
         return config
 
     def change_adventure_on_success(
@@ -389,7 +400,7 @@ class NPCsConcreteRegenerateInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.npcs_concrete_regenerate_prompts_messages
+        return deepcopy(prompts_template.npcs_concrete_regenerate_prompts_messages)
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -401,6 +412,7 @@ class NPCsConcreteRegenerateInstruction(TextGenerationInstruction):
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
         config.update(calc_npcs_answer_config(adventure))
+        config.update(calc_quest_answer_config(adventure))
         npc = adventure.quests[self.index]
         config.update(nameNPC=npc.name)
         return config
@@ -434,7 +446,7 @@ class ItemsRegenerateInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.items_regenerate_prompts_messages
+        return deepcopy(prompts_template.items_regenerate_prompts_messages)
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -446,6 +458,7 @@ class ItemsRegenerateInstruction(TextGenerationInstruction):
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
         config.update(calc_npcs_answer_config(adventure))
+        config.update(calc_quest_answer_config(adventure))
         return config
 
     def change_adventure_on_success(
@@ -481,7 +494,7 @@ class ItemsConcreteRegenerateInstruction(TextGenerationInstruction):
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return prompts_template.items_concrete_regenerate_prompts_messages
+        return deepcopy(prompts_template.items_concrete_regenerate_prompts_messages)
 
     def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
         """
@@ -493,6 +506,7 @@ class ItemsConcreteRegenerateInstruction(TextGenerationInstruction):
         config.update(calc_description_answer_config(adventure))
         config.update(calc_items_answer_config(adventure))
         config.update(calc_npcs_answer_config(adventure))
+        config.update(calc_quest_answer_config(adventure))
         item = adventure.items[self.index]
         config.update(nameItem=item.name)
         return config

@@ -22,6 +22,7 @@ if app_setting.is_test:
         lifespan=lifespan,
         openapi_url=app_setting.openapi_url,
         docs_url=app_setting.docs_url,
+        debug=True,
         redoc_url=None,
     )
 else:

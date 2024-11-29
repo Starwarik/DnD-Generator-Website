@@ -16,6 +16,7 @@ def parse_json_garbage(s: str) -> dict[str, Any]:
     """
     Пытается найти json среди str. Если не получается возращает ошибку JSONDecodeError.
     """
+    s = s.replace("'", "\"")
     s = s[next(idx for idx, c in enumerate(s) if c in "{[") :]
     try:
         return json.loads(s)
@@ -46,6 +47,7 @@ async def generate_text_with_tries(
     for instruction in instructions:
         prompts = instruction.get_prompts()
         config = instruction.get_config(adventure)
+        
         for i in range(len(prompts)):
             prompts[i].content = prompts[i].content.format(**config)
         generated_result = None
