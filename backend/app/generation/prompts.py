@@ -121,8 +121,8 @@ npcs_prompts_messages = items_prompts_messages + [
 ]
 
 quests_prompts_messages = items_prompts_messages + [
-    Message(type=MessageType.assistant, content=quests_prompt),
-    Message(type=MessageType.user, content=quests_answer),
+    Message(type=MessageType.assistant, content=npcs_answer),
+    Message(type=MessageType.user, content=quests_prompt),
 ]
 
 full_context_prompts_messages = quests_prompts_messages + [

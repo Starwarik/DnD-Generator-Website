@@ -84,7 +84,7 @@ async def generate_test_images_adventure(
     adventure = await update_state_content_adventure(
         adventure.id, state, content, session
     )
-    time.sleep(5)
+    time.sleep(10)
     return adventure
 
 
@@ -139,7 +139,7 @@ async def generate_test_images_characters(
     adventure = await update_state_content_adventure(
         adventure.id, state, content, session
     )
-    time.sleep(5)
+    time.sleep(10)
     return adventure
 
 
@@ -194,5 +194,5 @@ async def generate_test_images_items(
     adventure = await update_state_content_adventure(
         adventure.id, state, content, session
     )
-    time.sleep(5)
+    time.sleep(10)
     return adventure
