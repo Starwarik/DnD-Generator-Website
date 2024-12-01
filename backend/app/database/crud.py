@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_
 
 from app.generation.schemas import SpentedTokensCounts
-from app.configs.generation import generation_setting
+from app.generation.config import generation_setting
 
 # READ method
 

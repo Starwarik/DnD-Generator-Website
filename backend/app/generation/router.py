@@ -33,7 +33,7 @@ from app.generation.generation_text_service import (
     regenerate_item_concrete_json,
 )
 from app.generation.text_models import text_generation_model
-from app.configs.generation import generation_setting
+from app.generation.config import generation_setting
 from app.database.crud import spend_balance_on_tokens
 
 generation_router = APIRouter(tags=["generation"])

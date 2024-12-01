@@ -8,12 +8,11 @@ from app.database.database import get_session
 from app.database.crud import *
 from app.notification.notifications import notification_service
 from app.auth.utils import *
-from app.configs.auth import auth_setting
+from app.auth.config import auth_setting
 
 from pydantic import BaseModel
 
 from typing_extensions import Annotated
-
 
 from jwt.exceptions import InvalidTokenError
 

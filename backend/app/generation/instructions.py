@@ -21,8 +21,11 @@ def calc_default_config(adventure: AdventureInfo) -> dict[str, str]:
 
 
 def calc_description_answer_config(adventure: AdventureInfo) -> dict[str, str]:
-    description = AdventureInfoInstructionAnswer.model_validate(adventure, from_attributes=True)
-    return {"description_json_answer": description.model_dump_json(indent=4)}
+    return {
+        "description_json_answer": AdventureInfoInstructionAnswer.model_validate(
+            adventure, from_attributes=True
+        ).model_dump_json(indent=4)
+    }
 
 
 def calc_items_answer_config(adventure: AdventureInfo) -> dict[str, str]:
