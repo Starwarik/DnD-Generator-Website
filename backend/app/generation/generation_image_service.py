@@ -84,7 +84,7 @@ async def generate_test_images_adventure(
     adventure = await update_state_content_adventure(
         adventure.id, state, content, session
     )
-    time.sleep(5)
+    time.sleep(10)
     return adventure
 
 
@@ -101,8 +101,8 @@ async def generate_images_characters(
     :param state: состояние, в которое нужно установить приключение, после конца генерации.
     """
     content = AdventureInfo.model_validate_json(adventure.content)
-    for i in range(len(content.characters)):
-        char = content.characters[i]
+    for i in range(len(content.npcs)):
+        char = content.npcs[i]
         if char.image_id == -1:
             try:
                 image_id = await _generate_image(
@@ -112,7 +112,7 @@ async def generate_images_characters(
                     adventure.user_id,
                     session,
                 )
-                content.characters[i].image_id = image_id
+                content.npcs[i].image_id = image_id
                 time.sleep(10)
             except Exception as e:
                 print(e)
@@ -139,7 +139,7 @@ async def generate_test_images_characters(
     adventure = await update_state_content_adventure(
         adventure.id, state, content, session
     )
-    time.sleep(5)
+    time.sleep(10)
     return adventure
 
 
@@ -187,12 +187,12 @@ async def generate_test_images_items(
     :param state: состояние, в которое нужно установить приключение, после конца генерации.
     """
     content = AdventureInfo.model_validate_json(adventure.content)
-    new_characters = content.characters
+    new_characters = content.npcs
     for i, x in enumerate(new_characters):
         new_characters[i].image_id = -42
-    content.characters = new_characters
+    content.npcs = new_characters
     adventure = await update_state_content_adventure(
         adventure.id, state, content, session
     )
-    time.sleep(5)
+    time.sleep(10)
     return adventure

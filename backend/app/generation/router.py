@@ -205,7 +205,7 @@ async def regenerate_characters_concrete(
     adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
 
-    if index_character < 0 or index_character >= len(adventure_info.characters):
+    if index_character < 0 or index_character >= len(adventure_info.npcs):
         return HTTPException(status_code=400, detail="Index out of range")
 
     async def inner_command(adventure: Adventure):

@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 
-class Character(BaseModel):
-    id_npc: str
+class NPC(BaseModel):
+    id_npc: int
     name: str
     disc_costum: str
     dic_life: str
@@ -21,24 +21,22 @@ class Item(BaseModel):
 
 
 class Quest(BaseModel):
+    id_quest: int
     name: str
     description: str
     goal: str
 
 
 class AdventureInfo(BaseModel):
+    name: str
     annotation: str = ""
+    description_location: str = ""
+    description_places: list[str] = []
     location: str
     setting: str
-    playerNum: int
-
-    name: str
-    description_location: str = ""
-    description_quests: list[str] = []
-
     adventure_image_id: int = -1
     map_image_id: int = -1
-
-    characters: list[Character] = []
+    playerNum: int
+    npcs: list[NPC] = []
     items: list[Item] = []
     quests: list[Quest] = []

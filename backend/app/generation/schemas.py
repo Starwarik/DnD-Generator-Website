@@ -63,7 +63,7 @@ class TextGenerationResult(BaseModel):
 class AdventureInfoInstructionAnswer(BaseModel):
     name: str
     description_location: str
-    description_quests: list[str]
+    description_places: list[str]
 
 
 class ItemAnswer(BaseModel):
@@ -80,15 +80,16 @@ class ItemInstructionAnswer(BaseModel):
     items: list[ItemAnswer]
 
 
-class CharacterAnswer(BaseModel):
-    id_npc: str
+<<<<<<< HEAD
+class NPCAnswer(BaseModel):
     name: str
     disc_costum: str
     dic_life: str
 
 
-class CharactersInstructionAnswer(BaseModel):
-    npc: list[CharacterAnswer]
+<<<<<<< HEAD
+class NPCsInstructionAnswer(BaseModel):
+    npc: list[NPCAnswer]
 
 
 class QuestAnswer(BaseModel):
@@ -99,3 +100,15 @@ class QuestAnswer(BaseModel):
 
 class QuestsInstructionAnswer(BaseModel):
     quests: list[QuestAnswer]
+
+
+class QuestInstructionConcreteAnswer(BaseModel):
+    quests: QuestAnswer
+
+
+class NPCInstructionConcreteAnswer(BaseModel):
+    npc: NPCAnswer
+
+
+class ItemInstructionConcreteAnswer(BaseModel):
+    items: ItemAnswer

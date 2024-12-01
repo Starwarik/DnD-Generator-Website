@@ -3,6 +3,11 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
 from app.database.config import db_setting
 
+
+class Base(AsyncAttrs, DeclarativeBase):
+    __abstract__ = True
+
+
 async_engine = create_async_engine(db_setting.database_url, echo=True)
 async_session_maker = async_sessionmaker(async_engine, expire_on_commit=False)
 
@@ -18,7 +23,3 @@ async def get_session():
             yield session
     except SQLAlchemyError as e:
         pass
-
-
-class Base(AsyncAttrs, DeclarativeBase):
-    __abstract__ = True
