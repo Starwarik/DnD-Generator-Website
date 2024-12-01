@@ -31,7 +31,7 @@ def create_application(is_test: bool):
     return FastAPI(
         lifespan=lifespan,
         openapi_url=app_setting.openapi_url if is_test else None,
-        docs_url=app_setting.docs_url if is_test else None
+        docs_url=app_setting.docs_url if is_test else None,
         debug=is_test,
         redoc_url=None,
     )
