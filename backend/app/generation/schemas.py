@@ -80,14 +80,12 @@ class ItemInstructionAnswer(BaseModel):
     items: list[ItemAnswer]
 
 
-<<<<<<< HEAD
 class NPCAnswer(BaseModel):
     name: str
     disc_costum: str
     dic_life: str
 
 
-<<<<<<< HEAD
 class NPCsInstructionAnswer(BaseModel):
     npc: list[NPCAnswer]
 
