@@ -211,19 +211,19 @@ async def generate_new_test_adventure_json(
         ],
         "quests": [
             {
-                "id_quest": 0
+                "id_quest": 0,
                 "name": "Test quest 1",
                 "description": "Quest Description",
                 "goal": "Goal Quest"
             },
             {
-                "id_quest": 1
+                "id_quest": 1,
                 "name": "Test quest 2",
                 "description": "Quest Description",
                 "goal": "Goal Quest"
             },
             {
-                "id_quest": 2
+                "id_quest": 2,
                 "name": "Test quest 3",
                 "description": "Quest Description",
                 "goal": "Goal Quest"
