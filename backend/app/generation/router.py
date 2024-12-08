@@ -80,13 +80,10 @@ async def generate_test_adventure(
     current_user: Annotated[User, Depends(get_current_user)],
     session: AsyncSession = Depends(get_session),
 ):
-    if current_user.balance < generation_setting.min_balance_to_generate:
-        raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
-
     adventure: Adventure = await create_adventure(current_user.id, session)
 
     async def inner_command(adventure: Adventure):
-        adventure, spented_tokens_counts = await generate_new_test_adventure_json(
+        adventure, _ = await generate_new_test_adventure_json(
             location_name,
             setting,
             num_players,
@@ -96,7 +93,6 @@ async def generate_test_adventure(
         adventure = await generate_test_images_adventure(adventure, session)
         adventure = await generate_test_images_characters(adventure, session)
         await generate_test_images_items(adventure, session)
-        spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
 
     background_tasks.add_task(inner_command, adventure)
     return adventure
