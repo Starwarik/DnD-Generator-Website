@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class NPC(BaseModel):
-    id_npc: int
+    id_npc: int | None = None
     name: str
     disc_costum: str
     dic_life: str
@@ -10,7 +10,7 @@ class NPC(BaseModel):
 
 
 class Item(BaseModel):
-    id_items: int
+    id_items: int | None = None
     name: str
     description: str
     values: str
@@ -21,7 +21,7 @@ class Item(BaseModel):
 
 
 class Quest(BaseModel):
-    id_quest: int
+    id_quest: int | None = None
     name: str
     description: str
     goal: str

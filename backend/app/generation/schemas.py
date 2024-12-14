@@ -9,6 +9,14 @@ class MessageType(Enum):
     system = 2
 
 
+def message_type2str(x: MessageType):
+    if x == MessageType.assistant:
+        return "Assistant"
+    if x == MessageType.user:
+        return "User"
+    return "System"
+
+
 class Message(BaseModel):
     """
     Сообщение в чате с моделью.
@@ -16,6 +24,12 @@ class Message(BaseModel):
 
     type: MessageType
     content: str
+
+    def __repr__(self):
+        return f"{message_type2str(self.type)}: {self.content}"
+
+    def __str__(self):
+        return self.__repr__()
 
 
 class SpentedTokensCounts(BaseModel):
@@ -67,7 +81,6 @@ class AdventureInfoInstructionAnswer(BaseModel):
 
 
 class ItemAnswer(BaseModel):
-    id_items: int
     name: str
     description: str
     values: str

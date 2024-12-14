@@ -50,20 +50,32 @@ async def generate_text_with_tries(
         
         for i in range(len(prompts)):
             prompts[i].content = prompts[i].content.format(**config)
+        print("===========CURRENT PROMPT:==============")
+        print(prompts)
+        print()
+        index_try = 0
         generated_result = None
-        for _ in range(n_tries):
+        for index_try in range(n_tries):
             try:
                 generated_result = await model.async_generate_text(prompts)
+                print("============GENERATED RESULT:==================")
+                print(generated_result)
+                print()
                 generated_json: dict[str, Any] = parse_json_garbage(
                     generated_result.content
                 )
+                print("============GENERATED JSON:==================")
                 print(generated_json)
+                print()
                 adventure = instruction.change_adventure_on_success(
                     adventure, generated_json
                 )
+                break
             except Exception as e:
-                print(_, "try failed")
+                generated_result = None
+                print(index_try, " try failed")
                 print(e)
+                print()
         if generated_result is None:
             raise MaxAttemptsExced("Max tries")
         print("Success")

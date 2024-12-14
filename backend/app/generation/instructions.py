@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-from app.adventure.models import Adventure
 import app.generation.prompts as prompts_template
 
 from typing import final
@@ -47,10 +46,15 @@ def calc_npcs_answer_config(adventure: AdventureInfo) -> dict[str, str]:
         )
     }
 
+
 def calc_quest_answer_config(adventure: AdventureInfo) -> dict[str, str]:
-    quests = [QuestAnswer.model_validate(x, from_attributes=True) for x in adventure.quests]
+    quests = [
+        QuestAnswer.model_validate(x, from_attributes=True) for x in adventure.quests
+    ]
     return {
-        "quests_json_answer": QuestsInstructionAnswer(quests=quests)
+        "quests_json_answer": QuestsInstructionAnswer(quests=quests).model_dump_json(
+            indent=4
+        )
     }
 
 
@@ -196,6 +200,7 @@ class NPCsInstruction(TextGenerationInstruction):
         :param result - результат генерации
         """
         generated_answer = NPCsInstructionAnswer.model_validate(result)
+
         adventure.npcs = [
             NPC.model_validate(x, from_attributes=True) for x in generated_answer.npc
         ]
