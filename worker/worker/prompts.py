@@ -1,6 +1,6 @@
 # ============================ Message Template =============================
 
-from app.generation.schemas import Message, MessageType
+from schemas import Message, MessageType
 
 
 adventure_info_prompt = """Сгенерируй описание локации для ролевой настольной игры Dungeons & Dragons. Локация: "{nameLocation}", жанр: "{nameSetting}", количество участников: {playerNum}.

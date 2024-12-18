@@ -1,13 +1,12 @@
 from abc import ABC, abstractmethod
 
-import app.generation.prompts as prompts_template
+import prompts as prompts_template
 
 from typing import final
 
 from copy import deepcopy
 
-from app.adventure.schemas import *
-from app.generation.schemas import *
+from schemas import *
 
 
 def calc_default_config(adventure: AdventureInfo) -> dict[str, str]:

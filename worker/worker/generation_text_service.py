@@ -1,11 +1,9 @@
 from typing import Any
-from app.adventure.schemas import *
-from app.generation.instructions import *
-from app.generation.text_models import TextGenerationModel
+from schemas import *
+from instructions import *
+from text_models import TextGenerationModel
 import json
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.adventure.models import Adventure, AdventureState
-from app.adventure.service import create_adventure, update_state_content_adventure
+import time
 
 
 class MaxAttemptsExced(Exception):
@@ -16,7 +14,7 @@ def parse_json_garbage(s: str) -> dict[str, Any]:
     """
     Пытается найти json среди str. Если не получается возращает ошибку JSONDecodeError.
     """
-    s = s.replace("'", "\"")
+    s = s.replace("'", '"')
     s = s[next(idx for idx, c in enumerate(s) if c in "{[") :]
     try:
         return json.loads(s)
@@ -28,12 +26,12 @@ def parse_json_garbage(s: str) -> dict[str, Any]:
             raise e
 
 
-async def generate_text_with_tries(
+def generate_text_with_tries(
     instructions: list[TextGenerationInstruction],
     adventure: AdventureInfo,
     model: TextGenerationModel,
     n_tries: int = 3,
-) -> tuple[AdventureInfo, SpentedTokensCounts]:
+) -> AdventureUpdateWithSpentedResult:
     """
     Изменение информации приключения по данным инструкциям. На выходе выдает новое приключение.
 
@@ -47,7 +45,7 @@ async def generate_text_with_tries(
     for instruction in instructions:
         prompts = instruction.get_prompts()
         config = instruction.get_config(adventure)
-        
+
         for i in range(len(prompts)):
             prompts[i].content = prompts[i].content.format(**config)
         print("===========CURRENT PROMPT:==============")
@@ -57,7 +55,7 @@ async def generate_text_with_tries(
         generated_result = None
         for index_try in range(n_tries):
             try:
-                generated_result = await model.async_generate_text(prompts)
+                generated_result = model.generate_text(prompts)
                 print("============GENERATED RESULT:==================")
                 print(generated_result)
                 print()
@@ -80,17 +78,14 @@ async def generate_text_with_tries(
             raise MaxAttemptsExced("Max tries")
         print("Success")
         spented_tokens_counts += generated_result.count_tokens
-    return (adventure, spented_tokens_counts)
+    return AdventureUpdateWithSpentedResult(
+        new_adventure_info=adventure, spented_tokens_counts=spented_tokens_counts
+    )
 
 
-async def generate_new_adventure_json(
-    location_name: str,
-    setting: str,
-    num_players: int,
-    model: TextGenerationModel,
-    adventure: Adventure,
-    session: AsyncSession,
-) -> tuple[Adventure, SpentedTokensCounts]:
+def generate_new_adventure_json(
+    location_name: str, setting: str, num_players: int, model: TextGenerationModel
+) -> AdventureUpdateWithSpentedResult:
     """
     Генерирует полноценное приключение с нуля.
 
@@ -115,25 +110,13 @@ async def generate_new_adventure_json(
         NPCsInstruction(),
         QuestsInstruction(),
     ]
-    
-    adventure_info, spented_tokens_counts = await generate_text_with_tries(
-        instructions, adventure_info, model
-    )
 
-    adventure = await update_state_content_adventure(
-        adventure.id, AdventureState.image_adventure, adventure_info, session
-    )
-    spented_tokens_counts = SpentedTokensCounts()
-    return (adventure, spented_tokens_counts)
+    return generate_text_with_tries(instructions, adventure_info, model)
 
 
-async def generate_new_test_adventure_json(
-    location_name: str,
-    setting: str,
-    num_players: int,
-    adventure: Adventure,
-    session: AsyncSession,
-) -> tuple[Adventure, SpentedTokensCounts]:
+def generate_new_test_adventure_json(
+    location_name: str, setting: str, num_players: int
+) -> AdventureUpdateWithSpentedResult:
     """
     Генерирует фиктивное приключение для тестирования.
     :param location_name: название локации
@@ -152,7 +135,7 @@ async def generate_new_test_adventure_json(
             "2. На окраине города расположена заброшенная лаборатория, где проводились эксперименты по созданию големов. Лаборатория охраняется механическими стражами. Некоторые из них всё ещё функционируют и готовы атаковать любого, кто приблизится к лаборатории. Найдите способ отключить механических стражей и исследуйте лабораторию, чтобы найти забытые технологии.",
             "3. За городом находится кладбище, где похоронены жители города. Некоторые из них восстали из мёртвых и превратились в зомби. Зомби бродят по кладбищу в поисках живых. Уничтожьте нежить и восстановите мир на кладбище.",
             "4. В джунглях вокруг города обитают опасные существа, такие как гигантские пауки и ядовитые змеи. Они могут напасть на путников, если те не будут осторожны. Отправляйтесь в джунгли, чтобы собрать редкие ингредиенты для зелий и найти древние руины.",
-            "5. В городе также есть несколько жителей, которые готовы помочь искателям приключений. Они расскажут о истории города и подскажут, где искать сокровища. Жители живут в небольших хижинах, разбросанных по городу. Помогите жителям решить их проблемы и получите их поддержку в своих приключениях."
+            "5. В городе также есть несколько жителей, которые готовы помочь искателям приключений. Они расскажут о истории города и подскажут, где искать сокровища. Жители живут в небольших хижинах, разбросанных по городу. Помогите жителям решить их проблемы и получите их поддержку в своих приключениях.",
         ],
         "location": location_name,
         "setting": setting,
@@ -162,26 +145,26 @@ async def generate_new_test_adventure_json(
                 "id_npc": 0,
                 "name": "Торговец Корвин",
                 "disc_costum": "Корвин — крепкий мужчина средних лет с аккуратно подстриженной бородой и усами. Его одежда сшита из дорогих тканей, а на пальцах блестят золотые кольца. Он носит с собой увесистый кошель, полный монет.",
-                "dic_life": "Корвин путешествует по миру в поисках выгодных сделок. Он продаёт оружие, доспехи, магические предметы и другие товары, которые могут пригодиться искателям приключений. Корвин всегда готов заключить сделку, но не стоит его обманывать, он может оказаться весьма опасным противником."
+                "dic_life": "Корвин путешествует по миру в поисках выгодных сделок. Он продаёт оружие, доспехи, магические предметы и другие товары, которые могут пригодиться искателям приключений. Корвин всегда готов заключить сделку, но не стоит его обманывать, он может оказаться весьма опасным противником.",
             },
             {
                 "id_npc": 1,
                 "name": "Старейшина Гримбольд",
                 "disc_costum": "Гримбольд — седой дварф с длинной бородой и волосами, заплетёнными в косы. Он одет в богато украшенную кольчугу и носит на поясе молот. Гримбольд выглядит мудрым и опытным, его глаза светятся умом.",
-                "dic_life": "Гримбольд является старейшиной деревни дварфов. Он заботится о своих соплеменниках и защищает их от врагов. Гримбольд знает много историй о древних битвах и подвигах героев."
+                "dic_life": "Гримбольд является старейшиной деревни дварфов. Он заботится о своих соплеменниках и защищает их от врагов. Гримбольд знает много историй о древних битвах и подвигах героев.",
             },
             {
                 "id_npc": 2,
                 "name": "Ведьма Моргана",
                 "disc_costum": "Моргана — красивая женщина с длинными чёрными волосами и пронзительными глазами. Она одета в длинное платье, украшенное звёздами и лунами. На шее у неё висит амулет с изображением ворона.",
-                "dic_life": "Моргана живёт в лесу недалеко от деревни дварфов. Она изучает магию и общается с духами природы. Жители деревни боятся Моргану и считают её ведьмой."
+                "dic_life": "Моргана живёт в лесу недалеко от деревни дварфов. Она изучает магию и общается с духами природы. Жители деревни боятся Моргану и считают её ведьмой.",
             },
             {
                 "id_npc": 3,
                 "name": "Разбойник Кэл",
                 "disc_costum": "Кэл — молодой человек с рыжими волосами и веснушками на лице. Он одет в потрёпанную одежду, а на поясе у него висит кинжал. Кэл выглядит хитрым и коварным, его взгляд полон решимости.",
-                "dic_life": "Кэл является главарем разбойников, которые грабят путников на дорогах. Он мечтает о богатстве и власти, но пока что вынужден скрываться от стражи."
-            }
+                "dic_life": "Кэл является главарем разбойников, которые грабят путников на дорогах. Он мечтает о богатстве и власти, но пока что вынужден скрываться от стражи.",
+            },
         ],
         "items": [
             {
@@ -191,7 +174,7 @@ async def generate_new_test_adventure_json(
                 "values": "50 зм",
                 "type": "сокровища",
                 "damage": None,
-                "armor_class": None
+                "armor_class": None,
             },
             {
                 "id_items": 1,
@@ -200,7 +183,7 @@ async def generate_new_test_adventure_json(
                 "values": "25 зм",
                 "type": "оружие",
                 "damage": None,
-                "armor_class": None
+                "armor_class": None,
             },
             {
                 "id_items": 2,
@@ -209,7 +192,7 @@ async def generate_new_test_adventure_json(
                 "values": "75 зм",
                 "type": "доспехи",
                 "damage": None,
-                "armor_class": "+2"
+                "armor_class": "+2",
             },
             {
                 "id_items": 3,
@@ -218,41 +201,41 @@ async def generate_new_test_adventure_json(
                 "values": "100 зм",
                 "type": "оруществие",
                 "damage": "1d8",
-                "armor_class": None
-            }
+                "armor_class": None,
+            },
         ],
         "quests": [
             {
                 "id_quest": 0,
                 "name": "Test quest 1",
                 "description": "Quest Description",
-                "goal": "Goal Quest"
+                "goal": "Goal Quest",
             },
             {
                 "id_quest": 1,
                 "name": "Test quest 2",
                 "description": "Quest Description",
-                "goal": "Goal Quest"
+                "goal": "Goal Quest",
             },
             {
                 "id_quest": 2,
                 "name": "Test quest 3",
                 "description": "Quest Description",
-                "goal": "Goal Quest"
-            }
+                "goal": "Goal Quest",
+            },
         ],
     }
+    time.sleep(5)
     spented_tokens_counts = SpentedTokensCounts()
     adventure_info = AdventureInfo.model_validate(dummy_adventure)
-    adventure = await update_state_content_adventure(
-        adventure.id, AdventureState.image_adventure, adventure_info, session
+    return AdventureUpdateWithSpentedResult(
+        new_adventure_info=adventure_info, spented_tokens_counts=spented_tokens_counts
     )
-    return (adventure, spented_tokens_counts)
 
 
-async def regenerate_new_adventure_json(
-    adventure: Adventure, model: TextGenerationModel, session: AsyncSession
-) -> tuple[Adventure, SpentedTokensCounts]:
+def regenerate_new_adventure_json(
+    adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureUpdateWithSpentedResult:
     """
     Перегенерировать всё приключение заново.
 
@@ -260,41 +243,17 @@ async def regenerate_new_adventure_json(
     :param model: модель для генерации текста
     :param session: для бд
     """
-    adventure_info = AdventureInfo.model_validate_json(adventure.content)
-    adventure_info = AdventureInfo(
-        name=adventure_info.location,
-        location=adventure_info.location,
-        setting=adventure_info.setting,
-        playerNum=adventure_info.playerNum,
-        annotation="",
-        description=[],
-        npcs=[],
-        items=[],
-        quests=[],
+    return generate_new_adventure_json(
+        adventure_info.location, adventure_info.setting, adventure_info.playerNum, model
     )
-
-    instructions: list[TextGenerationInstruction] = [
-        AdventureInfoInstruction(),
-        ItemsInstruction(),
-        CharactersInstruction(),
-        QuestsInstruction(),
-    ]
-
-    adventure_info, spented_tokens_counts = await generate_text_with_tries(
-        instructions, adventure_info, model
-    )
-    adventure = await update_state_content_adventure(
-        adventure.id, AdventureState.image_adventure, adventure_info, session
-    )
-    return (adventure, spented_tokens_counts)
 
 
 # ============================= QUESTS ========================
 
 
-async def regenerate_quests_json(
-    adventure: Adventure, model: TextGenerationModel, session: AsyncSession
-) -> tuple[Adventure, SpentedTokensCounts]:
+def regenerate_quests_json(
+    adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureUpdateWithSpentedResult:
     """
     Перегенерировать все квесты заново. Только текстовое содержание.
 
@@ -302,23 +261,13 @@ async def regenerate_quests_json(
     :param model: модель для генерации текста
     :param session: для бд
     """
-    adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [QuestsRegenerateInstruction()]
-    adventure_info, spented_tokens_counts = await generate_text_with_tries(
-        instructions, adventure_info, model
-    )
-    adventure = await update_state_content_adventure(
-        adventure.id, AdventureState.ready, adventure_info, session
-    )
-    return (adventure, spented_tokens_counts)
+    return generate_text_with_tries(instructions, adventure_info, model)
 
 
-async def regenerate_quest_concrete_json(
-    index_quest: int,
-    adventure: Adventure,
-    model: TextGenerationModel,
-    session: AsyncSession,
-) -> tuple[Adventure, SpentedTokensCounts]:
+def regenerate_quest_concrete_json(
+    index_quest: int, adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureUpdateWithSpentedResult:
     """
     Перегенерировать конкретный квест заново. Только текстовое содержание.
 
@@ -327,25 +276,18 @@ async def regenerate_quest_concrete_json(
     :param model: модель для генерации текста
     :param session: для бд
     """
-    adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [
         QuestsConcreteRegenerateInstruction(index_quest)
     ]
-    adventure_info, spented_tokens_counts = await generate_text_with_tries(
-        instructions, adventure_info, model
-    )
-    adventure = await update_state_content_adventure(
-        adventure.id, AdventureState.ready, adventure_info, session
-    )
-    return (adventure, spented_tokens_counts)
+    return generate_text_with_tries(instructions, adventure_info, model)
 
 
 # ================================ NPCS ===========================
 
 
-async def regenerate_characters_json(
-    adventure: Adventure, model: TextGenerationModel, session: AsyncSession
-) -> tuple[Adventure, SpentedTokensCounts]:
+def regenerate_characters_json(
+    adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureUpdateWithSpentedResult:
     """
     Перегенерировать всех персонажей заново. Только текстовое содержание.
 
@@ -353,23 +295,13 @@ async def regenerate_characters_json(
     :param model: модель для генерации текста
     :param session: для бд
     """
-    adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [NPCsRegenerateInstruction()]
-    adventure_info, spented_tokens_counts = await generate_text_with_tries(
-        instructions, adventure_info, model
-    )
-    adventure = await update_state_content_adventure(
-        adventure.id, AdventureState.image_characters, adventure_info, session
-    )
-    return (adventure, spented_tokens_counts)
+    return generate_text_with_tries(instructions, adventure_info, model)
 
 
-async def regenerate_character_concrete_json(
-    index_character: int,
-    adventure: Adventure,
-    model: TextGenerationModel,
-    session: AsyncSession,
-) -> tuple[Adventure, SpentedTokensCounts]:
+def regenerate_character_concrete_json(
+    index_character: int, adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureUpdateWithSpentedResult:
     """
     Перегенерировать конкретный персонажа заново. Только текстовое содержание.
 
@@ -378,25 +310,18 @@ async def regenerate_character_concrete_json(
     :param model: модель для генерации текста
     :param session: для бд
     """
-    adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [
         NPCsConcreteRegenerateInstruction(index_character)
     ]
-    adventure_info, spented_tokens_counts = await generate_text_with_tries(
-        instructions, adventure_info, model
-    )
-    adventure = await update_state_content_adventure(
-        adventure.id, AdventureState.image_characters, adventure_info, session
-    )
-    return (adventure, spented_tokens_counts)
+    return generate_text_with_tries(instructions, adventure_info, model)
 
 
 # ================================== ITEMS ======================================
 
 
-async def regenerate_items_json(
-    adventure: Adventure, model: TextGenerationModel, session: AsyncSession
-) -> tuple[Adventure, SpentedTokensCounts]:
+def regenerate_items_json(
+    adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureUpdateWithSpentedResult:
     """
     Перегенерировать все предметы заново. Только текстовое содержание.
 
@@ -404,23 +329,13 @@ async def regenerate_items_json(
     :param model: модель для генерации текста
     :param session: для бд
     """
-    adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [ItemsRegenerateInstruction()]
-    adventure_info, spented_tokens_counts = await generate_text_with_tries(
-        instructions, adventure_info, model
-    )
-    adventure = await update_state_content_adventure(
-        adventure.id, AdventureState.image_items, adventure_info, session
-    )
-    return (adventure, spented_tokens_counts)
+    return generate_text_with_tries(instructions, adventure_info, model)
 
 
-async def regenerate_item_concrete_json(
-    index_item: int,
-    adventure: Adventure,
-    model: TextGenerationModel,
-    session: AsyncSession,
-) -> tuple[Adventure, SpentedTokensCounts]:
+def regenerate_item_concrete_json(
+    index_item: int, adventure_info: AdventureInfo, model: TextGenerationModel
+) -> AdventureUpdateWithSpentedResult:
     """
     Перегенерировать конкретный предмет заново. Только текстовое содержание.
 
@@ -429,14 +344,7 @@ async def regenerate_item_concrete_json(
     :param model: модель для генерации текста
     :param session: для бд
     """
-    adventure_info = AdventureInfo.model_validate_json(adventure.content)
     instructions: list[TextGenerationInstruction] = [
         ItemsConcreteRegenerateInstruction(index_item)
     ]
-    adventure_info, spented_tokens_counts = await enerate_text_with_tries(
-        instructions, adventure_info, model
-    )
-    adventure = await update_state_content_adventure(
-        adventure.id, AdventureState.image_items, adventure_info, session
-    )
-    return (adventure, spented_tokens_counts)
+    return generate_text_with_tries(instructions, adventure_info, model)

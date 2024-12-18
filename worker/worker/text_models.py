@@ -2,13 +2,7 @@ from abc import ABC, abstractmethod
 
 import aiohttp
 
-from app.generation.config import generation_setting
-
-from langchain_core.output_parsers import StrOutputParser
-from langchain.schema import HumanMessage, SystemMessage, AIMessage
-from langchain_community.chat_models.gigachat import GigaChat
-
-from app.generation.schemas import (
+from schemas import (
     Message,
     MessageType,
     TextGenerationResult,
@@ -17,8 +11,7 @@ from app.generation.schemas import (
 import requests
 
 from typing import Any, final
-
-message_type = HumanMessage | SystemMessage | AIMessage
+from config import generation_setting
 
 
 class TextGenerationModel(ABC):
@@ -35,6 +28,7 @@ class TextGenerationModel(ABC):
         raise NotImplementedError()
 
 
+'''
 @final
 class GigaChatText(TextGenerationModel):
     """
@@ -84,6 +78,7 @@ class GigaChatText(TextGenerationModel):
             ].completion_tokens,
         )
         return TextGenerationResult(content=response.content, count_tokens=count_token)
+'''
 
 
 @final
