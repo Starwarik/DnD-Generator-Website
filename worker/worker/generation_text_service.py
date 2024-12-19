@@ -140,7 +140,7 @@ def generate_new_test_adventure_json(
         "location": location_name,
         "setting": setting,
         "playerNum": num_players,
-        "npc": [
+        "npcs": [
             {
                 "id_npc": 0,
                 "name": "Торговец Корвин",
