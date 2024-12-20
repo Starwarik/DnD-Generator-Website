@@ -1,4 +1,5 @@
 import os
+from kombu.serialization import register
 from celery import Celery
 
 

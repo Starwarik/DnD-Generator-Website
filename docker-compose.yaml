@@ -1,18 +1,18 @@
 services:
 
-#  web:
-#    build: ./backend
-#    ports:
-#      - 8004:8000
-#    volumes: 
-#      - data:/code/data
-#    env_file: ".env"
-#    environment:
-#      - CELERY_BROKER_URL=redis://redis:6379/0
-#      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-#    restart: unless-stopped  
-#    depends_on:
-#      - redis
+  web:
+    build: ./backend
+    ports:
+      - 8004:8000
+    volumes: 
+      - data:/code/data
+    env_file: ".env"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    restart: unless-stopped  
+    depends_on:
+      - redis
 
   worker:
     build: ./worker
@@ -23,7 +23,7 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     restart: unless-stopped
     depends_on:
-#      - web
+      - web
       - redis
 
   redis:

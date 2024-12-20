@@ -14,6 +14,7 @@ from app.adventure.models import Adventure, AdventurePublic, AdventureState
 from app.user.models import User
 from app.auth.dependencies import get_current_user
 
+from app.generation.config import generation_setting
 from app.generation.generation_image_service import (
     generate_images_adventure,
     generate_test_images_adventure,
@@ -22,6 +23,7 @@ from app.generation.generation_image_service import (
     generate_images_items,
     generate_test_images_items,
 )
+from app.generation.schemas import AdventureUpdateWithSpentedResult
 from app.generation.celery import celery_app
 from app.database.crud import spend_balance_on_tokens
 
@@ -43,7 +45,7 @@ async def generate_adventure(
     adventure: Adventure = await create_adventure(current_user.id, session)
 
     async def inner_command(adventure: Adventure):
-        adventure_info, _ = celery_app.send_task(
+        adventure_info, spented_tokens_counts = celery_app.send_task(
             "main.generate_new_adventure", (location_name, setting, num_players)
         ).get()
         adventure = await update_state_content_adventure(
@@ -70,9 +72,10 @@ async def generate_test_adventure(
     adventure: Adventure = await create_adventure(current_user.id, session)
 
     async def inner_command(adventure: Adventure):
-        adventure_info, _ = celery_app.send_task(
+        result = celery_app.send_task(
             "main.generate_new_test_adventure", (location_name, setting, num_players)
         ).get()
+        adventure_info = AdventureInfo.model_validate(result["new_adventure_info"])
         adventure = await update_state_content_adventure(
             adventure.id, AdventureState.image_adventure, adventure_info, session
         )
