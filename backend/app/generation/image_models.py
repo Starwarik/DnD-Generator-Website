@@ -1,0 +1,113 @@
+from abc import ABC, abstractmethod
+from base64 import b64decode
+
+from app.image.schemas import ImageContainer
+
+from app.generation.config import generation_setting
+
+from langchain.schema import HumanMessage, SystemMessage
+from langchain_community.chat_models.gigachat import GigaChat
+
+import re
+
+
+class ImageGeneration(ABC):
+    """
+    Абстрактный класс модели для генерации картинок.
+    """
+
+    @abstractmethod
+    def generate_image(
+        self, system_prompt: str | None, user_prompt: str | None
+    ) -> ImageContainer:
+        """
+        По заданному промпту генерирует картинку.
+        :param system_prompt: Системный промпт. Может не указываться
+        :param user_prompt: Системный промпт. Может не указываться
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def async_generate_image(
+        self, system_prompt: str | None, user_prompt: str | None
+    ) -> ImageContainer:
+        """
+        По заданному промпту генерирует картинку.
+        :param system_prompt: Системный промпт. Может не указываться
+        :param user_prompt: Системный промпт. Может не указываться
+        """
+        raise NotImplementedError()
+
+
+class GigaChatImage(ImageGeneration):
+    """
+    Класс для генерации модели с использованием Гигачата.
+    """
+
+    def __init__(self):
+        self.model = GigaChat(
+            credentials=generation_setting.gigachat_credentials, verify_ssl_certs=False
+        )
+        self.model = self.model.bind_tools(tools=[], tool_choice="auto")
+
+    def generate_image(
+        self, system_prompt: str | None, user_prompt: str | None
+    ) -> ImageContainer:
+        """
+        По заданному промпту генерирует картинку.
+        :param system_prompt: Системный промпт. Может не указываться
+        :param user_prompt: Системный промпт. Может не указываться
+        """
+        messages = []
+        if system_prompt:
+            messages.append(SystemMessage(system_prompt))
+        if user_prompt:
+            messages.append(HumanMessage(user_prompt))
+        response = self.model.invoke(messages)
+
+        print(
+            "INPUT IMAGE TOKENS",
+            response.response_metadata["token_usage"].prompt_tokens,
+            "COMPLETION IMAGE TOKENS",
+            response.response_metadata["token_usage"].completion_tokens,
+            "COMPLETION IMAGE TOKENS",
+            response.response_metadata["token_usage"].total_tokens,
+        )
+        image_uuid = re.search(r'img src="(.+?)"', response.content).group(1)
+        image = self.model.get_file(image_uuid).content
+        image = b64decode(image)
+        image = ImageContainer(content=image, media_type="image/jpeg")
+        return image
+
+    async def async_generate_image(
+        self, system_prompt: str | None, user_prompt: str | None
+    ) -> ImageContainer:
+        """
+        По заданному промпту генерирует картинку.
+        :param system_prompt: Системный промпт. Может не указываться
+        :param user_prompt: Системный промпт. Может не указываться
+        """
+        messages = []
+        if system_prompt:
+            messages.append(SystemMessage(system_prompt))
+        if user_prompt:
+            messages.append(HumanMessage(user_prompt))
+        response = await self.model.ainvoke(messages)
+
+        print(
+            "INPUT IMAGE TOKENS",
+            response.response_metadata["token_usage"].prompt_tokens,
+            "COMPLETION IMAGE TOKENS",
+            response.response_metadata["token_usage"].completion_tokens,
+            "COMPLETION IMAGE TOKENS",
+            response.response_metadata["token_usage"].total_tokens,
+        )
+        image_uuid: str = re.search(r'img src="(.+?)"', response.content).group(1)
+        file = await self.model.aget_file(image_uuid)
+        image = file.content
+        image = b64decode(image)
+        image = ImageContainer(content=image, media_type="image/jpeg")
+        return image
+
+
+image_model = GigaChatImage()
