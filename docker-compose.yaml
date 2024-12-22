@@ -4,8 +4,6 @@ services:
     build: ./backend
     ports:
       - 8004:8000
-    volumes: 
-      - data:/code/data
     env_file: ".env"
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -13,6 +11,7 @@ services:
     restart: unless-stopped  
     depends_on:
       - redis
+      - db_postgres
 
   worker:
     build: ./worker
@@ -25,11 +24,22 @@ services:
     depends_on:
       - web
       - redis
+      - db_postgres
 
   redis:
     image: redis:7
     ports:
       - "127.0.0.1:6379:6379"
+  
+  db_postgres:
+    image: postgres:latest
+    container_name: postgres_db_container
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db:/var/lib/postgresql/data
 
-volumes:
-  data:
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: DB

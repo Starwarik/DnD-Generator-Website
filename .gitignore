@@ -164,7 +164,7 @@ cython_debug/
 forms.html
 
 #Ignore sqlite database
-database.db
+db/
 
 #Ignore vscode start
 launch.json
