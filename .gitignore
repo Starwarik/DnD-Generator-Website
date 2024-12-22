@@ -165,6 +165,7 @@ forms.html
 
 #Ignore sqlite database
 db/
+data/pgdata  
 
 #Ignore vscode start
 launch.json
