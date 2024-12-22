@@ -19,6 +19,18 @@ main {
 	color: var(--accent);
 }
 
+.user-agreement-footer {
+	grid-column: 1 / 8;
+	font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+
+  font-weight: 600;
+  font-size: calc(14px + 2 * (100vw / 1440));
+  line-height: 1.1em;
+  letter-spacing: 0.06em;
+}
+
 #ui {
 	z-index: 30;
 	position: fixed;
