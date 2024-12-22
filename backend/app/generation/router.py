@@ -23,7 +23,7 @@ from app.generation.generation_image_service import (
     generate_images_items,
     generate_test_images_items,
 )
-from app.generation.schemas import AdventureUpdateWithSpentedResult
+from app.generation.schemas import SpentedTokensCounts
 from app.generation.celery import celery_app
 from app.database.crud import spend_balance_on_tokens
 
@@ -45,9 +45,13 @@ async def generate_adventure(
     adventure: Adventure = await create_adventure(current_user.id, session)
 
     async def inner_command(adventure: Adventure):
-        adventure_info, spented_tokens_counts = celery_app.send_task(
+        result = celery_app.send_task(
             "main.generate_new_adventure", (location_name, setting, num_players)
         ).get()
+        adventure_info = AdventureInfo.model_validate(result["new_adventure_info"])
+        spented_tokens_counts = SpentedTokensCounts.model_validate(
+            result["spented_tokens_counts"]
+        )
         adventure = await update_state_content_adventure(
             adventure.id, AdventureState.image_adventure, adventure_info, session
         )
@@ -103,10 +107,14 @@ async def regenerate_quests(
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
     async def inner_command(adventure: Adventure):
-        adventure_info, spented_tokens_counts = celery_app.send_task(
+        result = celery_app.send_task(
             "main.regenerate_quests",
             (AdventureInfo.model_validate_json(adventure.content),),
         ).get()
+        adventure_info = AdventureInfo.model_validate(result["new_adventure_info"])
+        spented_tokens_counts = SpentedTokensCounts.model_validate(
+            result["spented_tokens_counts"]
+        )
         adventure = await update_state_content_adventure(
             adventure.id, AdventureState.image_adventure, adventure_info, session
         )
@@ -132,10 +140,14 @@ async def regenerate_quests_concrete(
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
     async def inner_command(adventure: Adventure, index_quest: int):
-        adventure_info, spented_tokens_counts = celery_app.send_task(
+        result = celery_app.send_task(
             "main.regenerate_quest_concrete",
             (index_quest, AdventureInfo.model_validate_json(adventure.content)),
         ).get()
+        adventure_info = AdventureInfo.model_validate(result["new_adventure_info"])
+        spented_tokens_counts = SpentedTokensCounts.model_validate(
+            result["spented_tokens_counts"]
+        )
         adventure = await update_state_content_adventure(
             adventure.id, AdventureState.image_adventure, adventure_info, session
         )
@@ -169,10 +181,14 @@ async def regenerate_characters(
     adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
 
     async def inner_command(adventure: Adventure):
-        adventure_info, spented_tokens_counts = celery_app.send_task(
+        result = celery_app.send_task(
             "main.regenerate_characters",
             (AdventureInfo.model_validate_json(adventure.content),),
         ).get()
+        adventure_info = AdventureInfo.model_validate(result["new_adventure_info"])
+        spented_tokens_counts = SpentedTokensCounts.model_validate(
+            result["spented_tokens_counts"]
+        )
         adventure = await update_state_content_adventure(
             adventure.id, AdventureState.image_adventure, adventure_info, session
         )
@@ -204,10 +220,14 @@ async def regenerate_characters_concrete(
         return HTTPException(status_code=400, detail="Index out of range")
 
     async def inner_command(adventure: Adventure):
-        adventure_info, spented_tokens_counts = celery_app.send_task(
+        result = celery_app.send_task(
             "main.regenerate_character_concrete",
             (index_character, AdventureInfo.model_validate_json(adventure.content)),
         ).get()
+        adventure_info = AdventureInfo.model_validate(result["new_adventure_info"])
+        spented_tokens_counts = SpentedTokensCounts.model_validate(
+            result["spented_tokens_counts"]
+        )
         adventure = await update_state_content_adventure(
             adventure.id, AdventureState.image_adventure, adventure_info, session
         )
@@ -236,10 +256,14 @@ async def regenerate_items(
     adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
 
     async def inner_command(adventure: Adventure):
-        adventure_info, spented_tokens_counts = celery_app.send_task(
+        result = celery_app.send_task(
             "main.regenerate_items",
             (AdventureInfo.model_validate_json(adventure.content),),
         ).get()
+        adventure_info = AdventureInfo.model_validate(result["new_adventure_info"])
+        spented_tokens_counts = SpentedTokensCounts.model_validate(
+            result["spented_tokens_counts"]
+        )
         adventure = await update_state_content_adventure(
             adventure.id, AdventureState.image_adventure, adventure_info, session
         )
@@ -270,10 +294,14 @@ async def regenerate_items_concrete(
         return HTTPException(status_code=400, detail="Index out of range")
 
     async def inner_command(adventure: Adventure):
-        adventure_info, spented_tokens_counts = celery_app.send_task(
+        result = celery_app.send_task(
             "main.regenerate_item_concrete",
             (index_item, AdventureInfo.model_validate_json(adventure.content)),
         ).get()
+        adventure_info = AdventureInfo.model_validate(result["new_adventure_info"])
+        spented_tokens_counts = SpentedTokensCounts.model_validate(
+            result["spented_tokens_counts"]
+        )
         adventure = await update_state_content_adventure(
             adventure.id, AdventureState.image_adventure, adventure_info, session
         )
