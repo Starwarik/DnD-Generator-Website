@@ -2,10 +2,11 @@ from abc import ABC, abstractmethod
 
 import worker.text_tasks.prompts as prompts_template
 
-from typing import final
+from typing import final, Any
 
 from copy import deepcopy
 
+from worker.database.schemas import *
 from worker.text_tasks.schemas import *
 
 

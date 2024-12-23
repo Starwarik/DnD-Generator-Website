@@ -1,13 +1,13 @@
-FROM python:3.11.2-slim-buster
+FROM python:3.11.2-alpine3.17
 
 WORKDIR /code
 
-RUN pip install --upgrade pip
-
 COPY ./requirements.txt /code/requirements.txt
 
-RUN pip install --no-cache-dir --root-user-action=ignore --upgrade -r requirements.txt
+RUN \
+ apk add --no-cache postgresql-libs && \
+ apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
+ python3 -m pip install -r requirements.txt --root-user-action=ignore --upgrade --no-cache-dir && \
+ apk --purge del .build-deps
 
 COPY ./worker /code/worker
-
-WORKDIR /code/worker

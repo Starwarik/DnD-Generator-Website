@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from base64 import b64decode
 
-from app.image.schemas import ImageContainer
+from worker.database.schemas import ImageContainer
 
-from app.generation.config import generation_setting
+from worker.config import generation_setting
 
 from langchain.schema import HumanMessage, SystemMessage
 from langchain_community.chat_models.gigachat import GigaChat

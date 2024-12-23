@@ -25,6 +25,7 @@ from app.generation.generation_image_service import (
 )
 from app.generation.schemas import SpentedTokensCounts
 from app.generation.celery import celery_app
+from celery import chain, signature
 from app.database.crud import spend_balance_on_tokens
 
 generation_router = APIRouter(tags=["generation"])
@@ -69,26 +70,20 @@ async def generate_test_adventure(
     num_players: int,
     location_name: str,
     setting: str,
-    background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
     session: AsyncSession = Depends(get_session),
 ):
     adventure: Adventure = await create_adventure(current_user.id, session)
-
-    async def inner_command(adventure: Adventure):
-        result = celery_app.send_task(
+    task = chain(
+        signature(
             "main.generate_new_test_adventure",
-            (adventure.id, location_name, setting, num_players),
-        ).get()
-        adventure_info = AdventureInfo.model_validate(result["new_adventure_info"])
-        adventure = await update_state_content_adventure(
-            adventure.id, AdventureState.image_adventure, adventure_info, session
-        )
-        # adventure = await generate_test_images_adventure(adventure, session)
-        # adventure = await generate_test_images_characters(adventure, session)
-        # await generate_test_images_items(adventure, session)
-
-    background_tasks.add_task(inner_command, adventure)
+            args=(adventure.id, location_name, setting, num_players),
+        ),
+        signature("main.generate_test_images_adventure"),
+        signature("main.generate_test_images_characters"),
+        signature("main.generate_test_images_items"),
+    )
+    task()
     return adventure
 
 

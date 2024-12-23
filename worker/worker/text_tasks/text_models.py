@@ -9,7 +9,7 @@ from worker.text_tasks.schemas import (
 import requests
 
 from typing import Any, final
-from worker.text_tasks.config import generation_setting
+from worker.config import generation_setting
 
 
 class TextGenerationModel(ABC):

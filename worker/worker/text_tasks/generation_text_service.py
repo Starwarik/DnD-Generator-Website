@@ -1,5 +1,5 @@
 from typing import Any
-from worker.text_tasks.schemas import *
+from worker.database.schemas import AdventureInfo
 from worker.text_tasks.instructions import *
 from worker.text_tasks.text_models import TextGenerationModel
 import json
@@ -31,7 +31,7 @@ def generate_text_with_tries(
     adventure: AdventureInfo,
     model: TextGenerationModel,
     n_tries: int = 3,
-) -> AdventureUpdateWithSpentedResult:
+) -> tuple[AdventureInfo, SpentedTokensCounts]:
     """
     Изменение информации приключения по данным инструкциям. На выходе выдает новое приключение.
 
@@ -78,14 +78,12 @@ def generate_text_with_tries(
             raise MaxAttemptsExced("Max tries")
         print("Success")
         spented_tokens_counts += generated_result.count_tokens
-    return AdventureUpdateWithSpentedResult(
-        new_adventure_info=adventure, spented_tokens_counts=spented_tokens_counts
-    )
+    return (adventure, spented_tokens_counts)
 
 
 def generate_new_adventure_json(
     location_name: str, setting: str, num_players: int, model: TextGenerationModel
-) -> AdventureUpdateWithSpentedResult:
+) -> tuple[AdventureInfo, SpentedTokensCounts]:
     """
     Генерирует полноценное приключение с нуля.
 
@@ -116,7 +114,7 @@ def generate_new_adventure_json(
 
 def generate_new_test_adventure_json(
     location_name: str, setting: str, num_players: int
-) -> AdventureUpdateWithSpentedResult:
+) -> tuple[AdventureInfo, SpentedTokensCounts]:
     """
     Генерирует фиктивное приключение для тестирования.
     :param location_name: название локации
@@ -228,14 +226,12 @@ def generate_new_test_adventure_json(
     time.sleep(5)
     spented_tokens_counts = SpentedTokensCounts()
     adventure_info = AdventureInfo.model_validate(dummy_adventure)
-    return AdventureUpdateWithSpentedResult(
-        new_adventure_info=adventure_info, spented_tokens_counts=spented_tokens_counts
-    )
+    return (adventure_info, spented_tokens_counts)
 
 
 def regenerate_new_adventure_json(
     adventure_info: AdventureInfo, model: TextGenerationModel
-) -> AdventureUpdateWithSpentedResult:
+) -> tuple[AdventureInfo, SpentedTokensCounts]:
     """
     Перегенерировать всё приключение заново.
 
@@ -253,7 +249,7 @@ def regenerate_new_adventure_json(
 
 def regenerate_quests_json(
     adventure_info: AdventureInfo, model: TextGenerationModel
-) -> AdventureUpdateWithSpentedResult:
+) -> tuple[AdventureInfo, SpentedTokensCounts]:
     """
     Перегенерировать все квесты заново. Только текстовое содержание.
 
@@ -267,7 +263,7 @@ def regenerate_quests_json(
 
 def regenerate_quest_concrete_json(
     index_quest: int, adventure_info: AdventureInfo, model: TextGenerationModel
-) -> AdventureUpdateWithSpentedResult:
+) -> tuple[AdventureInfo, SpentedTokensCounts]:
     """
     Перегенерировать конкретный квест заново. Только текстовое содержание.
 
@@ -287,7 +283,7 @@ def regenerate_quest_concrete_json(
 
 def regenerate_characters_json(
     adventure_info: AdventureInfo, model: TextGenerationModel
-) -> AdventureUpdateWithSpentedResult:
+) -> tuple[AdventureInfo, SpentedTokensCounts]:
     """
     Перегенерировать всех персонажей заново. Только текстовое содержание.
 
@@ -301,7 +297,7 @@ def regenerate_characters_json(
 
 def regenerate_character_concrete_json(
     index_character: int, adventure_info: AdventureInfo, model: TextGenerationModel
-) -> AdventureUpdateWithSpentedResult:
+) -> tuple[AdventureInfo, SpentedTokensCounts]:
     """
     Перегенерировать конкретный персонажа заново. Только текстовое содержание.
 
@@ -321,7 +317,7 @@ def regenerate_character_concrete_json(
 
 def regenerate_items_json(
     adventure_info: AdventureInfo, model: TextGenerationModel
-) -> AdventureUpdateWithSpentedResult:
+) -> tuple[AdventureInfo, SpentedTokensCounts]:
     """
     Перегенерировать все предметы заново. Только текстовое содержание.
 
@@ -335,7 +331,7 @@ def regenerate_items_json(
 
 def regenerate_item_concrete_json(
     index_item: int, adventure_info: AdventureInfo, model: TextGenerationModel
-) -> AdventureUpdateWithSpentedResult:
+) -> tuple[AdventureInfo, SpentedTokensCounts]:
     """
     Перегенерировать конкретный предмет заново. Только текстовое содержание.
 
