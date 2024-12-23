@@ -1,8 +1,8 @@
 import os
 from celery import Celery
 from kombu.serialization import register
-from schemas import AdventureUpdateWithSpentedResult, AdventureInfo
-from generation_text_service import (
+from worker.text_tasks.schemas import AdventureUpdateWithSpentedResult, AdventureInfo
+from worker.text_tasks.generation_text_service import (
     generate_new_adventure_json,
     generate_new_test_adventure_json,
     regenerate_new_adventure_json,
@@ -13,9 +13,9 @@ from generation_text_service import (
     regenerate_items_json,
     regenerate_item_concrete_json,
 )
-from text_models import text_generation_model
+from worker.text_tasks.text_models import text_generation_model
 
-import pydanticserializer
+import worker.pydanticserializer as pydanticserializer
 
 CELERY_BROKER_URL = (os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379"),)
 CELERY_RESULT_BACKEND = os.environ.get(

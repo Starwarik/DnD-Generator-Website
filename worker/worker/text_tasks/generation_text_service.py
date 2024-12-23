@@ -1,7 +1,7 @@
 from typing import Any
-from schemas import *
-from instructions import *
-from text_models import TextGenerationModel
+from worker.text_tasks.schemas import *
+from worker.text_tasks.instructions import *
+from worker.text_tasks.text_models import TextGenerationModel
 import json
 import time
 

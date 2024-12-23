@@ -77,15 +77,16 @@ async def generate_test_adventure(
 
     async def inner_command(adventure: Adventure):
         result = celery_app.send_task(
-            "main.generate_new_test_adventure", (location_name, setting, num_players)
+            "main.generate_new_test_adventure",
+            (adventure.id, location_name, setting, num_players),
         ).get()
         adventure_info = AdventureInfo.model_validate(result["new_adventure_info"])
         adventure = await update_state_content_adventure(
             adventure.id, AdventureState.image_adventure, adventure_info, session
         )
-        adventure = await generate_test_images_adventure(adventure, session)
-        adventure = await generate_test_images_characters(adventure, session)
-        await generate_test_images_items(adventure, session)
+        # adventure = await generate_test_images_adventure(adventure, session)
+        # adventure = await generate_test_images_characters(adventure, session)
+        # await generate_test_images_items(adventure, session)
 
     background_tasks.add_task(inner_command, adventure)
     return adventure

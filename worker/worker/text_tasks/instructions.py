@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 
-import prompts as prompts_template
+import worker.text_tasks.prompts as prompts_template
 
 from typing import final
 
 from copy import deepcopy
 
-from schemas import *
+from worker.text_tasks.schemas import *
 
 
 def calc_default_config(adventure: AdventureInfo) -> dict[str, str]:

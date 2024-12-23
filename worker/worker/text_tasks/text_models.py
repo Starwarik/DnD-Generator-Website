@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 
-import aiohttp
-
-from schemas import (
+from worker.text_tasks.schemas import (
     Message,
     MessageType,
     TextGenerationResult,
@@ -11,7 +9,7 @@ from schemas import (
 import requests
 
 from typing import Any, final
-from config import generation_setting
+from worker.text_tasks.config import generation_setting
 
 
 class TextGenerationModel(ABC):
@@ -21,10 +19,6 @@ class TextGenerationModel(ABC):
 
     @abstractmethod
     def generate_text(self, prompts: list[Message]) -> TextGenerationResult:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def async_generate_text(self, prompts: list[Message]) -> TextGenerationResult:
         raise NotImplementedError()
 
 
@@ -135,28 +129,6 @@ class YandexGPTTextSync(TextGenerationModel):
             json=self._create_payload(messages),
         )
         answer_json = answer.json()
-        count_token = SpentedTokensCounts(
-            yandexgpt_prompt_token_count=answer_json["result"]["usage"][
-                "inputTextTokens"
-            ],
-            yandexgpt_assistant_token_count=answer_json["result"]["usage"][
-                "completionTokens"
-            ],
-        )
-        return TextGenerationResult(
-            content=answer_json["result"]["alternatives"][0]["message"]["text"],
-            count_tokens=count_token,
-        )
-
-    async def async_generate_text(self, prompts: list[Message]) -> TextGenerationResult:
-        messages = self._convert_messages(prompts)
-        async with aiohttp.ClientSession() as session:
-            async with session.post(
-                self.url_to_server,
-                headers=self._create_header(),
-                json=self._create_payload(messages),
-            ) as resp:
-                answer_json = await resp.json()
         count_token = SpentedTokensCounts(
             yandexgpt_prompt_token_count=answer_json["result"]["usage"][
                 "inputTextTokens"

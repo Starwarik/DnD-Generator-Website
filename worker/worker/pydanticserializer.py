@@ -1,6 +1,6 @@
 import json
 from pydantic import BaseModel
-import schemas
+import worker.text_tasks.schemas as schemas
 
 
 class PydanticSerializer(json.JSONEncoder):
