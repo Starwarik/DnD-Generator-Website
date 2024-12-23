@@ -1,5 +1,31 @@
 services:
 
+  db_postgres:
+    image: postgres:latest
+    container_name: postgres_db_container
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: DB
+        PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata  
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres_user -d postgres_db" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  redis:
+    image: redis:7
+    ports:
+      - "127.0.0.1:6379:6379"
+
   web:
     build: ./backend
     ports:
@@ -26,20 +52,6 @@ services:
       - redis
       - db_postgres
 
-  redis:
-    image: redis:7
-    ports:
-      - "127.0.0.1:6379:6379"
-  
-  db_postgres:
-    image: postgres:latest
-    container_name: postgres_db_container
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./db:/var/lib/postgresql/data
-
-    environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_DB: DB
+volumes:
+  pgdata:
+    driver: local
