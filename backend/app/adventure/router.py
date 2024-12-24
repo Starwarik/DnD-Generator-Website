@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, HTTPException, Response
 
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, update
 from typing_extensions import Annotated
 
 from app.adventure.schemas import AdventureInfo
@@ -36,6 +37,54 @@ async def get_adventure(
     result = await session.get(Adventure, adventure_id)
     if result is None or result.user_id != current_user.id:
         raise Exception()
+    return result
+
+
+@adventure_router.put("/api/adventure/{id_adventure}", response_model=None)
+async def update_adventure(
+    id_adventure: int,
+    content: AdventureInfo,
+    current_user: Annotated[User, Depends(get_current_user)],
+    session: AsyncSession = Depends(get_session),
+) -> Adventure:
+    new_values = {}
+
+    adventure = await session.get(Adventure, id_adventure)
+    if adventure is None:
+        raise HTTPException(status_code=404, detail="Adventure not found")
+
+    if adventure.user_id != current_user.id:
+        raise HTTPException(
+            status_code=403, detail="Not authorized to update this adventure"
+        )
+
+    if adventure.state == AdventureState.ready:
+        new_values["content "] = content.model_dump_json()
+    else:
+        raise HTTPException(status_code=403, detail="Adventure is not ready for update")
+
+    if not new_values:
+        raise HTTPException(status_code=400, detail="No fields to update")
+
+    try:
+        command = (
+            update(Adventure).where(Adventure.id == id_adventure).values(**new_values)
+        )
+        await session.execute(command)
+        await session.commit()
+
+        result = await session.get(Adventure, id_adventure)
+
+        if result is None:
+            raise HTTPException(status_code=404, detail="Adventure not found")
+
+    except SQLAlchemyError as e:
+        await session.rollback()
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    except Exception as e:
+        await session.rollback()
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
     return result
 
 

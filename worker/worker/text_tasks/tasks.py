@@ -106,8 +106,8 @@ def regenerate_quest_concrete(
     return (id_adventure, spented_tokens)
 
 
-@celery_app.task(name="main.regenerate_characters")
-def regenerate_characters(
+@celery_app.task(name="main.regenerate_npcs")
+def regenerate_npcs(
     id_adventure: int,
 ):
     with Session(engine) as session:
@@ -123,16 +123,16 @@ def regenerate_characters(
     return (id_adventure, spented_tokens)
 
 
-@celery_app.task(name="main.regenerate_character_concrete")
-def regenerate_character_concrete(
+@celery_app.task(name="main.regenerate_npc_concrete")
+def regenerate_npc_concrete(
     id_adventure: int,
-    index_quest: int,
+    index_npc: int,
 ):
     with Session(engine) as session:
         adventure = get_adventure(id_adventure, session)
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     adventure, spented_tokens = regenerate_character_concrete_json(
-        index_quest, adventure_info, text_generation_model
+        index_npc, adventure_info, text_generation_model
     )
     with Session(engine) as session:
         update_state_content_adventure(
@@ -161,13 +161,13 @@ def regenerate_items(
 @celery_app.task(name="main.regenerate_item_concrete")
 def regenerate_item_concrete(
     id_adventure: int,
-    index_quest: int,
+    index_item: int,
 ):
     with Session(engine) as session:
         adventure = get_adventure(id_adventure, session)
     adventure_info = AdventureInfo.model_validate_json(adventure.content)
     adventure, spented_tokens = regenerate_item_concrete_json(
-        index_quest, adventure_info, text_generation_model
+        index_item, adventure_info, text_generation_model
     )
     with Session(engine) as session:
         update_state_content_adventure(

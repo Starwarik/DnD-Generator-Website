@@ -185,8 +185,8 @@ def generate_test_images_adventure(
     return id_adventure
 
 
-@celery_app.task(name="main.generate_test_images_characters")
-def generate_test_images_characters(
+@celery_app.task(name="main.generate_test_images_npcs")
+def generate_test_images_npcs(
     id_adventure: int,
     state: AdventureState = AdventureState.image_items,
 ) -> int:
