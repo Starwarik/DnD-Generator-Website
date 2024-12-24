@@ -1,9 +1,16 @@
-from worker.database.models import Adventure, AdventureState
-from worker.database.crud import update_state_content_adventure, get_adventure
-from worker.database.schemas import AdventureInfo
+from sqlalchemy.orm import Session
+
 from worker.database.database import engine
+from worker.database.models import Adventure, AdventureState
+from worker.database.crud import (
+    update_state_content_adventure,
+    get_adventure,
+    upload_image,
+)
+from worker.database.schemas import AdventureInfo, SpentedTokensCounts
 
 from worker.image_tasks.prompts import *
+from worker.image_tasks.image_models import image_model
 
 from worker.main import celery_app
 
@@ -14,19 +21,18 @@ import time
 # ================= IMAGE ============================
 
 
-def _generate_image(
-    instruction: str,
-    user_id: int,
-):
-    image_container = image_model.async_generate_image(None, instruction)
-    image = upload_image(image_container, user_id, session)
-    return image.id
+def _generate_image(instruction: str, user_id: int):
+    image_container, spented_tokens = image_model.generate_image(None, instruction)
+    with Session(engine) as session:
+        image = upload_image(image_container, user_id, session)
+    return (image.id, spented_tokens)
 
 
+@celery_app.task(name="main.generate_images_adventure")
 def generate_images_adventure(
-    adventure: Adventure,
+    id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
     state: AdventureState = AdventureState.image_characters,
-) -> Adventure:
+) -> tuple[int, SpentedTokensCounts]:
     """
     Генерация обложки и карты для всего приключения.
 
@@ -34,42 +40,54 @@ def generate_images_adventure(
     :param session: для бд
     :param state: состояние, в которое нужно установить приключение, после конца генерации.
     """
+    id_adventure, spented_tokens = id_adventure_and_spented_tokens
+
+    with Session(engine) as session:
+        adventure = get_adventure(id_adventure, session)
     content = AdventureInfo.model_validate_json(adventure.content)
     try:
-        if content.map_image_id == -1:
-            image_id = _generate_image(
-                map_image_generation.format(
-                    location_name=content.location,
-                    location_description="\n".join(content.description),
+        if content.adventure_image_id == -1:
+            image_id, current_spented_token = _generate_image(
+                adventure_image_generation.format(
+                    location_name=content.name,
+                    location_description=content.description_location
+                    + "\n"
+                    + "\n".join(content.description_places),
                 ),
                 adventure.user_id,
-                session,
             )
-            content.map_image_id = image_id
+            content.adventure_image_id = image_id
+            spented_tokens += current_spented_token
             time.sleep(10)
     except Exception as e:
         print(e)
     try:
-        if content.adventure_image_id == -1:
-            image_id = await _generate_image(
-                adventure_image_generation.format(
+        if content.map_image_id == -1:
+            image_id, current_spented_token = _generate_image(
+                map_image_generation.format(
                     location_name=content.location,
-                    location_description="\n".join(content.description),
+                    location_description=content.description_location
+                    + "\n"
+                    + "\n".join(content.description_places),
                 ),
                 adventure.user_id,
-                session,
             )
-            content.adventure_image_id = image_id
+            content.map_image_id = image_id
+            spented_tokens += current_spented_token
             time.sleep(10)
     except Exception as e:
         print(e)
-    return update_state_content_adventure(adventure.id, state, content, session)
+
+    with Session(engine) as session:
+        update_state_content_adventure(adventure.id, state, content, session)
+    return (id_adventure, spented_tokens)
 
 
-def generate_images_characters(
-    adventure: Adventure,
+@celery_app.task(name="main.generate_images_npcs")
+def generate_images_npcs(
+    id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
     state: AdventureState = AdventureState.image_items,
-) -> Adventure:
+) -> tuple[int, SpentedTokensCounts]:
     """
     Генерация картинок персонажей.
 
@@ -77,29 +95,37 @@ def generate_images_characters(
     :param session: для бд
     :param state: состояние, в которое нужно установить приключение, после конца генерации.
     """
+    id_adventure, spented_tokens = id_adventure_and_spented_tokens
+
+    with Session(engine) as session:
+        adventure = get_adventure(id_adventure, session)
     content = AdventureInfo.model_validate_json(adventure.content)
     for i in range(len(content.npcs)):
         char = content.npcs[i]
         if char.image_id == -1:
             try:
-                image_id = await _generate_image(
-                    character_image_generation.format(
-                        char_name=char.name, char_description=char.description
+                image_id, current_spented_token = _generate_image(
+                    npc_image_generation.format(
+                        char_name=char.name,
+                        char_description=char.disc_costum + "\n" + char.dic_life,
                     ),
                     adventure.user_id,
-                    session,
                 )
                 content.npcs[i].image_id = image_id
+                spented_tokens += current_spented_token
                 time.sleep(10)
             except Exception as e:
                 print(e)
-    return await update_state_content_adventure(adventure.id, state, content, session)
+    with Session(engine) as session:
+        update_state_content_adventure(adventure.id, state, content, session)
+    return (id_adventure, spented_tokens)
 
 
+@celery_app.task(name="main.generate_images_items")
 def generate_images_items(
-    adventure: Adventure,
+    id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
     state: AdventureState = AdventureState.ready,
-) -> Adventure:
+) -> tuple[int, SpentedTokensCounts]:
     """
     Генерация картинок предметов.
 
@@ -107,23 +133,29 @@ def generate_images_items(
     :param session: для бд
     :param state: состояние, в которое нужно установить приключение, после конца генерации.
     """
+    id_adventure, spented_tokens = id_adventure_and_spented_tokens
+
+    with Session(engine) as session:
+        adventure = get_adventure(id_adventure, session)
     content = AdventureInfo.model_validate_json(adventure.content)
     for i in range(len(content.items)):
         item = content.items[i]
         if item.image_id == -1:
             try:
-                image_id = await _generate_image(
+                image_id, current_spented_token = _generate_image(
                     item_image_generation.format(
                         item_name=item.name, item_description=item.description
                     ),
                     adventure.user_id,
-                    session,
                 )
                 content.items[i].image_id = image_id
+                spented_tokens += current_spented_token
                 time.sleep(10)
             except Exception as e:
                 print(e)
-    return await update_state_content_adventure(adventure.id, state, content, session)
+    with Session(engine) as session:
+        update_state_content_adventure(adventure.id, state, content, session)
+    return (id_adventure, spented_tokens)
 
 
 # ================= TEST IMAGE =======================
@@ -131,7 +163,7 @@ def generate_images_items(
 
 @celery_app.task(name="main.generate_test_images_adventure")
 def generate_test_images_adventure(
-    id_adventure: int,
+    id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
     state: AdventureState = AdventureState.image_characters,
 ) -> int:
     """
@@ -141,7 +173,6 @@ def generate_test_images_adventure(
     :param session: для бд
     :param state: состояние, в которое нужно установить приключение, после конца генерации.
     """
-    print("ID:", id_adventure)
     with Session(engine) as session:
         adventure = get_adventure(id_adventure, session)
     content = AdventureInfo.model_validate_json(adventure.content)
@@ -157,7 +188,7 @@ def generate_test_images_adventure(
 
 @celery_app.task(name="main.generate_test_images_characters")
 def generate_test_images_characters(
-    id_adventure: int,
+    id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
     state: AdventureState = AdventureState.image_items,
 ) -> int:
     """
@@ -184,7 +215,7 @@ def generate_test_images_characters(
 
 @celery_app.task(name="main.generate_test_images_items")
 def generate_test_images_items(
-    id_adventure: int,
+    id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
     state: AdventureState = AdventureState.ready,
 ) -> int:
     """

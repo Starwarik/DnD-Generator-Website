@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from enum import Enum
+from worker.database.schemas import SpentedTokensCounts
 
 
 class MessageType(Enum):
@@ -29,33 +30,6 @@ class Message(BaseModel):
 
     def __str__(self):
         return self.__repr__()
-
-
-class SpentedTokensCounts(BaseModel):
-    gigachat_prompt_token_count: int = 0
-    gigachat_assistant_token_count: int = 0
-    yandexgpt_prompt_token_count: int = 0
-    yandexgpt_assistant_token_count: int = 0
-    image_generated: int = 0
-
-    def __add__(self, other):
-        if not isinstance(other, SpentedTokensCounts):
-            raise ValueError("Неправильный тип", str(type(other)))
-
-        return SpentedTokensCounts(
-            gigachat_prompt_token_count=self.gigachat_prompt_token_count
-            + other.gigachat_prompt_token_count,
-            gigachat_assistant_token_count=self.gigachat_assistant_token_count
-            + other.gigachat_assistant_token_count,
-            yandexgpt_prompt_token_count=self.yandexgpt_prompt_token_count
-            + other.yandexgpt_prompt_token_count,
-            yandexgpt_assistant_token_count=self.yandexgpt_assistant_token_count
-            + other.yandexgpt_assistant_token_count,
-            image_generated=self.image_generated + other.image_generated,
-        )
-
-    def __radd__(self, other):
-        return self.__add__(other)
 
 
 class TextGenerationResult(BaseModel):

@@ -15,14 +15,6 @@ from app.user.models import User
 from app.auth.dependencies import get_current_user
 
 from app.generation.config import generation_setting
-from app.generation.generation_image_service import (
-    generate_images_adventure,
-    generate_test_images_adventure,
-    generate_images_characters,
-    generate_test_images_characters,
-    generate_images_items,
-    generate_test_images_items,
-)
 from app.generation.schemas import SpentedTokensCounts
 from app.generation.celery import celery_app
 from celery import chain, signature
@@ -36,7 +28,6 @@ async def generate_adventure(
     num_players: int,
     location_name: str,
     setting: str,
-    background_tasks: BackgroundTasks,
     current_user: Annotated[User, Depends(get_current_user)],
     session: AsyncSession = Depends(get_session),
 ):
@@ -45,23 +36,19 @@ async def generate_adventure(
 
     adventure: Adventure = await create_adventure(current_user.id, session)
 
-    async def inner_command(adventure: Adventure):
-        result = celery_app.send_task(
-            "main.generate_new_adventure", (location_name, setting, num_players)
-        ).get()
-        adventure_info = AdventureInfo.model_validate(result["new_adventure_info"])
-        spented_tokens_counts = SpentedTokensCounts.model_validate(
-            result["spented_tokens_counts"]
-        )
-        adventure = await update_state_content_adventure(
-            adventure.id, AdventureState.image_adventure, adventure_info, session
-        )
-        adventure = await generate_images_adventure(adventure, session)
-        adventure = await generate_images_characters(adventure, session)
-        await generate_images_items(adventure, session)
-        await spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
+    task = chain(
+        signature(
+            "main.generate_new_adventure",
+            args=(adventure.id, location_name, setting, num_players),
+        ),
+        signature("main.generate_images_adventure"),
+        signature("main.generate_images_npcs"),
+        signature("main.generate_images_items"),
+    )
+    task()
 
-    background_tasks.add_task(inner_command, adventure)
+    # await spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
+
     return adventure
 
 
