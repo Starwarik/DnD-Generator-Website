@@ -134,7 +134,6 @@ def generate_images_items(
     :param state: состояние, в которое нужно установить приключение, после конца генерации.
     """
     id_adventure, spented_tokens = id_adventure_and_spented_tokens
-
     with Session(engine) as session:
         adventure = get_adventure(id_adventure, session)
     content = AdventureInfo.model_validate_json(adventure.content)
@@ -163,7 +162,7 @@ def generate_images_items(
 
 @celery_app.task(name="main.generate_test_images_adventure")
 def generate_test_images_adventure(
-    id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
+    id_adventure: int,
     state: AdventureState = AdventureState.image_characters,
 ) -> int:
     """
@@ -188,7 +187,7 @@ def generate_test_images_adventure(
 
 @celery_app.task(name="main.generate_test_images_characters")
 def generate_test_images_characters(
-    id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
+    id_adventure: int,
     state: AdventureState = AdventureState.image_items,
 ) -> int:
     """
@@ -215,7 +214,7 @@ def generate_test_images_characters(
 
 @celery_app.task(name="main.generate_test_images_items")
 def generate_test_images_items(
-    id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
+    id_adventure: int,
     state: AdventureState = AdventureState.ready,
 ) -> int:
     """

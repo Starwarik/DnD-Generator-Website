@@ -51,7 +51,7 @@ def generate_new_test_adventure(
         update_state_content_adventure(
             id_adventure, AdventureState.ready, adventure, session
         )
-    return (id_adventure, spented_tokens)
+    return id_adventure
 
 
 @celery_app.task(name="main.regenerate_new_adventure")
