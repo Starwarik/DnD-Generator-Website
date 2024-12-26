@@ -61,12 +61,12 @@ class GigaChatImage(ImageGeneration):
 
         spented_tokens = SpentedTokensCounts(
             image_generated=1,
-            gigachat_assistant_token_count=response.response_metadata[
-                "token_usage"
-            ].completion_tokens,
-            gigachat_prompt_token_count=response.response_metadata[
-                "token_usage"
-            ].prompt_tokens,
+            gigachat_assistant_token_count=response.response_metadata["token_usage"][
+                "completion_tokens"
+            ],
+            gigachat_prompt_token_count=response.response_metadata["token_usage"][
+                "prompt_tokens"
+            ],
         )
         return (image, spented_tokens)
 

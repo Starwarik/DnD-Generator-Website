@@ -59,7 +59,7 @@ async def update_adventure(
         )
 
     if adventure.state == AdventureState.ready:
-        new_values["content "] = content.model_dump_json()
+        new_values["content"] = content.model_dump_json()
     else:
         raise HTTPException(status_code=403, detail="Adventure is not ready for update")
 
