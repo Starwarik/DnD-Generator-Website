@@ -104,25 +104,3 @@ async def delete_adventure(
     await session.execute(stmt)
     await session.commit()
     return Response(status_code=200)
-
-
-@adventure_router.post(
-    "/api/adventure/{id_adventure}/annotation", response_model=AdventurePublic
-)
-async def change_annotation(
-    id_adventure: int,
-    new_annotation: str,
-    current_user: Annotated[User, Depends(get_current_user)],
-    session: AsyncSession = Depends(get_session),
-):
-    command = select(Adventure).where(
-        Adventure.user_id == current_user.id, Adventure.id == id_adventure
-    )
-    results = await session.execute(command)
-    adventure = results.scalars().first()
-    content = AdventureInfo.model_validate_json(adventure.content)
-    content.annotation = new_annotation
-    adventure = await update_state_content_adventure(
-        adventure.id, AdventureState.ready, content, session
-    )
-    return adventure
