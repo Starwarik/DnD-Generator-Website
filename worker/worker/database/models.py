@@ -1,6 +1,6 @@
 from worker.database.database import Base
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, TypeDecorator
+from sqlalchemy import ForeignKey, Integer, TypeDecorator, String
 from enum import Enum
 
 
@@ -52,7 +52,7 @@ class Adventure(Base):
     __tablename__ = "adventure"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[int]
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     state: Mapped[AdventureState] = mapped_column(
         IntEnum(AdventureState), default=AdventureState.not_ready
     )
@@ -63,6 +63,19 @@ class Image(Base):
     __tablename__ = "image"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[int]
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     image: Mapped[bytes]
     media_type: Mapped[str]
+
+
+class User(Base):
+    __tablename__ = "user"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    username: Mapped[str] = mapped_column(String, unique=True, index=True)
+    password: Mapped[str]
+    email: Mapped[str] = mapped_column(String, unique=True, index=True)
+    balance: Mapped[float] = mapped_column(default=0.0)
+
+    def __repr__(self):
+        return f"User(id={self.id!r}, username={self.username!r}, password={self.password!r}, balance={self.balance!r})"
