@@ -1,7 +1,17 @@
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
-from worker.database.models import Adventure, AdventureState, Image
-from worker.database.schemas import AdventureInfo, ImageContainer
+from worker.database.models import Adventure, AdventureState, Image, User
+from worker.database.schemas import AdventureInfo, ImageContainer, SpentedTokensCounts
+from worker.config import generation_setting
+
+
+def get_user_by_id(id: str, session: Session) -> User | None:
+    statement = select(User).where(User.id == id)
+    results = session.execute(statement)
+    result = results.scalars().first()
+    if result is None:
+        return None
+    return result
 
 
 def get_adventure(
@@ -49,3 +59,27 @@ def upload_image(container: ImageContainer, user_id: int, session: Session) -> I
     session.commit()
     session.refresh(image)
     return image
+
+
+def change_balance_on_value(id: int, diff_balance: float, session: Session):
+    user = get_user_by_id(id, session)
+    user.balance += diff_balance
+    session.add(user)
+    session.commit()
+
+
+def spend_balance_on_tokens(
+    id: int, tokens_count: SpentedTokensCounts, session: Session
+):
+    diff_balance = (
+        tokens_count.gigachat_assistant_token_count
+        * generation_setting.gigachat_assistant_token_cost
+        + tokens_count.gigachat_prompt_token_count
+        * generation_setting.gigachat_prompt_token_cost
+        + tokens_count.yandexgpt_assistant_token_count
+        * generation_setting.yandexgpt_assistant_token_cost
+        + tokens_count.yandexgpt_prompt_token_count
+        * generation_setting.yandexgpt_prompt_token_cost
+        + tokens_count.image_generated * generation_setting.image_generated_cost
+    )
+    change_balance_on_value(id, -diff_balance, session)

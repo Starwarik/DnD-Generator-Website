@@ -9,15 +9,13 @@ from app.adventure.service import (
     create_adventure,
 )
 from app.database.database import get_session
-from app.adventure.models import Adventure, AdventurePublic, AdventureState
+from app.adventure.models import Adventure, AdventurePublic
 from app.user.models import User
 from app.auth.dependencies import get_current_user
 
 from app.generation.config import generation_setting
-from app.generation.schemas import SpentedTokensCounts
 from app.generation.celery import celery_app
 from celery import chain, signature
-from app.database.crud import spend_balance_on_tokens
 
 generation_router = APIRouter(tags=["generation"])
 
@@ -43,11 +41,9 @@ async def generate_adventure(
         signature("main.generate_images_adventure"),
         signature("main.generate_images_npcs"),
         signature("main.generate_images_items"),
+        signature("main.finish_generation_and_spent_balance"),
     )
     task()
-
-    # await spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
-
     return adventure
 
 
@@ -92,7 +88,14 @@ async def regenerate_quests(
         "main.regenerate_quests",
         (adventure.id,),
     )
-    # await spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
+    task = chain(
+        signature(
+            "main.regenerate_quests",
+            args=(adventure.id,),
+        ),
+        signature("main.finish_generation_and_spent_balance"),
+    )
+    task()
     return adventure
 
 
@@ -114,12 +117,14 @@ async def regenerate_quests_concrete(
     if index_quest < 0 or index_quest >= len(adventure_info.quests):
         return HTTPException(status_code=400, detail="Index out of range")
 
-    celery_app.send_task(
-        "main.regenerate_quest_concrete",
-        (adventure.id, index_quest),
+    task = chain(
+        signature(
+            "main.regenerate_quest_concrete",
+            args=(adventure.id, index_quest),
+        ),
+        signature("main.finish_generation_and_spent_balance"),
     )
-    # await spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
-
+    task()
     return adventure
 
 
@@ -146,9 +151,9 @@ async def regenerate_npcs(
             args=(adventure.id),
         ),
         signature("main.generate_images_npcs"),
+        signature("main.finish_generation_and_spent_balance"),
     )
     task()
-    # await spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
     return adventure
 
 
@@ -177,6 +182,7 @@ async def regenerate_characters_concrete(
             args=(adventure.id, index_npc),
         ),
         signature("main.generate_images_npcs"),
+        signature("main.finish_generation_and_spent_balance"),
     )
     task()
     return adventure
@@ -204,9 +210,9 @@ async def regenerate_items(
             args=(adventure.id,),
         ),
         signature("main.generate_images_items"),
+        signature("main.finish_generation_and_spent_balance"),
     )
     task()
-    # await spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
     return adventure
 
 
@@ -234,7 +240,7 @@ async def regenerate_items_concrete(
             args=(adventure.id, index_item),
         ),
         signature("main.generate_images_items"),
+        signature("main.finish_generation_and_spent_balance"),
     )
     task()
-    # await spend_balance_on_tokens(current_user.id, spented_tokens_counts, session)
     return adventure

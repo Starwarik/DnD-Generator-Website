@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from worker.database.database import engine
-from worker.database.models import Adventure, AdventureState
+from worker.database.models import AdventureState
 from worker.database.crud import (
     update_state_content_adventure,
     get_adventure,

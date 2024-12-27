@@ -27,4 +27,6 @@ celery_app.conf.update(
     result_accept_content=["application/json", "application/x-pydantic"],
 )
 
-celery_app.autodiscover_tasks(["worker.text_tasks", "worker.image_tasks"])
+celery_app.autodiscover_tasks(
+    ["worker.text_tasks", "worker.image_tasks", "worker.payment"]
+)
