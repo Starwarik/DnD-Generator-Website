@@ -9,31 +9,33 @@ from app.payment.utils import *
 
 from app.payment.models import Transaction
 
-import aiohttp
+# import aiohttp
+import requests
+
 
 payment_router = APIRouter(tags=["payment"])
 
 
 @payment_router.post("/api/make_payment")
 async def make_payment(
+    transaction_id: str,
     amount: float,
     current_user: Annotated[User, Depends(get_current_user)],
     session: AsyncSession = Depends(get_session),
 ):
-    transaction = Transaction(user_id=current_user.id, amount=amount, is_success=False)
-    session.add(transaction)
-    await session.commit()
-    await session.refresh(transaction)
-
     amount = int(amount * 100)
 
-    async with aiohttp.ClientSession() as http_session:
-        data = f"amount={amount}&currency=643&userName=adventuregenerator-api&password=u5**Nk43&returnUrl=google.com&description=my_first_order&language=ru&orderNumber={transaction.id}"
-        async with http_session.post(
-            "https://vtb.rbsuat.com/payment/rest/register.do", data=data
-        ) as response:
-            html = await response.text()
-    return html
+    headers = {
+        "content-type": "application/x-www-form-urlencoded",
+    }
+
+    data = f"amount={amount}&currency=643&userName=adventuregenerator-api&password=u5**Nk43&returnUrl=google.com&description=my_first_order&language=ru&orderNumber={transaction_id}"
+
+    response = requests.post(
+        "https://vtb.rbsuat.com/payment/rest/register.do", headers=headers, data=data
+    )
+
+    return response.json()
 
 
 @payment_router.post("/api/payment_success")

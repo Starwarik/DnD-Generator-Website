@@ -72,7 +72,7 @@ async def generate_test_adventure(
 # ============================= QUESTS ========================
 
 
-@generation_router.put(
+@generation_router.get(
     "/api/generate/{id_adventure}/quests", response_model=AdventurePublic
 )
 async def regenerate_quests(
@@ -99,7 +99,7 @@ async def regenerate_quests(
     return adventure
 
 
-@generation_router.put(
+@generation_router.get(
     "/api/generate/{id_adventure}/quests/{index_quest}", response_model=AdventurePublic
 )
 async def regenerate_quests_concrete(
@@ -131,7 +131,7 @@ async def regenerate_quests_concrete(
 # ================================ CHARACTERS ===========================
 
 
-@generation_router.put(
+@generation_router.get(
     "/api/generate/{id_adventure}/npcs", response_model=AdventurePublic
 )
 async def regenerate_npcs(
@@ -157,7 +157,7 @@ async def regenerate_npcs(
     return adventure
 
 
-@generation_router.put(
+@generation_router.get(
     "/api/generate/{id_adventure}/npcs/{index_npc}",
     response_model=AdventurePublic,
 )
@@ -191,7 +191,7 @@ async def regenerate_characters_concrete(
 # ================================== ITEMS ======================================
 
 
-@generation_router.put(
+@generation_router.get(
     "/api/generate/{id_adventure}/items", response_model=AdventurePublic
 )
 async def regenerate_items(
@@ -216,7 +216,7 @@ async def regenerate_items(
     return adventure
 
 
-@generation_router.put(
+@generation_router.get(
     "/api/generate/{id_adventure}/items/{index_item}", response_model=AdventurePublic
 )
 async def regenerate_items_concrete(
