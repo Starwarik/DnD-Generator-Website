@@ -56,8 +56,10 @@ services:
         order: start-first  
         max_failure_ratio: 0.1  
     depends_on:
-      - db_postgres
-      - redis
+      db_postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   worker:
     image: noihat/dnd-worker:1 
@@ -76,9 +78,12 @@ services:
         order: start-first  
         max_failure_ratio: 0.1 
     depends_on:
-      - web
-      - redis
-      - db_postgres
+      web:
+        condition: service_started
+      redis:
+        condition: service_healthy
+      db_postgres:
+        condition: service_healthy
 
 volumes:
   pgdata:
