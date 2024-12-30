@@ -2,10 +2,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class PaymentSettings(BaseSettings):
-    secret_key_jwt: str
-    algorithm_jwt: str
+    vtb_username: str
+    vtb_password: str
 
-    token_expire_minutes: int
+    vtb_base_api: str
+
+    url_successful_order: str
+    url_failed_order: str
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
