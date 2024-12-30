@@ -6,19 +6,41 @@ from app.database.database import get_session
 from app.user.models import User
 from app.auth.dependencies import get_current_user
 from app.payment.utils import *
+from app.payment.config import payment_setting
 
-from app.payment.models import Transaction, User
+from app.payment.models import Transaction
+from app.user.models import User
+
+from fastapi.responses import RedirectResponse
 
 # import aiohttp
 import requests
+from typing import Any
 
 
 payment_router = APIRouter(tags=["payment"])
 
 
+def create_order(amount: float, order_num: int) -> dict[str, Any]:
+    fallback_url = (
+        f"https://adventuregenerator.ru/api/payment_success?order_number={order_num}"
+    )
+
+    headers = {
+        "content-type": "application/x-www-form-urlencoded",
+    }
+
+    data = f"amount={amount}&currency=643&userName={payment_setting.vtb_username}&password={payment_setting.vtb_password}&returnUrl={fallback_url}&failUrl={fallback_url}&description=my_first_order&language=ru&orderNumber={order_num}"
+
+    response = requests.post(
+        payment_setting.vtb_base_api + "register.do", headers=headers, data=data
+    )
+
+    return response.json()
+
+
 @payment_router.get("/api/make_payment")
 async def make_payment(
-    transaction_id: str,
     amount: float,
     current_user: Annotated[User, Depends(get_current_user)],
     session: AsyncSession = Depends(get_session),
@@ -29,53 +51,63 @@ async def make_payment(
     await session.refresh(transaction)
 
     amount = int(amount * 100)
-    username_vtb = "adventuregenerator-api"
-    password_vtb = "u5**Nk43"
-    success_url = "http://127.0.0.1:8004/api/payment_success?order_id={transaction_id}"
 
-    headers = {
-        "content-type": "application/x-www-form-urlencoded",
-    }
+    is_failed = True
+    transaction_id = transaction.id - 1
+    while is_failed:
+        transaction_id += 1
+        result = create_order(amount, transaction_id)
+        is_failed = "errorCode" in result
 
-    data = f"amount={amount}&currency=643&userName={username_vtb}&password={password_vtb}&returnUrl={success_url}&description=my_first_order&language=ru&orderNumber={transaction_id}"
+        transaction_try = await session.get(Transaction, transaction_id)
 
-    response = requests.post(
-        "https://vtb.rbsuat.com/payment/rest/register.do", headers=headers, data=data
-    )
+        is_failed = is_failed or (not transaction_try is None)
 
-    return response.json()["formUrl"]
+    transaction.id = transaction_id
+    session.add(transaction)
+    await session.commit()
+
+    return result["formUrl"]
 
 
 @payment_router.get("/api/payment_success")
 async def on_payment_success(
-    order_id: int, session: AsyncSession = Depends(get_session)
+    order_number: int,
+    orderId: str | None,
+    lang: str | None,
+    session: AsyncSession = Depends(get_session),
 ):
     data = {
-        "userName": "adventuregenerator-api",
-        "password": "u5**Nk43",
-        "orderId": order_id,
+        "userName": payment_setting.vtb_username,
+        "password": payment_setting.vtb_password,
+        "orderNumber": order_number,
         "language": "ru",
     }
 
     response = requests.post(
-        "https://vtb.rbsuat.com/payment/rest/getOrderStatusExtended.do", data=data
+        payment_setting.vtb_base_api + "getOrderStatusExtended.do", data=data
     )
 
-    if response.json()["errorCode"] != 0:
+    result = response.json()
+
+    if result["orderStatus"] == 2 or result["orderStatus"] == 1:
         raise Exception("Not sucessful")
 
-    transaction = await session.get(Transaction, order_id)
+    transaction = await session.get(Transaction, order_number)
 
     if transaction is None:
-        raise Exception("There is no such order")
+        print("There is no such order")
+        return RedirectResponse(payment_setting.url_failed_order)
 
     if transaction.is_success:
-        raise Exception("Already proceed")
+        print("Already proceed")
+        return RedirectResponse(payment_setting.url_failed_order)
 
     user = await session.get(User, transaction.user_id)
 
     if user is None:
-        raise Exception("There is no such person")
+        print("There is no such person")
+        return RedirectResponse(payment_setting.url_failed_order)
 
     user.balance += transaction.amount
     transaction.is_success = True
@@ -84,3 +116,5 @@ async def on_payment_success(
     session.add(transaction)
     await session.commit()
     await session.flush()
+
+    return RedirectResponse(payment_setting.url_successful_order)
