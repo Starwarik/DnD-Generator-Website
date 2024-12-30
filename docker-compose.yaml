@@ -1,94 +1,169 @@
 services:
-
   db_postgres:
-    image: postgres:latest
-    container_name: postgres_db_container
+    container_name: db_postgres
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
-      POSTGRES_DB: DB
       PGDATA: /var/lib/postgresql/data/pgdata
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data/pgdata  
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
+      POSTGRES_DB: DB
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_USER: postgres
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d DB"]
-      interval: 30s
+      test:
+      - CMD-SHELL
+      - pg_isready -U postgres -d DB
       timeout: 10s
+      interval: 30s
       retries: 5
+    image: postgres:latest
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 5432
+      published: 5432
+      protocol: tcp
     secrets:
-      - postgres_password
-
+    - source: postgres_password
+    volumes:
+    - type: volume
+      source: pgdata
+      target: /var/lib/postgresql/data/pgdata
+      volume: {}
   redis:
-    image: redis:7
-    ports:
-      - "6379:6379"
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
+      test:
+      - CMD
+      - redis-cli
+      - ping
       timeout: 10s
+      interval: 30s
       retries: 5
-
-  web:
-    image: noihat/dnd-web:1 
+    image: redis:7
+    networks:
+      default: null
     ports:
-      - "8004:8000"
-    env_file: ".env"
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    - mode: ingress
+      target: 6379
+      published: 6379
+      protocol: tcp
+  web:
+    depends_on:
+      - db_postgres
+      - redis
     deploy:
       replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        max_failure_ratio: 0.1
+        order: start-first
       restart_policy:
         condition: on-failure
-      update_config:
-        parallelism: 1  
-        delay: 10s  
-        order: start-first  
-        max_failure_ratio: 0.1  
-    depends_on:
-      db_postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
 
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      algorithm_jwt: HS256
+      docs_url: /api/docs
+      is_test: "True"
+      min_balance_to_generate: "1000"
+      notification_service: dummy_notification
+      openapi_url: /api/openapi.json
+      smtp_login: support@adventuregenerator.ru
+      smtp_sender_email: support@adventuregenerator.ru
+      smtp_server_port: "465"
+      smtp_server_url: smtp.mail.ru
+      smtp_template_message: Проблемы с входом в систему? 
+      smtp_template_subject: Сбросить пароль легко. Просто нажмите кнопку ниже и следуйте инструкциям. Мы отладим вас и запустим снова почти сразу. https://adventuregenerator.ru?reset_token={token} Если вы не сделали этот запрос, пожалуйста, проигнорируйте это электронное письмо.
+      test_image_url: /code/app/image/test_image.jpg
+      token_expire_minutes: "30"
+    image: noihat/dnd-web:1
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 8000
+      published: 8004
+      protocol: tcp
+    secrets:
+      - source: postgres_password
+      - source: secret_key_jwt
+      - source: database_url
+      - source: smtp_password
   worker:
-    image: noihat/dnd-worker:1 
-    env_file: ".env"
-    command: celery -A worker.main:celery_app worker --loglevel=INFO
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    command:
+    - celery
+    - -A
+    - worker.main:celery_app
+    - worker
+    - --loglevel=INFO
+    depends_on:
+      - db_postgres
+      - redis
+      - web
     deploy:
       replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        max_failure_ratio: 0.1
+        order: start-first
       restart_policy:
         condition: on-failure
-      update_config:
-        parallelism: 1  
-        delay: 10s 
-        order: start-first  
-        max_failure_ratio: 0.1 
-    depends_on:
-      web:
-        condition: service_started
-      redis:
-        condition: service_healthy
-      db_postgres:
-        condition: service_healthy
-
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      gigachat_assistant_token_cost: "1"
+      gigachat_prompt_token_cost: "1"
+      image_generated_cost: "1"
+      min_balance_to_generate: "1000"
+      yandexgpt_assistant_token_cost: "1"
+      yandexgpt_prompt_token_cost: "1"
+    image: noihat/dnd-worker:1
+    networks:
+      default: null
+    secrets:
+      - source: sync_database_url
+      - source: gigachat_credentials
+      - source: yandexchat_api_key
+      - source: yandexchat_folder_id
+networks:
+  default:
+    name: dnd-generator-website_default
 volumes:
   pgdata:
+    name: dnd-generator-website_pgdata
     driver: local
-
 secrets:
   postgres_password:
+    name: postgres_password
     external: true
+  secret_key_jwt:
+    name: secret_key_jwt
+    external: true
+  database_url:
+    name: database_url
+    external: true
+  sync_database_url:
+    name: sync_database_url
+    external: true
+  smtp_password: 
+    name: smtp_password
+    external: true
+  gigachat_credentials:
+    name: gigachat_credentials
+    external: true
+  yandexchat_api_key:
+    name: yandexchat_api_key
+    external: true
+  yandexchat_folder_id:
+    name: yandexchat_folder_id
+    external: true
+

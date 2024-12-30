@@ -7,7 +7,8 @@ from app.user.models import User
 from app.auth.dependencies import get_current_user
 from app.payment.utils import *
 
-from app.payment.models import Transaction, User
+from app.payment.models import Transaction
+from app.user.models import User
 
 # import aiohttp
 import requests
@@ -31,7 +32,9 @@ async def make_payment(
     amount = int(amount * 100)
     username_vtb = "adventuregenerator-api"
     password_vtb = "u5**Nk43"
-    success_url = "http://127.0.0.1:8004/api/payment_success?order_id={transaction_id}"
+    success_url = (
+        "https://adventuregenerator.ru/api/payment_success?order_id={transaction_id}"
+    )
 
     headers = {
         "content-type": "application/x-www-form-urlencoded",
@@ -43,7 +46,11 @@ async def make_payment(
         "https://vtb.rbsuat.com/payment/rest/register.do", headers=headers, data=data
     )
 
-    return response.json()["formUrl"]
+    json_result = response.json()
+
+    print(json_result)
+
+    return json_result  # ["formUrl"]
 
 
 @payment_router.get("/api/payment_success")
@@ -61,7 +68,10 @@ async def on_payment_success(
         "https://vtb.rbsuat.com/payment/rest/getOrderStatusExtended.do", data=data
     )
 
-    if response.json()["errorCode"] != 0:
+    json_result = response.json()
+    return json_result
+
+    if json_result["errorCode"] != 0:
         raise Exception("Not sucessful")
 
     transaction = await session.get(Transaction, order_id)

@@ -12,7 +12,7 @@ class AppSettings(BaseSettings):
     docs_url: str
     openapi_url: str
 
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(extra="ignore")
 
 
 app_setting = AppSettings()
