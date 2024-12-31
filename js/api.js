@@ -72,6 +72,9 @@ async function resetPassword(token_reset, new_password) {
 
 async function makePayment(amount) {
     await fetch(domain+'api/make_payment?amount='+amount, {
-        method: 'GET' 
+        method: 'GET',
+        headers: new Headers({
+            'Authorization': 'Bearer '+token, 
+        })
     });
 }
