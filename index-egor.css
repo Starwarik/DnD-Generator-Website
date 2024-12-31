@@ -643,17 +643,17 @@ form-submit:hover {
     user-select: none;
 }
 
-#dialog-reset-password-letter {
+.notification-dialog {
     background-color: var(--accent);
     color: white;
     top: 200px;
 }
 
-#dialog-reset-password-letter h1 {
+.notification-dialog h1 {
     text-align: left;
 }
 
-#dialog-reset-password-letter h2 {
+.notification-dialog h2 {
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;

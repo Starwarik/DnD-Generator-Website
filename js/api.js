@@ -50,7 +50,7 @@ async function getUserInfo(token) {
 
 async function sendResetLetter(email) {
     let reset_token = await fetch(domain+'api/reset_token?email='+email, {
-        method: 'GET', 
+        method: 'GET' 
     }).then(response => response.text());
     console.log(reset_token);
 }
@@ -67,5 +67,11 @@ async function resetPassword(token_reset, new_password) {
             'Content-Type': 'application/json;charset=utf-8'
         },
         body: JSON.stringify(formData),
+    });
+}
+
+async function makePayment(amount) {
+    await fetch(domain+'api/make_payment?amount='+amount, {
+        method: 'GET' 
     });
 }

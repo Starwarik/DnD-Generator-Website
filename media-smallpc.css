@@ -940,28 +940,28 @@
 		user-select: none;
 	}
 
-	#dialog-reset-password-letter {
-		background-color: var(--accent);
-		color: white;
-		top: 200px;
+	.notification-dialog {
+    background-color: var(--accent);
+    color: white;
+    top: 200px;
 	}
 
-	#dialog-reset-password-letter h1 {
-		text-align: left;
+	.notification-dialog h1 {
+    text-align: left;
 	}
 
-	#dialog-reset-password-letter h2 {
-		font-family: "Raleway", sans-serif;
-		font-optical-sizing: auto;
-		font-style: normal;
+	.notification-dialog h2 {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
 
-		font-weight: 500;
-		font-size: 1rem;
-		line-height: 1.5rem;
-		letter-spacing: 0.06em;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    letter-spacing: 0.06em;
 
-		text-align: left;
-		margin-bottom: 0;
+    text-align: left;
+    margin-bottom: 0;
 	}
 
 	/* Account Navbar menu */

@@ -179,6 +179,22 @@
 			</dialog>
 		</div>
 		<div class="dialog-wrapper">
+			<dialog class="dialog notification-dialog" id="dialog__payment_success">
+				<div class="dialog-viewport">
+					<h1 class="dialog__header">Оплата успешна!</h1>
+					<h2 class="dialog__header">Деньги зачислены на ваш баланс</h2>
+				</div>
+			</dialog>
+		</div>
+		<div class="dialog-wrapper">
+			<dialog class="dialog notification-dialog" id="dialog__payment_fail">
+				<div class="dialog-viewport">
+					<h1 class="dialog__header">Упс! Что-то пошло не так...</h1>
+					<h2 class="dialog__header">Попробуйте ещё раз или обратитесь в службу поддержки</h2>
+				</div>
+			</dialog>
+		</div>
+		<div class="dialog-wrapper">
 			<dialog class="dialog" id="dialog-reset-password">
 				<div class="dialog-viewport">
 					<img class="dialog__exit-button" src="./images/exit_button.svg" onclick="close_all_dialogues()"></img>
@@ -217,7 +233,7 @@
 			</dialog>
 		</div>
 		<div class="dialog-wrapper">
-			<dialog class="dialog" id="dialog-reset-password-letter">
+			<dialog class="dialog notification-dialog" id="dialog-reset-password-letter">
 				<div class="dialog-viewport">
 					<h1 class="dialog__header">Мы отправили<br/>Вам письмо</h1>
 					<h2 class="dialog__header">Проверьте почту для смены пароля</h2>
@@ -310,7 +326,7 @@
 						<span class="buy-tokens__title_post-title">валюта для генерации</span>
 					</h2>
 					<div class="buy-tokens__content-wrapper">
-						<form class="buy-tokens-form">
+						<form class="buy-tokens-form" id="buy-tokens-form">
 							<div class="account-info-form">
 								<img class="account-info-form__user-image" src="images/user_icon.svg" />
 								<p class="account-info-form__username" id="account-info-form__username">...</p>
