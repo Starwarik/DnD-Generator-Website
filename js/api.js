@@ -77,8 +77,8 @@ async function makePayment(amount) {
             'Authorization': 'Bearer '+token, 
         })
     }).then(
-		response => response.text().slice(1, -1)
+		response => response.text()
 	).then(
-		url => window.location.replace(url)
+		url => window.location.replace(url.slice(1, -1))
 	);
 }
