@@ -76,5 +76,9 @@ async function makePayment(amount) {
         headers: new Headers({
             'Authorization': 'Bearer '+token, 
         })
-    });
+    }).then(
+		response => response.text().slice(1, -1)
+	).then(
+		url => window.location.replace(url)
+	);
 }
