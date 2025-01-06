@@ -1,0 +1,11 @@
+@media (min-width: 1341px) {
+	#download__buttons-wrapper {
+		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: 1fr;
+	}
+
+	#download__buttons-wrapper .download__button:last-child {
+		grid-column: auto;
+		grid-row: auto;
+	}
+}
