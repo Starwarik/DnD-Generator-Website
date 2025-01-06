@@ -5,6 +5,7 @@ const dialog_reset_password_second = document.getElementById('dialog-reset-passw
 const dialog_reset_password_letter = document.getElementById('dialog-reset-password-letter');
 const dialog__payment_success = document.getElementById('dialog__payment_success');
 const dialog__payment_fail = document.getElementById('dialog__payment_fail');
+const dialog__payment_wrong_amount = document.getElementById('dialog__payment_wrong-amount');
 
 dialog_register.addEventListener('mousedown', () => dialog_register.close());
 dialog_login.addEventListener('mousedown', () => dialog_login.close());
@@ -13,6 +14,8 @@ dialog_reset_password_second.addEventListener('mousedown', () => dialog_reset_pa
 dialog_reset_password_letter.addEventListener('mousedown', () => dialog_reset_password_letter.close());
 dialog__payment_success.addEventListener('mousedown', () => dialog__payment_success.close());
 dialog__payment_fail.addEventListener('mousedown', () => dialog__payment_fail.close());
+dialog__payment_wrong_amount.addEventListener('mousedown', () => dialog__payment_wrong_amount.close());
+
 
 let dialog_viewports = document.getElementsByClassName("dialog-viewport");
 
@@ -28,6 +31,7 @@ function close_all_dialogues() {
     dialog_reset_password_letter.close();
     dialog__payment_success.close();
     dialog__payment_fail.close();
+    dialog__payment_wrong_amount.close();
 }
 
 function show_login() {
@@ -63,4 +67,9 @@ function show_payment_success() {
 function show_payment_fail() {
     close_all_dialogues();
     dialog__payment_fail.showModal();
+}
+
+function show_payment_wrong_amount() {
+    close_all_dialogues();
+    dialog__payment_wrong_amount.showModal();
 }

@@ -3,6 +3,7 @@ const dialog_form_register = document.getElementById('dialog-form-register');
 const dialog_form_reset_password = document.getElementById('dialog-form-reset-password');
 const dialog_form_reset_password_second = document.getElementById('dialog-form-reset-password-second');
 const buy_tokens_form = document.getElementById('buy-tokens-form');
+const account_navbar_menu = document.getElementById('account-navbar-menu');
 
 dialog_form_login.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -65,6 +66,20 @@ buy_tokens_form.addEventListener('submit', async (e) => {
     if (amount >= 100) {
         await makePayment(amount);
     } else {
-        show_payment_fail();
+        show_payment_wrong_amount();
     }
 });
+
+account_navbar_menu.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(account_navbar_menu);
+
+    const amount = Number(formData.get('amount'));
+
+    if (amount >= 100) {
+        await makePayment(amount);
+    } else {
+        show_payment_wrong_amount();
+    }
+});
+show_payment_wrong_amount();
