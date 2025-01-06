@@ -82,4 +82,3 @@ account_navbar_form.addEventListener('submit', async (e) => {
         show_payment_wrong_amount();
     }
 });
-show_payment_wrong_amount();
