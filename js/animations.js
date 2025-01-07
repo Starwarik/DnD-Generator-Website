@@ -14,54 +14,68 @@ let sections = [
 let lineType = "";
 let lineHeight = "";
 
-for (let i = 0; i < navMenus.length; i++) {
-	switch (i) {
-		case 0:
-			lineType = "bracket";
-			if (window.matchMedia('(min-width: 1024px)').matches) {
-				lineHeight = "21vh";
-			} else {
-				lineHeight = "17vh"
-			}
-			break;
-		case 5:
-			lineType = "bracket";
-			if (window.matchMedia('(min-width: 1024px)').matches) {
-				lineHeight = "21vh";
-			} else {
-				lineHeight = "17vh"
-			}
-			break;
-		default:
-			lineType = "middle";
-			lineHeight = "13vh";
-			break;
-	}
-	let navmenu = navMenus[i];
-	let svgObj = navmenu.querySelector(".navpoint .navstar");
-	let navMenuAnim = gsap.timeline({
-		scrollTrigger: {
-			trigger: `#${sections[i]}`,
-			start: "500px 70%",
-			toggleActions: "restart none none reverse"
-		},
-	});
-	navMenuAnim.to(`#nav-${sections[i]} .${lineType}-line`, { borderTopWidth: `${lineHeight}` });
-	navMenuAnim.to(`#nav-${sections[i]} .nav-description`, { color: "#DD1144" }, "<");
-	try {
-		svgObj.addEventListener("load", () => {
+function create_navbar(context) {
+	for (let i = 0; i < navMenus.length; i++) {
+		switch (i) {
+			case 0:
+				lineType = "bracket";
+				if (window.matchMedia('(min-width: 1024px)').matches) {
+					lineHeight = "21vh";
+				} else {
+					lineHeight = "17vh"
+				}
+				break;
+			case 5:
+				lineType = "bracket";
+				if (window.matchMedia('(min-width: 1024px)').matches) {
+					lineHeight = "21vh";
+				} else {
+					lineHeight = "17vh"
+				}
+				break;
+			default:
+				lineType = "middle";
+				lineHeight = "13vh";
+				break;
+		}
+		let navmenu = navMenus[i];
+		let svgObj = navmenu.querySelector(".navpoint .navstar");
+		let navMenuAnim = gsap.timeline({
+			scrollTrigger: {
+				trigger: `#${sections[i]}`,
+				start: "500px 70%",
+				toggleActions: "restart none none reverse"
+			},
+		});
+		navMenuAnim.to(`#nav-${sections[i]} .${lineType}-line`, { borderTopWidth: `${lineHeight}` });
+		navMenuAnim.to(`#nav-${sections[i]} .nav-description`, { color: "#DD1144" }, "<");
+
+		context.add("navstarAnim", () => {
 			var svgDoc = svgObj.contentDocument;
 			var svgImage = svgDoc.querySelector(".anchor");
 			navMenuAnim.to(svgImage, { fill: "#DD1144", stroke: "#DD1144" });
 		});
-	} catch {
-		
+
+		try {
+			svgObj.addEventListener("load", context.navstarAnim);
+		} catch {
+			
+		}
+	}
+}
+
+function navmenus_removeEventListeners(context) {
+	for (let i = 0; i < navMenus.length; i++) {
+		let svgObj = navmenus[i].querySelector(".navpoint .navstar");
+		svgObj.removeEventListener("load", context.navstarAnim);
 	}
 }
 
 mm = gsap.matchMedia();
 
 mm.add('(min-width: 1024px)', (context) => {
+
+	create_navbar(context)
 
 	headOnStartAnimPC = gsap.timeline();
 	headOnStartAnimPC.from("#phone-1", { yPercent: 100, ease: "expo.out", duration: 1 });
@@ -231,13 +245,17 @@ mm.add('(min-width: 1024px)', (context) => {
 		document.querySelector("#account-navbar-auth").removeEventListener("mouseenter", context.accAnimPC2_play);
 		document.querySelector("#account-navbar-auth").removeEventListener("mouseleave", context.accAnimPC2_reverse);
 		gsap.utils.toArray(".description-item").forEach(description => {
-			description.removeEventListener("mouseenter", context.descriptionItem_play)
+			description.removeEventListener("mouseenter", context.descriptionItem_play);
 			description.removeEventListener("mouseleave", context.descriptionItem_reverse);
 		});
+
+		navmenus_removeEventListeners(context);
 	}
 });
 
 mm.add('(min-width: 601px) and (max-width: 1023px)', (context) => {
+
+	create_navbar(context);
 
 	headOnStartAnimMobile = gsap.timeline();
 	headOnStartAnimMobile.from("#phones-mobile", { yPercent: 100, ease: "expo.out", duration: 1 });
@@ -343,11 +361,15 @@ mm.add('(min-width: 601px) and (max-width: 1023px)', (context) => {
 		
 		document.querySelector(".account-navbar-menu-exit").removeEventListener("mousedown", context.accAnimMobile_reverse);
 		document.querySelector("#account-navbar-auth .account-wrapper").removeEventListener("mousedown", context.accAnimMobile_restart);
+		navmenus_removeEventListeners(context);
 	}
 
 });
 
 mm.add('(min-width: 340px) and (max-width: 600px)', (context) => {
+
+	create_navbar(context);
+
 	headOnStartAnimMobile = gsap.timeline();
 	headOnStartAnimMobile.from("#phones-mobile", { yPercent: 100, ease: "expo.out", duration: 1 });
 	headOnStartAnimMobile.from("#head-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
@@ -450,11 +472,15 @@ mm.add('(min-width: 340px) and (max-width: 600px)', (context) => {
 		
 		document.querySelector(".account-navbar-menu-exit").removeEventListener("mousedown", context.accAnimMobile_reverse);
 		document.querySelector("#account-navbar-auth .account-wrapper").removeEventListener("mousedown", context.accAnimMobile_restart);
+		navmenus_removeEventListeners(context);
 	}
 
 });
 
 mm.add('(max-width: 339px)', (context) => {
+
+	create_navbar(context);
+
 	headOnStartAnimMobile = gsap.timeline();
 	headOnStartAnimMobile.from("#head-title", { width: 0, paddingRight: 0, ease: "expo.out", duration: 1.07 }, "<");
 	headOnStartAnimMobile.from("#download-1", { yPercent: 100, ease: "expo.out", duration: 1.07 }, "<");
@@ -555,5 +581,6 @@ mm.add('(max-width: 339px)', (context) => {
 		
 		document.querySelector(".account-navbar-menu-exit").removeEventListener("mousedown", context.accAnimMobile_reverse);
 		document.querySelector("#account-navbar-auth .account-wrapper").removeEventListener("mousedown", context.accAnimMobile_restart);
+		navmenus_removeEventListeners(context);
 	}
 });
