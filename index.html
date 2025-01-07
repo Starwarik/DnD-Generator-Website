@@ -141,11 +141,11 @@
 							</div>
 							<div class="dialog-form__field">
 								<label class="form-label">Пароль</label>
-								<input class="form-input" type="password" name="pass" oninvalid="this.setCustomValidity('Длина пароля должна быть от 8 до 20 символов. Пароль должен содержать хотя бы одну заглавную букву, строчную букву, цифру и спецсимвол из набора: .:,;?!@#$%^&*_-+=')" oninput="this.setCustomValidity('')" pattern="[a-z]+[A-Z]+\d+[\.:,;\?!@#\$%\^&\*_\-\+=]+" minlength="8" maxlength="20" placeholder="Пароль" required>
+								<input class="form-input" type="password" name="pass" oninvalid="this.setCustomValidity('Длина пароля должна быть от 8 до 20 символов. Пароль должен содержать хотя бы одну заглавную букву, строчную букву, цифру и спецсимвол из набора: .:,;?!@#$%^&*_-+=')" oninput="this.setCustomValidity('')" pattern="(?=.*[0-9])(?=.*[\.:,;\?!@#\$%\^&\*_\-\+=])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z.:,;?!@#$%^&*_\-+=]{8, 20}" placeholder="Пароль" required>
 							</div>
 							<div class="dialog-form__field">
 								<label class="form-label">Подтвердить пароль</label>
-								<input class="form-input" type="password" name="pass_repeat" oninvalid="this.setCustomValidity('Длина пароля должна быть от 8 до 20 символов. Пароль должен содержать хотя бы одну заглавную букву, строчную букву, цифру и спецсимвол из набора: .:,;?!@#$%^&*_-+=')" oninput="this.setCustomValidity('')" pattern="[a-z]+[A-Z]+\d+[\.:,;\?!@#\$%\^&\*_\-\+=]+" minlength="8" maxlength="20" placeholder="Пароль" required>
+								<input class="form-input" type="password" name="pass_repeat" oninvalid="this.setCustomValidity('Длина пароля должна быть от 8 до 20 символов. Пароль должен содержать хотя бы одну заглавную букву, строчную букву, цифру и спецсимвол из набора: .:,;?!@#$%^&*_-+=')" oninput="this.setCustomValidity('')" pattern="(?=.*[0-9])(?=.*[\.:,;\?!@#\$%\^&\*_\-\+=])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z.:,;?!@#$%^&*_\-+=]{8, 20}" placeholder="Пароль" required>
 							</div>
 						</fieldset>
 						<div class="dialog-form__checkbox">
@@ -171,7 +171,7 @@
 							</div>
 							<div class="dialog-form__field">
 								<label class="form-label">Пароль</label>
-								<input class="form-input" type="password" name="pass" oninvalid="this.setCustomValidity('Длина пароля должна быть от 8 до 20 символов. Пароль должен содержать хотя бы одну заглавную букву, строчную букву, цифру и спецсимвол из набора: .:,;?!@#$%^&*_-+=')" oninput="this.setCustomValidity('')" pattern="[a-z]+[A-Z]+\d+[\.:,;\?!@#\$%\^&\*_\-\+=]+" minlength="8" maxlength="20" placeholder="Пароль" required>
+								<input class="form-input" type="password" name="pass" oninvalid="this.setCustomValidity('Длина пароля должна быть от 8 до 20 символов. Пароль должен содержать хотя бы одну заглавную букву, строчную букву, цифру и спецсимвол из набора: .:,;?!@#$%^&*_-+=')" oninput="this.setCustomValidity('')" pattern="(?=.*[0-9])(?=.*[\.:,;\?!@#\$%\^&\*_\-\+=])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z.:,;?!@#$%^&*_\-+=]{8, 20}" placeholder="Пароль" required>
 							</div>
 						</fieldset>
 						<p class="dialog-login-form__reset-password" onclick="show_reset_password()">Забыли пароль?</p>
