@@ -59,7 +59,7 @@ function create_navbar(context) {
 		try {
 			svgObj.addEventListener("load", context.navstarAnim);
 		} catch {
-			
+			console.log("dsadsasd");
 		}
 	}
 }
