@@ -56,11 +56,7 @@ function create_navbar(context) {
 			navMenuAnim.to(svgImage, { fill: "#DD1144", stroke: "#DD1144" });
 		});
 
-		try {
-			svgObj.addEventListener("load", context.navstarAnim);
-		} catch {
-			console.log("dsadsasd");
-		}
+		svgObj.addEventListener("load", context.navstarAnim);
 	}
 }
 
