@@ -3,7 +3,7 @@ gsap.registerPlugin(ScrollTrigger);
 // АНИМАЦИЯ ИНТЕРФЕЙСА
 // Анимация навбара
 
-let navMenus = gsap.utils.toArray(".navmenu");
+let navMenus = document.getElementsByClassName(".navmenu");
 let sections = [
 	"head",
 	"what-is",
@@ -56,7 +56,11 @@ function create_navbar(context) {
 			navMenuAnim.to(svgImage, { fill: "#DD1144", stroke: "#DD1144" });
 		});
 
-		svgObj.addEventListener("load", context.navstarAnim);
+		try {
+			svgObj.addEventListener("load", context.navstarAnim);
+		} catch {
+			
+		}
 	}
 }
 
