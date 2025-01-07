@@ -38,8 +38,21 @@ function create_navbar(context) {
 				lineHeight = "13vh";
 				break;
 		}
-		let navmenu = navMenus[i];
-		let svgObj = navmenu.querySelector(".navpoint .navstar");
+
+		if (i != 5) {
+
+			let navmenu = navMenus[i];
+			let svgObj = navmenu.querySelector(".navpoint .navstar");
+
+			context.add("navstarAnim", () => {
+				var svgDoc = svgObj.contentDocument;
+				var svgImage = svgDoc.querySelector(".anchor");
+				navMenuAnim.to(svgImage, { fill: "#DD1144", stroke: "#DD1144" });
+			});
+	
+			svgObj.addEventListener("load", context.navstarAnim);
+		}
+
 		let navMenuAnim = gsap.timeline({
 			scrollTrigger: {
 				trigger: `#${sections[i]}`,
@@ -47,20 +60,9 @@ function create_navbar(context) {
 				toggleActions: "restart none none reverse"
 			},
 		});
+
 		navMenuAnim.to(`#nav-${sections[i]} .${lineType}-line`, { borderTopWidth: `${lineHeight}` });
 		navMenuAnim.to(`#nav-${sections[i]} .nav-description`, { color: "#DD1144" }, "<");
-
-		context.add("navstarAnim", () => {
-			var svgDoc = svgObj.contentDocument;
-			var svgImage = svgDoc.querySelector(".anchor");
-			navMenuAnim.to(svgImage, { fill: "#DD1144", stroke: "#DD1144" });
-		});
-
-		try {
-			svgObj.addEventListener("load", context.navstarAnim);
-		} catch {
-
-		}
 	}
 }
 
