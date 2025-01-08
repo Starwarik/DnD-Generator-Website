@@ -40,6 +40,15 @@ main {
 	pointer-events: none;
 }
 
+.loading-circle {
+	display: none;
+	opacity: 0;
+	position: fixed;
+	left: 50%;
+	margin-left: -65px;
+	top: 40%;
+}
+
 /* навигационная панель */
 
 .nav-wrapper {

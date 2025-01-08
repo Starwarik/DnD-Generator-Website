@@ -174,6 +174,11 @@ mm.add('(min-width: 1024px)', (context) => {
 	accountMenuAnimPC.to(".account-navbar-menu", { opacity: 1, y: 596, ease: "expo.inout", duration: 0.5 });
 	accountMenuAnimPC.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
 
+	loadingCircleAnim = gsap.timeline().pause();
+	loadingCircleAnim.set(".loading-circle", { display: "block" });
+	loadingCircleAnim.to(".loading-circle", { opacity: 1 }, "<");
+	loadingCircleAnim.to(".loading-circle", { rotation: 360, ease: "none", repeat: -1, duration: 1 }, "<");
+
 	headHidePhonesTriggerPC = ScrollTrigger.create({
 		trigger: "#head",
 		start: "80% 10%",
@@ -386,6 +391,11 @@ mm.add('(min-width: 601px) and (max-width: 1023px)', (context) => {
 	accountAnimMobile.from(".account-navbar-menu", { opacity: 0, yPercent: 200, ease: "expo.inout", duration: 0.5 });
 	accountAnimMobile.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
 
+	loadingCircleAnim = gsap.timeline().pause();
+	loadingCircleAnim.set(".loading-circle", { display: "block" });
+	loadingCircleAnim.to(".loading-circle", { opacity: 1 }, "<");
+	loadingCircleAnim.to(".loading-circle", { rotation: 360, ease: "none", repeat: -1, duration: 1 }, "<");
+
 	context.add("accAnimMobile_reverse", () => {
 		accountAnimMobile.reverse();
 	});
@@ -497,6 +507,11 @@ mm.add('(min-width: 340px) and (max-width: 600px)', (context) => {
 	accountAnimMobile.from(".account-navbar-menu", { opacity: 0, yPercent: 200, ease: "expo.inout", duration: 0.5 });
 	accountAnimMobile.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
 
+	loadingCircleAnim = gsap.timeline().pause();
+	loadingCircleAnim.set(".loading-circle", { display: "block" });
+	loadingCircleAnim.to(".loading-circle", { opacity: 1 }, "<");
+	loadingCircleAnim.to(".loading-circle", { rotation: 360, ease: "none", repeat: -1, duration: 1 }, "<");
+
 	context.add("accAnimMobile_reverse", () => {
 		accountAnimMobile.reverse();
 	});
@@ -605,6 +620,11 @@ mm.add('(max-width: 339px)', (context) => {
 	accountAnimMobile = gsap.timeline().pause();
 	accountAnimMobile.from(".account-navbar-menu", { opacity: 0, yPercent: 200, ease: "expo.inout", duration: 0.5 });
 	accountAnimMobile.to(".account-navbar-menu-exit", { backgroundColor: "#00000040", pointerEvents: "all", ease: "power2.inout", duration: 0.4 }, "<");
+
+	loadingCircleAnim = gsap.timeline().pause();
+	loadingCircleAnim.set(".loading-circle", { display: "block" });
+	loadingCircleAnim.to(".loading-circle", { opacity: 1, duration: 1 }, "<");
+	loadingCircleAnim.to(".loading-circle", { rotation: 360, ease: "none", repeat: -1, duration: 1 }, "<");
 
 	context.add("accAnimMobile_reverse", () => {
 		accountAnimMobile.reverse();

@@ -75,14 +75,18 @@ async function resetPassword(token_reset, new_password) {
 }
 
 async function makePayment(amount) {
+    loadingCircleAnim.play();
     await fetch(domain+'api/make_payment?amount='+amount, {
         method: 'GET',
         headers: new Headers({
             'Authorization': 'Bearer '+token, 
         })
     }).then(
-		response => response.text()
-	).then(
+		(response) => {
+            loadingCircleAnim.reverse();
+            setTimeout(() => { loadingCircleAnim.stop(); }, 1001);
+            resolve(response.text());
+    }).then(
 		url => window.location.replace(url.slice(1, -1))
 	);
 }
