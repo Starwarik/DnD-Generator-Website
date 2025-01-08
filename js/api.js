@@ -42,7 +42,7 @@ async function getUserInfo(token) {
     if (request.ok) {
         return request.json();
     } else {
-        show_busy_nickname();
+        sessionStorage.setItem("busyNick", true);
     }
 
     return {

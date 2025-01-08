@@ -24,6 +24,13 @@ for (let i = 0; i < dialog_viewports.length; i++) {
     dialog_viewports[i].addEventListener('mousedown', (event) => event.stopPropagation());
 }
 
+window.addEventListener("load", () => {
+    if (sessionStorage.getItem("busyNick") == true) {
+        sessionStorage.removeItem("busyNick");
+        show_busy_nickname();
+    }
+})
+
 function close_all_dialogues() {
     dialog_register.close();
     dialog_login.close();
