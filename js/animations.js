@@ -53,7 +53,7 @@ function refresh_navmenu(navMenuAnims, numberOfSection) {
 	if (sectionTopPos <= 200 && sectionNavAnim.progress() < 1 && (scrollDirection == 1 || scrollDirection == 0) && (prevSectionNavAnim.progress() > 0.7)) {
 		sectionNavAnim.play();
 	} else if (sectionTopPos > 200 && sectionNavAnim.progress() > 0 && (scrollDirection == -1 || scrollDirection == 0) && (nextSectionNavAnim == undefined)) {
-
+		sectionNavAnim.reverse();
 	} else if (sectionTopPos > 200 && sectionNavAnim.progress() > 0 && (scrollDirection == -1 || scrollDirection == 0) && (nextSectionNavAnim.progress() < 0.3)) {
 		sectionNavAnim.reverse();
 	}
