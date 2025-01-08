@@ -38,10 +38,12 @@ async function getUserInfo(token) {
             'Authorization': 'Bearer '+token, 
         }), 
     })
+    
 
     if (request.ok) {
+        sessionStorage.setItem("headers", request.headers);
         return request.json();
-    } else {
+    } else if (false) {
         sessionStorage.setItem("busyNick", true);
     }
 
