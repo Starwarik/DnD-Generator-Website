@@ -44,6 +44,7 @@ async function getUserInfo(token) {
         return request.json();
     } else if (request.status == 401) {
         localStorage.setItem("busyNick", true);
+        location.reload();
     }
 
     return {
