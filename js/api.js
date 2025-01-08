@@ -82,11 +82,10 @@ async function makePayment(amount) {
             'Authorization': 'Bearer '+token, 
         })
     }).then(
-		(response) => {
-            loadingCircleAnim.reverse();
-            setTimeout(() => { loadingCircleAnim.stop(); }, 1001);
-            resolve(response.text());
-    }).then(
+		response => response.text()
+    ).then(
 		url => window.location.replace(url.slice(1, -1))
 	);
 }
+//loadingCircleAnim.reverse();
+//setTimeout(() => { loadingCircleAnim.kill(); }, 1001);
