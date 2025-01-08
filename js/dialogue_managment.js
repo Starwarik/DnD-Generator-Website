@@ -25,11 +25,9 @@ for (let i = 0; i < dialog_viewports.length; i++) {
 }
 
 window.addEventListener("load", () => {
-    show_busy_nickname();
-    console.log(localStorage.getItem("busyNick"));
     if (localStorage.getItem("busyNick") == true) {
-        localStorage.removeItem("busyNick");
         show_busy_nickname();
+        localStorage.removeItem("busyNick");
     }
 })
 
