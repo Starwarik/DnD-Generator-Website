@@ -25,7 +25,9 @@ for (let i = 0; i < dialog_viewports.length; i++) {
 }
 
 window.addEventListener("load", () => {
-    if (localStorage.getItem("busyNick") == true) {
+    var isBusy = localStorage.getItem("busyNick");
+    console.log(isBusy);
+    if (isBusy == true) {
         show_busy_nickname();
         localStorage.removeItem("busyNick");
     }
