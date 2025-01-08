@@ -47,9 +47,9 @@ function refresh_navmenu(navMenuAnim, numberOfSection) {
 	//var sectionHeight = section.getBoundingClientRect().height;
 	//var percentsOfSectionInScreenY = percents_in_screen_y(sectionTopPos, sectionHeight);
 
-	if (sectionTopPos <= 200 && navMenuAnim.progress() < 1 && scrollDirection == 1||0) {
+	if (sectionTopPos <= 200 && navMenuAnim.progress() < 1 && (scrollDirection == 1 || scrollDirection == 0)) {
 		navMenuAnim.play();
-	} else if (sectionTopPos > 200 && navMenuAnim.progress() > 0 && scrollDirection == -1||0) {
+	} else if (sectionTopPos > 200 && navMenuAnim.progress() > 0 && (scrollDirection == -1 || scrollDirection == 0)) {
 		navMenuAnim.reverse();
 	}
 }
