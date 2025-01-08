@@ -38,10 +38,12 @@ async function getUserInfo(token) {
             'Authorization': 'Bearer '+token, 
         }), 
     })
-    request.then(response => response.text()).then(responseText => console.log(responseText));
 
     if (request.ok) {
         return request.json();
+    } else {
+        var loginField = document.getElementById("login-register");
+        loginField.setCustomValidity("Этот ник уже занят. Пожалуйста, попробуйте ввести другой.");
     }
 
     return {
