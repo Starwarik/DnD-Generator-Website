@@ -39,23 +39,28 @@ window.addEventListener("scroll", () => {
 //	}
 //}
 
-function refresh_navmenu(navMenuAnim, numberOfSection) {
+function refresh_navmenu(navMenuAnims, numberOfSection) {
 	var sections = document.getElementsByClassName("section");
 	var section = sections[numberOfSection];
+	var sectionNavAnim = navMenuAnims[numberOfSection];
+	var prevSectionNavAnim = navMenuAnims.at(numberOfSection-1);
+	var nextSectionNavAnim = navMenuAnims.at(numberOfSection+1);
 
 	var sectionTopPos = section.getBoundingClientRect().top;
 	//var sectionHeight = section.getBoundingClientRect().height;
 	//var percentsOfSectionInScreenY = percents_in_screen_y(sectionTopPos, sectionHeight);
 
-	if (sectionTopPos <= 200 && navMenuAnim.progress() < 1 && (scrollDirection == 1 || scrollDirection == 0)) {
-		navMenuAnim.play();
-	} else if (sectionTopPos > 200 && navMenuAnim.progress() > 0 && (scrollDirection == -1 || scrollDirection == 0)) {
-		navMenuAnim.reverse();
+	sectionNavAnimCond: if (sectionTopPos <= 200 && sectionNavAnim.progress() < 1 && (scrollDirection == 1 || scrollDirection == 0) && (prevSectionNavAnim.progress() > 0.7)) {
+		sectionNavAnim.play();
+	} else if (sectionTopPos > 200 && sectionNavAnim.progress() > 0 && (scrollDirection == -1 || scrollDirection == 0) && (nextSectionNavAnim != undefined && nextSectionNavAnim.progress() < 0.3)) {
+		sectionNavAnim.reverse();
 	}
 }
 
 function create_navbar(context) {
 	var navMenuIntervals = [];
+	var navMenuAnims = [];
+
 	for (let i = 0; i < navMenus.length; i++) {
 		switch (i) {
 			case 0:
@@ -81,6 +86,7 @@ function create_navbar(context) {
 		}
 
 		let navMenuAnim = gsap.timeline().pause();
+		navMenuAnims.push(navMenuAnim);
 
 		navMenuAnim.to(`#nav-${sections[i]} .${lineType}-line`, { borderTopWidth: `${lineHeight}` });
 		navMenuAnim.to(`#nav-${sections[i]} .nav-description`, { color: "#DD1144" }, "<");
@@ -100,7 +106,7 @@ function create_navbar(context) {
 		}
 
 		if (i != 0) {
-			var navMenuInterval = setInterval(refresh_navmenu, 500, navMenuAnim, i);
+			var navMenuInterval = setInterval(refresh_navmenu, 500, navMenuAnims, i);
 			navMenuIntervals.push(navMenuInterval);
 		} else {
 			navMenuAnim.play();
