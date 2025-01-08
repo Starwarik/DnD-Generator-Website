@@ -623,6 +623,7 @@ mm.add('(max-width: 339px)', (context) => {
 
 	loadingCircleAnim = gsap.timeline().pause();
 	loadingCircleAnim.set(".loading-circle", { display: "block" });
+	loadingCircleAnim.to(".loading-circle__background", { backgroundColor: "#00000040", duration: 1 }, "<");
 	loadingCircleAnim.to(".loading-circle", { opacity: 1, duration: 1 }, "<");
 	loadingCircleAnim.to(".loading-circle", { rotation: 360, ease: "none", repeat: -1, duration: 1 }, "<");
 

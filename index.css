@@ -40,6 +40,16 @@ main {
 	pointer-events: none;
 }
 
+.loading-circle__background {
+	position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 30;
+}
+
 .loading-circle {
 	display: none;
 	opacity: 0;
