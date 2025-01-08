@@ -25,8 +25,6 @@ for (let i = 0; i < dialog_viewports.length; i++) {
 }
 
 window.addEventListener("load", () => {
-    console.log(sessionStorage.getItem("headers"));
-    sessionStorage.removeItem("headers");
     if (sessionStorage.getItem("busyNick") == true) {
         sessionStorage.removeItem("busyNick");
         show_busy_nickname();

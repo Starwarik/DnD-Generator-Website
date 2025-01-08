@@ -41,9 +41,8 @@ async function getUserInfo(token) {
     
 
     if (request.ok) {
-        sessionStorage.setItem("headers", request.headers);
         return request.json();
-    } else if (false) {
+    } else if (request.status == 401) {
         sessionStorage.setItem("busyNick", true);
     }
 
