@@ -43,7 +43,7 @@ async function getUserInfo(token) {
     if (request.ok) {
         return request.json();
     } else if (request.status == 401) {
-        sessionStorage.setItem("busyNick", true);
+        localStorage.setItem("busyNick", true);
     }
 
     return {
