@@ -137,7 +137,7 @@
 							</div>
 							<div class="dialog-form__field">
 								<label class="form-label">Логин</label>
-								<input class="form-input" id="login-register" type="text" name="login" oninput="this.setCustomValidity('')" minlength="3" maxlength="20" placeholder="Логин" required>
+								<input class="form-input" type="text" name="login" minlength="3" maxlength="20" placeholder="Логин" required>
 							</div>
 							<div class="dialog-form__field">
 								<label class="form-label">Пароль</label>
@@ -178,6 +178,14 @@
 						<button class="form-submit dialog-form__submit" type="submit">Войти</button>
 						<p class="dialog-form__info">Нет аккаунта? <span class="dialog-form__info_higlited" onclick="show_register()">Регистрация</span></p>
 					</form>
+				</div>
+			</dialog>
+		</div>
+		<div class="dialog-wrapper">
+			<dialog class="dialog notification-dialog" id="dialog__busy_nickname">
+				<div class="dialog-viewport">
+					<h1 class="dialog__header">Этот логин уже занят</h1>
+					<h2 class="dialog__header">Пожалуйста, попробуйте ввести другой</h2>
 				</div>
 			</dialog>
 		</div>

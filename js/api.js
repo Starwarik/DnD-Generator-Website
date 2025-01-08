@@ -42,8 +42,7 @@ async function getUserInfo(token) {
     if (request.ok) {
         return request.json();
     } else {
-        var loginField = document.getElementById("login-register");
-        loginField.setCustomValidity("Этот ник уже занят. Пожалуйста, попробуйте ввести другой.");
+        show_busy_nickname();
     }
 
     return {
