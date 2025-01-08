@@ -13,7 +13,7 @@ async function register(username, password, email) {
             'Content-Type': 'application/json;charset=utf-8'
         },
         body: JSON.stringify(formData),
-    }.then(response => response.text()).then(responseText => console.log(responseText)));
+    });
 }
 
 async function getToken(username, password) {
@@ -38,6 +38,7 @@ async function getUserInfo(token) {
             'Authorization': 'Bearer '+token, 
         }), 
     })
+    request.then(response => response.text()).then(responseText => console.log(responseText));
 
     if (request.ok) {
         return request.json();
