@@ -13,8 +13,49 @@ let sections = [
 	"footer"];
 let lineType = "";
 let lineHeight = "";
+let scrollDirection = 0;
+let previousScrollPos = 0;
+
+window.addEventListener("scroll", () => {
+	var scrollPos = window.scrollY || window.scrollTop || document.getElementsByTagName("html")[0].scrollTop;
+	var delta = scrollPos - previousScrollPos;
+	if (delta > 0) {
+		scrollDirection = 1;
+	} else if (delta == 0) {
+		scrollDirection = 0;
+	} else {
+		scrollDirection = -1;
+	}
+	previousScrollPos = scrollPos;
+});
+
+//function percents_in_screen_y(sectionTopPos, height) {
+//	if ((sectionTopPos < 0 && Math.abs(sectionTopPos) >= height) || sectionTopPos > 0) {
+//		var percentsInScreenY = 100;
+//		return percentsInScreenY;
+//	} else {
+//		var percentsInScreenY = (1 - (Math.abs(sectionTopPos) / height)) * 100;
+//		return percentsInScreenY;
+//	}
+//}
+
+function refresh_navmenu(navMenuAnim, numberOfSection) {
+	var sections = document.getElementsByClassName("section");
+	var section = sections[numberOfSection];
+
+	var sectionTopPos = section.getBoundingClientRect().top;
+	//var sectionHeight = section.getBoundingClientRect().height;
+	//var percentsOfSectionInScreenY = percents_in_screen_y(sectionTopPos, sectionHeight);
+
+	if (sectionTopPos <= 200 && navMenuAnim.progress() < 1 && scrollDirection == 1||0) {
+		navMenuAnim.play();
+	} else if (sectionTopPos > 200 && navMenuAnim.progress() > 0 && scrollDirection == -1||0) {
+		navMenuAnim.reverse();
+	}
+}
 
 function create_navbar(context) {
+	var navMenuIntervals = [];
 	for (let i = 0; i < navMenus.length; i++) {
 		switch (i) {
 			case 0:
@@ -39,6 +80,11 @@ function create_navbar(context) {
 				break;
 		}
 
+		let navMenuAnim = gsap.timeline().pause();
+
+		navMenuAnim.to(`#nav-${sections[i]} .${lineType}-line`, { borderTopWidth: `${lineHeight}` });
+		navMenuAnim.to(`#nav-${sections[i]} .nav-description`, { color: "#DD1144" }, "<");
+
 		if (i != 5) {
 
 			let navmenu = navMenus[i];
@@ -53,22 +99,18 @@ function create_navbar(context) {
 			svgObj.addEventListener("load", context.navstarAnim);
 		}
 
-		let navMenuAnim = gsap.timeline({
-			scrollTrigger: {
-				trigger: `#${sections[i]}`,
-				start: "500px 70%",
-				toggleActions: "restart none none reverse"
-			},
-		});
-
-		navMenuAnim.to(`#nav-${sections[i]} .${lineType}-line`, { borderTopWidth: `${lineHeight}` });
-		navMenuAnim.to(`#nav-${sections[i]} .nav-description`, { color: "#DD1144" }, "<");
+		if (i != 0) {
+			var navMenuInterval = setInterval(refresh_navmenu, 500, navMenuAnim, i);
+			navMenuIntervals.push(navMenuInterval);
+		} else {
+			navMenuAnim.play();
+		}
 	}
 }
 
 function navmenus_removeEventListeners(context) {
 	for (let i = 0; i < navMenus.length; i++) {
-		let svgObj = navmenus[i].querySelector(".navpoint .navstar");
+		let svgObj = navMenus[i].querySelector(".navpoint .navstar");
 		svgObj.removeEventListener("load", context.navstarAnim);
 	}
 }
