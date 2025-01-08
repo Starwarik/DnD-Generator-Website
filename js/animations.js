@@ -50,9 +50,11 @@ function refresh_navmenu(navMenuAnims, numberOfSection) {
 	//var sectionHeight = section.getBoundingClientRect().height;
 	//var percentsOfSectionInScreenY = percents_in_screen_y(sectionTopPos, sectionHeight);
 
-	sectionNavAnimCond: if (sectionTopPos <= 200 && sectionNavAnim.progress() < 1 && (scrollDirection == 1 || scrollDirection == 0) && (prevSectionNavAnim.progress() > 0.7)) {
+	if (sectionTopPos <= 200 && sectionNavAnim.progress() < 1 && (scrollDirection == 1 || scrollDirection == 0) && (prevSectionNavAnim.progress() > 0.7)) {
 		sectionNavAnim.play();
-	} else if (sectionTopPos > 200 && sectionNavAnim.progress() > 0 && (scrollDirection == -1 || scrollDirection == 0) && (nextSectionNavAnim != undefined && nextSectionNavAnim.progress() < 0.3)) {
+	} else if (sectionTopPos > 200 && sectionNavAnim.progress() > 0 && (scrollDirection == -1 || scrollDirection == 0) && (nextSectionNavAnim == undefined)) {
+
+	} else if (sectionTopPos > 200 && sectionNavAnim.progress() > 0 && (scrollDirection == -1 || scrollDirection == 0) && (nextSectionNavAnim.progress() < 0.3)) {
 		sectionNavAnim.reverse();
 	}
 }
