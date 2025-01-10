@@ -121,7 +121,9 @@ class AdventureInfoInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        generated_answer = AdventureInfoInstructionAnswer.model_validate(result)
+        generated_answer = AdventureInfoInstructionAnswer.model_validate(
+            result["location"]
+        )
         adventure.description_location = generated_answer.description_location
         adventure.description_places = generated_answer.description_places
         return adventure
