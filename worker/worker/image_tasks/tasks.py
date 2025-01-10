@@ -53,6 +53,7 @@ def generate_images_adventure(
                     location_description=content.description_location
                     + "\n"
                     + "\n".join(content.description_places),
+                    nameSetting=content.setting,
                 ),
                 adventure.user_id,
             )
@@ -69,6 +70,7 @@ def generate_images_adventure(
                     location_description=content.description_location
                     + "\n"
                     + "\n".join(content.description_places),
+                    nameSetting=content.setting,
                 ),
                 adventure.user_id,
             )
@@ -108,6 +110,7 @@ def generate_images_npcs(
                     npc_image_generation.format(
                         char_name=char.name,
                         char_description=char.disc_costum + "\n" + char.dic_life,
+                        nameSetting=content.setting,
                     ),
                     adventure.user_id,
                 )
@@ -143,7 +146,9 @@ def generate_images_items(
             try:
                 image_id, current_spented_token = _generate_image(
                     item_image_generation.format(
-                        item_name=item.name, item_description=item.description
+                        item_name=item.name,
+                        item_description=item.description,
+                        nameSetting=content.setting,
                     ),
                     adventure.user_id,
                 )
