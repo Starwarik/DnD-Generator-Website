@@ -58,8 +58,8 @@ class ItemAnswer(BaseModel):
     description: str
     values: str
     type: str
-    damage: str | None
-    armor_class: str | None
+    damage: str | None = None
+    armor_class: str | None = None
 
 
 class ItemInstructionAnswer(BaseModel):
