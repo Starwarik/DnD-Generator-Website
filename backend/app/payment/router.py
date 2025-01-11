@@ -97,8 +97,8 @@ async def on_payment_success(
 
     result = response.json()
 
-    if result["orderStatus"] == 2 or result["orderStatus"] == 1:
-        return result["orderStatus"]
+    if not (result["orderStatus"] == 2 or result["orderStatus"] == 1):
+        return RedirectResponse(payment_setting.url_failed_order)
 
     transaction = await session.get(Transaction, order_number)
 
