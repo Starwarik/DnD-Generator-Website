@@ -98,7 +98,7 @@ async def on_payment_success(
     result = response.json()
 
     if result["orderStatus"] == 2 or result["orderStatus"] == 1:
-        return result
+        return result["orderStatus"]
 
     transaction = await session.get(Transaction, order_number)
 
