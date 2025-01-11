@@ -1,5 +1,5 @@
 from typing_extensions import Annotated
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.database.database import get_session
 
@@ -45,29 +45,35 @@ async def make_payment(
     current_user: Annotated[User, Depends(get_current_user)],
     session: AsyncSession = Depends(get_session),
 ):
-    transaction = Transaction(user_id=current_user.id, amount=amount, is_success=False)
-    session.add(transaction)
-    await session.commit()
-    await session.refresh(transaction)
+    try:
+        transaction = Transaction(
+            user_id=current_user.id, amount=amount, is_success=False
+        )
+        session.add(transaction)
+        await session.commit()
+        await session.refresh(transaction)
 
-    amount = int(amount * 100)
+        amount = int(amount * 100)
 
-    is_failed = True
-    transaction_id = transaction.id - 1
-    while is_failed:
-        transaction_id += 1
-        result = create_order(amount, transaction_id)
-        is_failed = "errorCode" in result
+        is_failed = True
+        transaction_id = transaction.id - 1
+        while is_failed:
+            transaction_id += 1
+            result = create_order(amount, transaction_id)
+            is_failed = "errorCode" in result
 
-        transaction_try = await session.get(Transaction, transaction_id)
+            transaction_try = await session.get(Transaction, transaction_id)
 
-        is_failed = is_failed or (not transaction_try is None)
+            is_failed = is_failed or (not transaction_try is None)
 
-    transaction.id = transaction_id
-    session.add(transaction)
-    await session.commit()
+        transaction.id = transaction_id
+        session.add(transaction)
+        await session.commit()
 
-    return result["formUrl"]
+        return result["formUrl"]
+    except Exception as e:
+        print(e)
+        return HTTPException(404)
 
 
 @payment_router.get("/api/payment_success")
