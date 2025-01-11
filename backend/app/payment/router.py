@@ -60,9 +60,11 @@ async def make_payment(
         while is_failed:
             transaction_id += 1
             result = create_order(amount, transaction_id)
+            print(result)
             is_failed = "errorCode" in result
 
             transaction_try = await session.get(Transaction, transaction_id)
+            print(transaction_try)
 
             is_failed = is_failed or (not transaction_try is None)
 
