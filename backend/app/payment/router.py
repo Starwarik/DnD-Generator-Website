@@ -45,6 +45,7 @@ async def make_payment(
     current_user: Annotated[User, Depends(get_current_user)],
     session: AsyncSession = Depends(get_session),
 ):
+    result, transaction_try = "none", "none"
     try:
         transaction = Transaction(
             user_id=current_user.id, amount=amount, is_success=False
@@ -55,7 +56,6 @@ async def make_payment(
 
         amount = int(amount * 100)
 
-        result, transaction_try = "none", "none"
         is_failed = True
         transaction_id = transaction.id - 1
         while is_failed:
@@ -98,7 +98,7 @@ async def on_payment_success(
     result = response.json()
 
     if result["orderStatus"] == 2 or result["orderStatus"] == 1:
-        raise Exception("Not sucessful")
+        return result
 
     transaction = await session.get(Transaction, order_number)
 
