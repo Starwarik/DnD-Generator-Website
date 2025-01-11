@@ -55,16 +55,15 @@ async def make_payment(
 
         amount = int(amount * 100)
 
+        result, transaction_try = "none", "none"
         is_failed = True
         transaction_id = transaction.id - 1
         while is_failed:
             transaction_id += 1
             result = create_order(amount, transaction_id)
-            print(result)
             is_failed = "errorCode" in result
 
             transaction_try = await session.get(Transaction, transaction_id)
-            print(transaction_try)
 
             is_failed = is_failed or (not transaction_try is None)
 
@@ -74,7 +73,7 @@ async def make_payment(
 
         return result["formUrl"]
     except Exception as e:
-        print(e)
+        print(e, result, transaction_try)
         return HTTPException(404)
 
 
