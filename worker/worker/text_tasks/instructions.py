@@ -126,6 +126,7 @@ class AdventureInfoInstruction(TextGenerationInstruction):
         )
         adventure.description_location = generated_answer.description_location
         adventure.description_places = generated_answer.description_places
+        adventure.annotation = generated_answer.description_location[:30]
         return adventure
 
 

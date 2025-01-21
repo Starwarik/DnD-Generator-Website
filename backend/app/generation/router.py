@@ -7,9 +7,10 @@ from app.adventure.schemas import AdventureInfo
 from app.adventure.service import (
     get_adventure,
     create_adventure,
+    update_state_content_adventure,
 )
 from app.database.database import get_session
-from app.adventure.models import Adventure, AdventurePublic
+from app.adventure.models import Adventure, AdventurePublic, AdventureState
 from app.user.models import User
 from app.auth.dependencies import get_current_user
 
@@ -32,6 +33,14 @@ async def generate_adventure(
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
     adventure: Adventure = await create_adventure(current_user.id, session)
+    adventure_info = AdventureInfo.model_validate_json(adventure.content)
+    adventure_info.name = location_name
+    adventure_info.location = location_name
+    adventure_info.setting = setting
+    adventure_info.playerNum = num_players
+    adventure = await update_state_content_adventure(
+        adventure.id, AdventureState.generating_text, adventure_info, session
+    )
 
     task = chain(
         signature(
@@ -56,6 +65,15 @@ async def generate_test_adventure(
     session: AsyncSession = Depends(get_session),
 ):
     adventure: Adventure = await create_adventure(current_user.id, session)
+    adventure_info = AdventureInfo.model_validate_json(adventure.content)
+    adventure_info.name = location_name
+    adventure_info.location = location_name
+    adventure_info.setting = setting
+    adventure_info.playerNum = num_players
+    adventure = await update_state_content_adventure(
+        adventure.id, AdventureState.generating_text, adventure_info, session
+    )
+
     task = chain(
         signature(
             "main.generate_new_test_adventure",

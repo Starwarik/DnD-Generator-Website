@@ -32,7 +32,7 @@ def generate_new_adventure(
     )
     with Session(engine) as session:
         update_state_content_adventure(
-            id_adventure, AdventureState.ready, adventure, session
+            id_adventure, AdventureState.image_adventure, adventure, session
         )
     return (id_adventure, spented_tokens)
 
@@ -49,7 +49,7 @@ def generate_new_test_adventure(
     )
     with Session(engine) as session:
         update_state_content_adventure(
-            id_adventure, AdventureState.ready, adventure, session
+            id_adventure, AdventureState.image_adventure, adventure, session
         )
     return id_adventure
 
@@ -66,7 +66,7 @@ def regenerate_new_adventure(
     )
     with Session(engine) as session:
         update_state_content_adventure(
-            id_adventure, AdventureState.ready, adventure_info, session
+            id_adventure, AdventureState.image_adventure, adventure_info, session
         )
     return (id_adventure, spented_tokens)
 
@@ -118,7 +118,7 @@ def regenerate_npcs(
     )
     with Session(engine) as session:
         update_state_content_adventure(
-            id_adventure, AdventureState.ready, adventure, session
+            id_adventure, AdventureState.image_characters, adventure, session
         )
     return (id_adventure, spented_tokens)
 
@@ -136,7 +136,7 @@ def regenerate_npc_concrete(
     )
     with Session(engine) as session:
         update_state_content_adventure(
-            id_adventure, AdventureState.ready, adventure, session
+            id_adventure, AdventureState.image_characters, adventure, session
         )
     return (id_adventure, spented_tokens)
 
@@ -153,7 +153,7 @@ def regenerate_items(
     )
     with Session(engine) as session:
         update_state_content_adventure(
-            id_adventure, AdventureState.ready, adventure, session
+            id_adventure, AdventureState.image_items, adventure, session
         )
     return (id_adventure, spented_tokens)
 
@@ -171,6 +171,6 @@ def regenerate_item_concrete(
     )
     with Session(engine) as session:
         update_state_content_adventure(
-            id_adventure, AdventureState.ready, adventure, session
+            id_adventure, AdventureState.image_items, adventure, session
         )
     return (id_adventure, spented_tokens)

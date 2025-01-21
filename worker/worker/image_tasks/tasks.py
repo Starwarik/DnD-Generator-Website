@@ -88,7 +88,7 @@ def generate_images_adventure(
 @celery_app.task(name="main.generate_images_npcs")
 def generate_images_npcs(
     id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
-    state: AdventureState = AdventureState.image_items,
+    state: AdventureState = AdventureState.ready,
 ) -> tuple[int, SpentedTokensCounts]:
     """
     Генерация картинок персонажей.
