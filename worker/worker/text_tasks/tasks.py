@@ -44,9 +44,7 @@ def generate_new_test_adventure(
     setting: str,
     num_players: int,
 ):
-    adventure, spented_tokens = generate_new_test_adventure_json(
-        location_name, setting, num_players
-    )
+    adventure, _ = generate_new_test_adventure_json(location_name, setting, num_players)
     with Session(engine) as session:
         update_state_content_adventure(
             id_adventure, AdventureState.image_adventure, adventure, session

@@ -33,11 +33,12 @@ async def generate_adventure(
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
     adventure: Adventure = await create_adventure(current_user.id, session)
-    adventure_info = AdventureInfo.model_validate_json(adventure.content)
-    adventure_info.name = location_name
-    adventure_info.location = location_name
-    adventure_info.setting = setting
-    adventure_info.playerNum = num_players
+    adventure_info = AdventureInfo(
+        name=location_name,
+        location=location_name,
+        setting=setting,
+        playerNum=num_players,
+    )
     adventure = await update_state_content_adventure(
         adventure.id, AdventureState.generating_text, adventure_info, session
     )
@@ -48,8 +49,8 @@ async def generate_adventure(
             args=(adventure.id, location_name, setting, num_players),
         ),
         signature("main.generate_images_adventure"),
-        signature("main.generate_images_npcs"),
         signature("main.generate_images_items"),
+        signature("main.generate_images_npcs"),
         signature("main.finish_generation_and_spent_balance"),
     )
     task()
@@ -65,11 +66,12 @@ async def generate_test_adventure(
     session: AsyncSession = Depends(get_session),
 ):
     adventure: Adventure = await create_adventure(current_user.id, session)
-    adventure_info = AdventureInfo.model_validate_json(adventure.content)
-    adventure_info.name = location_name
-    adventure_info.location = location_name
-    adventure_info.setting = setting
-    adventure_info.playerNum = num_players
+    adventure_info = AdventureInfo(
+        name=location_name,
+        location=location_name,
+        setting=setting,
+        playerNum=num_players,
+    )
     adventure = await update_state_content_adventure(
         adventure.id, AdventureState.generating_text, adventure_info, session
     )
@@ -80,8 +82,8 @@ async def generate_test_adventure(
             args=(adventure.id, location_name, setting, num_players),
         ),
         signature("main.generate_test_images_adventure"),
-        signature("main.generate_test_images_npcs"),
         signature("main.generate_test_images_items"),
+        signature("main.generate_test_images_npcs"),
     )
     task()
     return adventure

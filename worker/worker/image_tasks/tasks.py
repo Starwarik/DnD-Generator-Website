@@ -31,7 +31,7 @@ def _generate_image(instruction: str, user_id: int):
 @celery_app.task(name="main.generate_images_adventure")
 def generate_images_adventure(
     id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
-    state: AdventureState = AdventureState.image_characters,
+    state: AdventureState = AdventureState.image_items,
 ) -> tuple[int, SpentedTokensCounts]:
     """
     Генерация обложки и карты для всего приключения.
@@ -127,7 +127,7 @@ def generate_images_npcs(
 @celery_app.task(name="main.generate_images_items")
 def generate_images_items(
     id_adventure_and_spented_tokens: tuple[int, SpentedTokensCounts],
-    state: AdventureState = AdventureState.ready,
+    state: AdventureState = AdventureState.image_characters,
 ) -> tuple[int, SpentedTokensCounts]:
     """
     Генерация картинок предметов.
@@ -168,7 +168,7 @@ def generate_images_items(
 @celery_app.task(name="main.generate_test_images_adventure")
 def generate_test_images_adventure(
     id_adventure: int,
-    state: AdventureState = AdventureState.image_characters,
+    state: AdventureState = AdventureState.image_items,
 ) -> int:
     """
     Тестовая генерация обложек и карты. Вставляются id -42 для изображений.
@@ -193,7 +193,7 @@ def generate_test_images_adventure(
 @celery_app.task(name="main.generate_test_images_npcs")
 def generate_test_images_npcs(
     id_adventure: int,
-    state: AdventureState = AdventureState.image_items,
+    state: AdventureState = AdventureState.ready,
 ) -> int:
     """
     Тестовая генерация картинок персонажей. Вставляются id -42 для изображений персонажей.
@@ -220,7 +220,7 @@ def generate_test_images_npcs(
 @celery_app.task(name="main.generate_test_images_items")
 def generate_test_images_items(
     id_adventure: int,
-    state: AdventureState = AdventureState.ready,
+    state: AdventureState = AdventureState.image_characters,
 ) -> int:
     """
     Тестовая генерация картинок предметов. Вставляются id -42 для изображений предме6тов.
