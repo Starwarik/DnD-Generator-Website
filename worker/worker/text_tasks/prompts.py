@@ -22,10 +22,10 @@ quests_prompt = """Сгенерируй не менее {playerNumXthree} кве
 quests_answer = "{quests_json_answer}"
 
 items_regeneration_prompt = """Сгенерируй {playerNum} - {playerNumXthree} новых предметов, используя описание локации. 
-Структурируй их в объект "items" с ключами: "name", "description", "values", "type", "damage", "armor_class. Общее содержание ответа не должно привышать 500 токенов""""
+Структурируй их в объект "items" с ключами: "name", "description", "values", "type", "damage", "armor_class. Общее содержание ответа не должно привышать 500 токенов"""
 
 items_regeneration_concrete_prompt = """оздай новый предмет вместо "{nameItem}", используй описание локации. 
-Структурируй в объект "items" с ключами: "name", "description", "values", "type", "damage", "armor_class. Общее содержание ответа не должно привышать 500 токенов""""
+Структурируй в объект "items" с ключами: "name", "description", "values", "type", "damage", "armor_class. Общее содержание ответа не должно привышать 500 токенов"""
 
 npcs_regeneration_prompt = """Сгенерируй {playerNum} - {playerNumXthree} новых персонажей на основе локации. Привяжи к квестам и предметам. 
 Структурируй в объект "npc" с ключами: "name" — имя персонажа; "disc_costum" – подробное описание внешности персонажа; "dic_life" – описание образа жизни персонажа. Общее содержание ответа не должно привышать 500 токенов"""
