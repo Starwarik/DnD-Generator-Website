@@ -18,6 +18,7 @@ from app.generation.config import generation_setting
 from app.generation.celery import celery_app
 from celery import chain, signature
 
+
 generation_router = APIRouter(tags=["generation"])
 
 
@@ -104,10 +105,6 @@ async def regenerate_quests(
         raise HTTPException(402, detail="Не достаточно денег на балансе для генерации.")
 
     adventure: Adventure = await get_adventure(id_adventure, current_user.id, session)
-    celery_app.send_task(
-        "main.regenerate_quests",
-        (adventure.id,),
-    )
     task = chain(
         signature(
             "main.regenerate_quests",
