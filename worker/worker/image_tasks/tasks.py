@@ -61,7 +61,7 @@ def generate_images_adventure(
             spented_tokens += current_spented_token
             time.sleep(10)
     except Exception as e:
-        print(e)
+        print(e, content.adventure_image_id, content.map_image_id)
     try:
         if content.map_image_id == -1:
             image_id, current_spented_token = _generate_image(
@@ -78,7 +78,7 @@ def generate_images_adventure(
             spented_tokens += current_spented_token
             time.sleep(10)
     except Exception as e:
-        print(e)
+        print(e, content.adventure_image_id, content.map_image_id)
 
     with Session(engine) as session:
         update_state_content_adventure(adventure.id, state, content, session)
