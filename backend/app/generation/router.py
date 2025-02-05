@@ -165,7 +165,7 @@ async def regenerate_npcs(
     task = chain(
         signature(
             "main.regenerate_npcs",
-            args=(adventure.id),
+            args=(adventure.id,),
         ),
         signature("main.generate_images_npcs"),
         signature("main.finish_generation_and_spent_balance"),
