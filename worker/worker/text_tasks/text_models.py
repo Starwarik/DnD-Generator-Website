@@ -88,7 +88,7 @@ class YandexGPTTextSync(TextGenerationModel):
         self.url_to_server = url_to_server
         self.api_key = generation_setting.yandexchat_api_key.get_secret_value()
         self.folder_id = generation_setting.yandexchat_folder_id
-        self.model_uri = "yandexgpt-lite/latest"
+        self.model_uri = "yandexgpt/latest"
         self.max_tokens = 2000
         self.temperature = 1
 

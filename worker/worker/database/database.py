@@ -16,4 +16,4 @@ class Base(DeclarativeBase):
     __abstract__ = True
 
 
-engine = create_engine(db_setting.sync_database_url, echo=True)
+engine = create_engine(db_setting.sync_database_url)
