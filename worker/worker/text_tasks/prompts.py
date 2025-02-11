@@ -1,6 +1,7 @@
 # ============================ Message Template =============================
 
 from worker.text_tasks.schemas import Message, MessageType
+
 adventure_info_prompt = """Сгенерируй описание локации для ролевой настольной игры D&D (Dungeons & Dragons) пятой редакции. Локация: "{nameLocation}"; жанр: "{nameSetting}", 
 количество участников: {playerNum}. Результат должен быть представлен в формате JSON и включать объект "location" со следующими ключами: 
 "description_location" — название локации и краткое описание локации в двух предложениях; 
@@ -39,7 +40,7 @@ items_regeneration_prompt = """Сгенерируй {playerNum} - 4 новых �
 
 items_regeneration_concrete_prompt = """Создай новый предмет вместо "{nameItem}", используй описание локации (в соответствии с жанром "{nameSetting}").
 Структурируй в объект "items" с ключами: "name", "description", "values", "type", "damage", "armor_class. 
-Общее содержание ответа не должно привышать 500 символов""""
+Общее содержание ответа не должно привышать 500 символов"""
 
 npcs_regeneration_prompt = """Сгенерируй {playerNum} - 4 новых персонажей на основе локации (в соответствии с жанром "{nameSetting}"). Привяжи к квестам и предметам. 
 Структурируй в объект "npc" с ключами: "name" — имя персонажа; "disc_costum" – подробное описание внешности персонажа; "dic_life" – описание образа жизни персонажа. 
