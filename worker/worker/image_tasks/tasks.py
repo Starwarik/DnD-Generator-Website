@@ -18,6 +18,10 @@ from sqlalchemy.orm import Session
 
 import time
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 # ================= IMAGE ============================
 
 
@@ -61,6 +65,8 @@ def generate_images_adventure(
             spented_tokens += current_spented_token
             time.sleep(10)
     except Exception as e:
+        logger.error("Can't generate adventure image")
+        logger.error(repr(e))
         print(e, content.adventure_image_id, content.map_image_id)
     try:
         if content.map_image_id == -1:
@@ -78,6 +84,8 @@ def generate_images_adventure(
             spented_tokens += current_spented_token
             time.sleep(10)
     except Exception as e:
+        logger.error("Can't generate map image")
+        logger.error(repr(e))
         print(e, content.adventure_image_id, content.map_image_id)
 
     with Session(engine) as session:
@@ -118,6 +126,8 @@ def generate_images_npcs(
                 spented_tokens += current_spented_token
                 time.sleep(10)
             except Exception as e:
+                logger.error("Can't generate npc image")
+                logger.error(repr(e))
                 print(e)
     with Session(engine) as session:
         update_state_content_adventure(adventure.id, state, content, session)
@@ -156,6 +166,8 @@ def generate_images_items(
                 spented_tokens += current_spented_token
                 time.sleep(10)
             except Exception as e:
+                logger.error("Can't generate items image")
+                logger.error(repr(e))
                 print(e)
     with Session(engine) as session:
         update_state_content_adventure(adventure.id, state, content, session)
