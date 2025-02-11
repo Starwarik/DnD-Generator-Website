@@ -35,7 +35,7 @@ quests_prompt = """Сгенерируй не менее {playerNumXthree} кве
 quests_answer = "{quests_json_answer}"
 
 items_regeneration_prompt = """Сгенерируй {playerNum} - 4 новых предметов, используя описание локации (в соответствии с жанром "{nameSetting}"). 
-Структурируй их в объект "items" с ключами: "name", "description", "values", "type", "damage", "armor_class". Общее содержание ответа не должно привышать 500 символов""""
+Структурируй их в объект "items" с ключами: "name", "description", "values", "type", "damage", "armor_class". Общее содержание ответа не должно привышать 500 символов"""
 
 items_regeneration_concrete_prompt = """Создай новый предмет вместо "{nameItem}", используй описание локации (в соответствии с жанром "{nameSetting}").
 Структурируй в объект "items" с ключами: "name", "description", "values", "type", "damage", "armor_class. 
