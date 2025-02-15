@@ -48,7 +48,6 @@ class TextGenerationResult(BaseModel):
 
 
 class AdventureInfoInstructionAnswer(BaseModel):
-    name: str
     description_location: str
     description_places: list[str]
 
