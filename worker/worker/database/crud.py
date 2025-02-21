@@ -1,4 +1,4 @@
-from sqlalchemy import select, update
+from sqlalchemy import select, update, delete
 from sqlalchemy.orm import Session
 from worker.database.models import Adventure, AdventureState, Image, User
 from worker.database.schemas import AdventureInfo, ImageContainer, SpentedTokensCounts
@@ -83,3 +83,21 @@ def spend_balance_on_tokens(
         + tokens_count.image_generated * generation_setting.image_generated_cost
     )
     change_balance_on_value(id, -diff_balance, session)
+
+
+def delete_adventure(id: int, session: Session):
+    adventure = get_adventure(id, session)
+    content = AdventureInfo.model_validate(adventure.content)
+    images_ids: list[int] = []
+    images_ids.append(content.adventure_image_id)
+    images_ids.append(content.map_image_id)
+    images_ids.extend([item.image_id for item in content.items])
+    images_ids.extend([npc.image_id for npc in content.npcs])
+    images_ids = list(filter(lambda x: x != -1 and x != -42, images_ids))
+    if len(images_ids) != 0:
+        command = delete(Image).where(Image.id.in_(images_ids))
+        session.execute(command)
+        session.commit()
+    command = delete(Adventure).where(Adventure.id == id)
+    session.execute(command)
+    session.commit()

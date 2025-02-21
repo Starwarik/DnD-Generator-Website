@@ -299,7 +299,7 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
         ]
         for i in range(len(adventure.quests)):
             adventure.quests[i].id_quest = i
-        raise NotImplementedError()
+        return adventure
 
 
 @final
@@ -343,8 +343,11 @@ class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        generated_answer = QuestInstructionConcreteAnswer.model_validate(result)
-        quest = Quest.model_validate(generated_answer.quests, from_attributes=True)
+        generated_answer: QuestInstructionConcreteAnswer = QuestInstructionConcreteAnswer.model_validate(result)
+        if type(generated_answer.quests) is list:
+            quest = Quest.model_validate(generated_answer.quests[0], from_attributes=True)
+        else:
+            quest = Quest.model_validate(generated_answer.quests, from_attributes=True)
         quest.id_quest = self.index
         adventure.quests[self.index] = quest
         return adventure
@@ -438,7 +441,10 @@ class NPCsConcreteRegenerateInstruction(TextGenerationInstruction):
         :param result - результат генерации
         """
         generated_answer = NPCInstructionConcreteAnswer.model_validate(result)
-        npc = NPC.model_validate(generated_answer.npc, from_attributes=True)
+        if type(generated_answer.npc) is list:
+            npc = NPC.model_validate(generated_answer.npc[0], from_attributes=True)
+        else:
+            npc = NPC.model_validate(generated_answer.npc, from_attributes=True)
         npc.id_npc = self.index
         adventure.npcs[self.index] = npc
         return adventure
@@ -532,7 +538,10 @@ class ItemsConcreteRegenerateInstruction(TextGenerationInstruction):
         :param result - результат генерации
         """
         generated_answer = ItemInstructionConcreteAnswer.model_validate(result)
-        item = Item.model_validate(generated_answer.items, from_attributes=True)
+        if type(generated_answer.items) is list:
+            item = Item.model_validate(generated_answer.items[0], from_attributes=True)
+        else:
+            item = Item.model_validate(generated_answer.items, from_attributes=True)
         item.id_items = self.index
         adventure.items[self.index] = item
         return adventure

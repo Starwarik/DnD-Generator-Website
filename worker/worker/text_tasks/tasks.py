@@ -15,9 +15,17 @@ from worker.text_tasks.text_models import text_generation_model
 
 from sqlalchemy.orm import Session
 from worker.database.database import engine
-from worker.database.crud import update_state_content_adventure, get_adventure
+from worker.database.crud import (
+    update_state_content_adventure,
+    get_adventure,
+    delete_adventure,
+)
 
 from worker.main import celery_app
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @celery_app.task(name="main.generate_new_adventure")
@@ -27,9 +35,16 @@ def generate_new_adventure(
     setting: str,
     num_players: int,
 ):
-    adventure, spented_tokens = generate_new_adventure_json(
-        location_name, setting, num_players, text_generation_model
-    )
+    try:
+        adventure, spented_tokens = generate_new_adventure_json(
+            location_name, setting, num_players, text_generation_model
+        )
+    except Exception as e:
+        logger.error("Generation failed. Deleting adventure.")
+        with Session(engine) as session:
+            delete_adventure(id_adventure, session)
+        return
+
     with Session(engine) as session:
         update_state_content_adventure(
             id_adventure, AdventureState.image_adventure, adventure, session

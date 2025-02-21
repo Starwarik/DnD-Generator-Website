@@ -86,12 +86,12 @@ class QuestsInstructionAnswer(BaseModel):
 
 
 class QuestInstructionConcreteAnswer(BaseModel):
-    quests: QuestAnswer
+    quests: QuestAnswer | list[QuestAnswer]
 
 
 class NPCInstructionConcreteAnswer(BaseModel):
-    npc: NPCAnswer
+    npc: NPCAnswer | list[NPCAnswer]
 
 
 class ItemInstructionConcreteAnswer(BaseModel):
-    items: ItemAnswer
+    items: ItemAnswer | list[ItemAnswer]
