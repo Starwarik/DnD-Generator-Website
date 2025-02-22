@@ -60,7 +60,6 @@ def generate_text_with_tries(
         generated_result = None
         for index_try in range(n_tries):
             try:
-                # raise Exception()
                 generated_result = model.generate_text(prompts)
                 print("============GENERATED RESULT:==================")
                 print(generated_result)
@@ -77,7 +76,7 @@ def generate_text_with_tries(
                 break
             except Exception as e:
                 generated_result = None
-                logger.error(f"Can't generate text. {index_try} try failed. {repr(e)}")
+                logger.error(f"Can't generate text. {index_try+1}/{n_tries} try failed. {repr(e)}")
         if generated_result is None:
             raise MaxAttemptsExced("Max tries")
         print("Success")
