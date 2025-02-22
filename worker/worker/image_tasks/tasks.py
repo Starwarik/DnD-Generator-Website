@@ -73,7 +73,7 @@ def generate_images_adventure(
             image_id, current_spented_token = _generate_image(
                 map_image_generation.format(
                     location_name=content.location,
-                    location_description=content.description_location
+                    description_places=content.description_location
                     + "\n"
                     + "\n".join(content.description_places),
                     nameSetting=content.setting,
