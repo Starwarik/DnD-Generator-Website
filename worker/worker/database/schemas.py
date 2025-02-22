@@ -25,12 +25,17 @@ class Item(BaseModel):
     image_id: int = -1
 
 
+class QuestRewards(BaseModel):
+    gold: str
+    silver: str
+    bronze: str
+
 class Quest(BaseModel):
     id_quest: int | None = None
     name: str
     description: str
     goal: str
-
+    rewards: QuestRewards
 
 class AdventureInfo(BaseModel):
     name: str
