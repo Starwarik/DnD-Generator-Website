@@ -26,9 +26,9 @@ class Item(BaseModel):
 
 
 class QuestRewards(BaseModel):
-    gold: str
-    silver: str
-    bronze: str
+    gold: int
+    silver: int
+    bronze: int
 
 class Quest(BaseModel):
     id_quest: int | None = None

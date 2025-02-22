@@ -237,7 +237,7 @@ class QuestsInstruction(TextGenerationInstruction):
         return config
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: dict[str, Any]
+        self, adventure: AdventureInfo, result: list[dict[str, Any]]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -245,10 +245,10 @@ class QuestsInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        generated_answer = QuestsInstructionAnswer.model_validate(result)
+        generated_answer = [QuestAnswer.model_validate(quest) for quest in result]
         adventure.quests = [
             Quest.model_validate(x, from_attributes=True)
-            for x in generated_answer.quests
+            for x in generated_answer
         ]
         for i in range(len(adventure.quests)):
             adventure.quests[i].id_quest = i

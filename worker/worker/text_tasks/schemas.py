@@ -75,9 +75,9 @@ class NPCsInstructionAnswer(BaseModel):
     npc: list[NPCAnswer]
 
 class QuestRewards(BaseModel):
-    gold: str
-    silver: str
-    bronze: str
+    gold: int
+    silver: int
+    bronze: int
 
 
 class QuestAnswer(BaseModel):
@@ -85,10 +85,6 @@ class QuestAnswer(BaseModel):
     description: str
     goal: str
     rewards: QuestRewards
-
-
-class QuestsInstructionAnswer(BaseModel):
-    quests: list[QuestAnswer]
 
 
 class QuestInstructionConcreteAnswer(BaseModel):
