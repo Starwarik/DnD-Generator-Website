@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import json
 
 import worker.text_tasks.prompts as prompts_template
 
@@ -52,9 +53,7 @@ def calc_quest_answer_config(adventure: AdventureInfo) -> dict[str, str]:
         QuestAnswer.model_validate(x, from_attributes=True) for x in adventure.quests
     ]
     return {
-        "quests_json_answer": QuestsInstructionAnswer(quests=quests).model_dump_json(
-            indent=4
-        )
+        "quests_json_answer": json.dumps([q.model_dump() for q in quests], indent=4)
     }
 
 
