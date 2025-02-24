@@ -11,6 +11,10 @@ import requests
 from typing import Any, final
 from worker.config import generation_setting
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class TextGenerationModel(ABC):
     """
@@ -129,18 +133,23 @@ class YandexGPTTextSync(TextGenerationModel):
             json=self._create_payload(messages),
         )
         answer_json = answer.json()
-        count_token = SpentedTokensCounts(
-            yandexgpt_prompt_token_count=answer_json["result"]["usage"][
-                "inputTextTokens"
-            ],
-            yandexgpt_assistant_token_count=answer_json["result"]["usage"][
-                "completionTokens"
-            ],
-        )
-        return TextGenerationResult(
-            content=answer_json["result"]["alternatives"][0]["message"]["text"],
-            count_tokens=count_token,
-        )
+        
+        try:
+            count_token = SpentedTokensCounts(
+                yandexgpt_prompt_token_count=answer_json["result"]["usage"][
+                    "inputTextTokens"
+                ],
+                yandexgpt_assistant_token_count=answer_json["result"]["usage"][
+                    "completionTokens"
+                ],
+            )
+            return TextGenerationResult(
+                content=answer_json["result"]["alternatives"][0]["message"]["text"],
+                count_tokens=count_token,
+            )
+        except Exception as e:
+            logger.info(answer_json)
+            raise e
 
 
 text_generation_model = YandexGPTTextSync()
