@@ -7,7 +7,7 @@ from worker.database.crud import (
     get_adventure,
     upload_image,
 )
-from worker.database.schemas import AdventureInfo, SpentedTokensCounts
+from worker.database.schemas import AdventureInfo, ImageContainer, SpentedTokensCounts
 
 from worker.image_tasks.prompts import *
 from worker.image_tasks.image_models import image_model
@@ -26,7 +26,18 @@ logger = logging.getLogger(__name__)
 
 
 def _generate_image(instruction: str, user_id: int):
-    image_container, spented_tokens = image_model.generate_image(None, instruction)
+    image_container, spented_tokens = None, None
+    is_success = True
+    i = 0
+    while i < 3 and not is_success:
+        is_success = True
+        try:
+            image_container, spented_tokens = image_model.generate_image(None, instruction)
+        except Exception as e:
+            is_success = False
+            logger.error(repr(e))
+    if image_container is None or not is_success:
+        raise Exception("Max try")
     with Session(engine) as session:
         image = upload_image(image_container, user_id, session)
     return (image.id, spented_tokens)
