@@ -14,6 +14,9 @@ logger = logging.getLogger(__name__)
 class MaxAttemptsExced(Exception):
     pass
 
+class ModelCensorship(Exception):
+    pass
+
 
 def parse_json_garbage(s: str) -> dict[str, Any]:
     """
@@ -63,6 +66,8 @@ def generate_text_with_tries(
                 generated_result = model.generate_text(prompts)
                 print("============GENERATED RESULT:==================")
                 print(generated_result)
+                if "ya.ru" in generated_result.content:
+                    raise ModelCensorship()
                 print()
                 generated_json: dict[str, Any] = parse_json_garbage(
                     generated_result.content
@@ -74,6 +79,9 @@ def generate_text_with_tries(
                     adventure, generated_json
                 )
                 break
+            except ModelCensorship as e:
+                logger.error("Found censorship. Generating failed")
+                raise ModelCensorship()
             except Exception as e:
                 generated_result = None
                 logger.error(f"Can't generate text. {index_try+1}/{n_tries} try failed. {repr(e)}")
@@ -85,7 +93,7 @@ def generate_text_with_tries(
 
 
 def generate_new_adventure_json(
-    location_name: str, setting: str, num_players: int, model: TextGenerationModel
+    adventure_info: AdventureInfo, model: TextGenerationModel
 ) -> tuple[AdventureInfo, SpentedTokensCounts]:
     """
     Генерирует полноценное приключение с нуля.
@@ -97,13 +105,6 @@ def generate_new_adventure_json(
     :param adventure: модель приключения из бд
     :param session: для бд
     """
-
-    adventure_info = AdventureInfo(
-        name=location_name,
-        location=location_name,
-        setting=setting,
-        playerNum=num_players,
-    )
 
     instructions: list[TextGenerationInstruction] = [
         AdventureInfoInstruction(),

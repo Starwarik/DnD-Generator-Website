@@ -7,7 +7,7 @@ from worker.database.crud import (
     get_adventure,
     upload_image,
 )
-from worker.database.schemas import AdventureInfo, ImageContainer, SpentedTokensCounts
+from worker.database.schemas import AdventureInfo, SpentedTokensCounts
 
 from worker.image_tasks.prompts import *
 from worker.image_tasks.image_models import image_model

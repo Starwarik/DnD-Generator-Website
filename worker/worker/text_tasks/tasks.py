@@ -10,6 +10,8 @@ from worker.text_tasks.generation_text_service import (
     regenerate_character_concrete_json,
     regenerate_items_json,
     regenerate_item_concrete_json,
+    ModelCensorship,
+    MaxAttemptsExced
 )
 from worker.text_tasks.text_models import text_generation_model
 
@@ -18,7 +20,6 @@ from worker.database.database import engine
 from worker.database.crud import (
     update_state_content_adventure,
     get_adventure,
-    delete_adventure,
 )
 
 from worker.main import celery_app
@@ -35,14 +36,31 @@ def generate_new_adventure(
     setting: str,
     num_players: int,
 ):
+    adventure_info = AdventureInfo(
+        name=location_name,
+        location=location_name,
+        setting=setting,
+        playerNum=num_players,
+    )
+
     try:
         adventure, spented_tokens = generate_new_adventure_json(
-            location_name, setting, num_players, text_generation_model
+            adventure_info, text_generation_model
         )
-    except Exception as e:
-        logger.error("Generation failed. Deleting adventure.")
+    except MaxAttemptsExced as _:
+        logger.error("Max attempts exceed. Generation failed")
         with Session(engine) as session:
-            delete_adventure(id_adventure, session)
+            update_state_content_adventure(id_adventure, state=AdventureState.max_retry_error, content=None, session=session)
+        return
+    except ModelCensorship as _:
+        logger.error("Model censored request. Generation failed")
+        with Session(engine) as session:
+            update_state_content_adventure(id_adventure, state=AdventureState.censorship_error, content=None, session=session)
+        return
+    except Exception as e:
+        logger.error("Generation failed. "+repr(e))
+        with Session(engine) as session:
+            update_state_content_adventure(id_adventure, state=AdventureState.other_error, content=None, session=session)
         return
 
     with Session(engine) as session:

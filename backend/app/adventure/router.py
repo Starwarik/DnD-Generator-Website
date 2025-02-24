@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,13 +6,11 @@ from sqlalchemy import select, delete, update
 from typing_extensions import Annotated
 
 from app.adventure.schemas import AdventureInfo
-from app.adventure.service import (
-    update_state_content_adventure,
-)
 from app.database.database import get_session
 from app.adventure.models import Adventure, AdventurePublic, AdventureState
 from app.user.models import User
 from app.auth.dependencies import get_current_user
+from app.image.models import Image
 
 adventure_router = APIRouter(tags=["adventure"])
 
@@ -98,9 +96,29 @@ async def delete_adventure(
     adventure_id: int,
     session: AsyncSession = Depends(get_session),
 ):
-    stmt = delete(Adventure).where(
-        (Adventure.id == adventure_id) & (Adventure.user_id == current_user.id)
-    )
-    await session.execute(stmt)
+    adventure = await session.get(Adventure, adventure_id)
+    if adventure is None:
+        raise HTTPException(status_code=404, detail="Adventure not found")
+
+    if adventure.user_id != current_user.id:
+        raise HTTPException(
+            status_code=403, detail="Not authorized to update this adventure"
+        )
+    
+    content = AdventureInfo.model_validate(adventure.content)
+
+    images_ids: list[int] = []
+    images_ids.append(content.adventure_image_id)
+    images_ids.append(content.map_image_id)
+    images_ids.extend([item.image_id for item in content.items])
+    images_ids.extend([npc.image_id for npc in content.npcs])
+    images_ids = list(filter(lambda x: x != -1 and x != -42, images_ids))
+
+    if len(images_ids) != 0:
+        command = delete(Image).where(Image.id.in_(images_ids))
+        await session.execute(command)
+        await session.commit()
+
+    command = delete(Adventure).where(Adventure.id == id) # type: ignore
+    await session.execute(command)
     await session.commit()
-    return Response(status_code=200)

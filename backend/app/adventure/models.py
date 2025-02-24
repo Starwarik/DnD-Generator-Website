@@ -9,12 +9,15 @@ class AdventureState(Enum):
     """
     Хранит состояние генерации приключения
 
-    1. not_ready - Не готово
-    2. generating_text - Происходит генерация текста.
-    3. image_adventure - Просиходит генерация обложки и карты приключения.
-    4. image_items - Генерация картинок для предметов
-    5. image_characters - Генерация картинок для персонажей
-    6. ready - Приключение готово
+    0. not_ready - Не готово
+    1. generating_text - Происходит генерация текста.
+    2. image_adventure - Просиходит генерация обложки и карты приключения.
+    3. image_items - Генерация картинок для предметов
+    4. image_characters - Генерация картинок для персонажей
+    5. ready - Приключение готово
+    6. max_retry_error - Модель выдывала несколько раз подряд плохой результат. Ошибка
+    7. censorship_error - Модель цензурирует запрос. Ошибка
+    8. other_error - Ошибка другого рода
     """
 
     not_ready = 0
@@ -23,6 +26,9 @@ class AdventureState(Enum):
     image_items = 3
     image_characters = 4
     ready = 5
+    max_retry_error = 6
+    censorship_error = 7
+    other_error = 8
 
 
 class IntEnum(TypeDecorator):
