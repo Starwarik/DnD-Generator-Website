@@ -56,31 +56,23 @@ class GigaChatImage(ImageGeneration):
             messages.append(SystemMessage(system_prompt))
         if user_prompt:
             messages.append(HumanMessage(user_prompt))
-        try:
-            response = self.model.invoke(messages)
-        except Exception as e:
-            logger.error(f"Generating Image Error {repr(e)}")
-            raise e
-        try:
-            image_uuid = re.search(r'img src="(.+?)"', response.content).group(1)
-            image = self.model.get_file(image_uuid).content
-            image = b64decode(image)
-            image = ImageContainer(content=image, media_type="image/jpeg")
+        response = self.model.invoke(messages)
+        logger.info(f"Models response: {response.content}")
+        image_uuid = re.search(r'img src="(.+?)"', response.content).group(1)
+        image = self.model.get_file(image_uuid).content
+        image = b64decode(image)
+        image = ImageContainer(content=image, media_type="image/jpeg")
 
-            spented_tokens = SpentedTokensCounts(
-                image_generated=1,
-                gigachat_assistant_token_count=response.response_metadata[
+        spented_tokens = SpentedTokensCounts(
+            image_generated=1,
+            gigachat_assistant_token_count=response.response_metadata[
                     "token_usage"
-                ]["completion_tokens"],
-                gigachat_prompt_token_count=response.response_metadata["token_usage"][
-                    "prompt_tokens"
-                ],
-            )
-            return (image, spented_tokens)
-        except Exception as e:
-            logger.error(f"Parsing Image generation error {repr(e)}")
-            logger.error(f"Models response: {response.content}")
-            raise e
+            ]["completion_tokens"],
+            gigachat_prompt_token_count=response.response_metadata["token_usage"][
+                "prompt_tokens"
+            ],
+        )
+        return (image, spented_tokens)
 
 
 image_model = GigaChatImage()

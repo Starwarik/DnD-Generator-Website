@@ -25,19 +25,14 @@ logger = logging.getLogger(__name__)
 # ================= IMAGE ============================
 
 
+class MaxRetryImage(Exception):
+    pass
+
+
 def _generate_image(instruction: str, user_id: int):
-    image_container, spented_tokens = None, None
-    is_success = True
-    i = 0
-    while i < 3 and not is_success:
-        is_success = True
-        try:
-            image_container, spented_tokens = image_model.generate_image(None, instruction)
-        except Exception as e:
-            is_success = False
-            logger.error(repr(e))
-    if image_container is None or not is_success:
-        raise Exception("Max try")
+    image_container, spented_tokens = image_model.generate_image(
+        None, instruction
+    )
     with Session(engine) as session:
         image = upload_image(image_container, user_id, session)
     return (image.id, spented_tokens)
@@ -78,7 +73,6 @@ def generate_images_adventure(
     except Exception as e:
         logger.error("Can't generate adventure image")
         logger.error(repr(e))
-        print(e, content.adventure_image_id, content.map_image_id)
     try:
         if content.map_image_id == -1:
             image_id, current_spented_token = _generate_image(
@@ -97,7 +91,6 @@ def generate_images_adventure(
     except Exception as e:
         logger.error("Can't generate map image")
         logger.error(repr(e))
-        print(e, content.adventure_image_id, content.map_image_id)
 
     with Session(engine) as session:
         update_state_content_adventure(adventure.id, state, content, session)
