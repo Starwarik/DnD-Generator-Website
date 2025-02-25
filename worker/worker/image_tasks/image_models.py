@@ -56,7 +56,11 @@ class GigaChatImage(ImageGeneration):
             messages.append(SystemMessage(system_prompt))
         if user_prompt:
             messages.append(HumanMessage(user_prompt))
-        response = self.model.invoke(messages)
+        try:
+            response = self.model.invoke(messages)
+        except Exception as e:
+            logger.error(f"Generating Image Error {repr(e)}")
+            raise e
         try:
             image_uuid = re.search(r'img src="(.+?)"', response.content).group(1)
             image = self.model.get_file(image_uuid).content
@@ -74,8 +78,9 @@ class GigaChatImage(ImageGeneration):
             )
             return (image, spented_tokens)
         except Exception as e:
-            logger.error(f"Image generation error {e}")
+            logger.error(f"Parsing Image generation error {repr(e)}")
             logger.error(f"Models response: {response.content}")
+            raise e
 
 
 image_model = GigaChatImage()
