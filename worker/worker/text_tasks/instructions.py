@@ -11,7 +11,25 @@ from worker.database.schemas import *
 from worker.text_tasks.schemas import *
 
 
-def calc_default_config(adventure: AdventureInfo) -> dict[str, str]:
+class RegenerationType(Enum):
+    none = 0
+    items = 1
+    items_concrete = 2
+    npc = 3
+    npc_concrete = 4
+    quest = 5
+    quest_concrete = 6
+
+class ContextConfig(BaseModel):
+    include_adventure_info: bool = False
+    include_items: bool = False
+    include_npcs: bool = False
+    include_quests: bool = False
+    include_regeneration: RegenerationType = RegenerationType.none
+    index_regeneration: int | None = None
+
+
+def calc_default_context(adventure: AdventureInfo) -> dict[str, str]:
     return {
         "nameLocation": adventure.location,
         "nameSetting": adventure.setting,
@@ -20,7 +38,7 @@ def calc_default_config(adventure: AdventureInfo) -> dict[str, str]:
     }
 
 
-def calc_description_answer_config(adventure: AdventureInfo) -> dict[str, str]:
+def calc_description_answer_context(adventure: AdventureInfo) -> dict[str, str]:
     return {
         "description_json_answer": AdventureInfoInstructionAnswer.model_validate(
             adventure, from_attributes=True
@@ -28,7 +46,7 @@ def calc_description_answer_config(adventure: AdventureInfo) -> dict[str, str]:
     }
 
 
-def calc_items_answer_config(adventure: AdventureInfo) -> dict[str, str]:
+def calc_items_answer_context(adventure: AdventureInfo) -> dict[str, str]:
     items = [
         ItemAnswer.model_validate(x, from_attributes=True) for x in adventure.items
     ]
@@ -39,7 +57,7 @@ def calc_items_answer_config(adventure: AdventureInfo) -> dict[str, str]:
     }
 
 
-def calc_npcs_answer_config(adventure: AdventureInfo) -> dict[str, str]:
+def calc_npcs_answer_context(adventure: AdventureInfo) -> dict[str, str]:
     npc = [NPCAnswer.model_validate(x, from_attributes=True) for x in adventure.npcs]
     return {
         "characters_json_answer": NPCsInstructionAnswer(npc=npc).model_dump_json(
@@ -48,13 +66,75 @@ def calc_npcs_answer_config(adventure: AdventureInfo) -> dict[str, str]:
     }
 
 
-def calc_quest_answer_config(adventure: AdventureInfo) -> dict[str, str]:
+def calc_quest_answer_context(adventure: AdventureInfo) -> dict[str, str]:
     quests = [
         QuestAnswer.model_validate(x, from_attributes=True) for x in adventure.quests
     ]
     return {
         "quests_json_answer": json.dumps([q.model_dump() for q in quests], indent=4)
     }
+
+def implement_context(message: Message, context: dict[str, str]):
+    new_message = deepcopy(message)
+    new_message.content = new_message.content.format(**context)
+    return new_message
+
+def create_context(adventure: AdventureInfo):
+    context = calc_default_context(adventure)
+    if adventure.description_location != "" and len(adventure.description_places) != 0:
+        context.update(calc_description_answer_context(adventure))
+    if len(adventure.items) != 0:
+        context.update(calc_items_answer_context(adventure))
+    if len(adventure.npcs) != 0:
+        context.update(calc_npcs_answer_context(adventure))
+    if len(adventure.quests) != 0:
+        context.update(calc_quest_answer_context(adventure))
+    return context
+
+def create_prompts(adventure: AdventureInfo, config: ContextConfig):
+    prompt: list[Message] = []
+    context = create_context(adventure)
+    if config.include_adventure_info:
+        prompt.append(implement_context(prompts_template.adventure_info_prompt, context))
+        if "description_json_answer" in context:
+            prompt.append(implement_context(prompts_template.adventure_info_answer, context))
+    if config.include_items:
+        prompt.append(implement_context(prompts_template.items_prompt, context))
+        if "items_json_answer" in context:
+            prompt.append(implement_context(prompts_template.items_answer, context))
+    if config.include_npcs:
+        prompt.append(implement_context(prompts_template.npcs_prompt, context))
+        if "characters_json_answer" in context:
+            prompt.append(implement_context(prompts_template.npcs_answer, context))
+    if config.include_quests:
+        prompt.append(implement_context(prompts_template.quests_prompt, context))
+        if "quests_json_answer" in context:
+            prompt.append(implement_context(prompts_template.quests_answer, context))
+    match config.include_regeneration:
+        case RegenerationType.none:
+            pass
+        case RegenerationType.items:
+            prompt.append(implement_context(prompts_template.items_regeneration_prompt, context))
+        case RegenerationType.items_concrete:
+            assert config.index_regeneration
+            item = adventure.items[config.index_regeneration]
+            context.update(nameItem=item.name)
+            prompt.append(implement_context(prompts_template.items_regeneration_concrete_prompt, context))
+        case RegenerationType.npc:
+            prompt.append(implement_context(prompts_template.npcs_regeneration_prompt, context))
+        case RegenerationType.npc_concrete:
+            assert config.index_regeneration
+            npc = adventure.npcs[config.index_regeneration]
+            context.update(nameNPC=npc.name)
+            prompt.append(implement_context(prompts_template.npcs_regeneration_concrete_prompt, context))
+        case RegenerationType.quest:
+            prompt.append(implement_context(prompts_template.quests_regeneration_prompt, context))
+        case RegenerationType.quest_concrete:
+            assert config.index_regeneration
+            quest = adventure.quests[config.index_regeneration]
+            context.update(name_quest=quest.name)
+            prompt.append(implement_context(prompts_template.quests_regeneration_concrete_prompt, context))
+    return prompt
 
 
 class TextGenerationInstruction(ABC):
@@ -63,18 +143,9 @@ class TextGenerationInstruction(ABC):
     """
 
     @abstractmethod
-    def get_prompts(self) -> list[Message]:
+    def get_prompts(self, adventure: AdventureInfo) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
-        """
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        """
-        Получить конфиг, который будет подставлять значения в промпт. Например 'nameLocation' содержит название локации.
-
-        :param adventure - приключение на основе, которого генерится конфиг.
         """
         raise NotImplementedError()
 
@@ -97,19 +168,11 @@ class AdventureInfoInstruction(TextGenerationInstruction):
     Класс инструкции для генерация описания всего приключения.
     """
 
-    def get_prompts(self) -> list[Message]:
+    def get_prompts(self, adventure: AdventureInfo) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return deepcopy(prompts_template.adventure_info_prompts_messages)
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        """
-        Получить конфиг, который будет подставлять значения в промпт. Например 'nameLocation' содержит название локации.
-
-        :param adventure - приключение на основе, которого генерится конфиг.
-        """
-        return calc_default_config(adventure)
+        return create_prompts(adventure, ContextConfig(include_adventure_info=True))
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: dict[str, Any]
@@ -135,22 +198,12 @@ class ItemsInstruction(TextGenerationInstruction):
     Класс инструкции для генерация текстового описания предметов.
     """
 
-    def get_prompts(self) -> list[Message]:
+    def get_prompts(self, adventure: AdventureInfo) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return deepcopy(prompts_template.items_prompts_messages)
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        """
-        Получить конфиг, который будет подставлять значения в промпт. Например 'nameLocation' содержит название локации.
-
-        :param adventure - приключение на основе, которого генерится конфиг.
-        """
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        return config
-
+        return create_prompts(adventure, ContextConfig(include_adventure_info=True, include_items=True))
+    
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: dict[str, Any]
     ) -> AdventureInfo:
@@ -175,22 +228,11 @@ class NPCsInstruction(TextGenerationInstruction):
     Класс инструкции для генерация текстового описания персонажей.
     """
 
-    def get_prompts(self) -> list[Message]:
+    def get_prompts(self, adventure: AdventureInfo) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return deepcopy(prompts_template.npcs_prompts_messages)
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        """
-        Получить конфиг, который будет подставлять значения в промпт. Например 'nameLocation' содержит название локации.
-
-        :param adventure - приключение на основе, которого генерится конфиг.
-        """
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        return config
+        return create_prompts(adventure, ContextConfig(include_adventure_info=True, include_items=True, include_npcs=True))
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: dict[str, Any]
@@ -217,23 +259,11 @@ class QuestsInstruction(TextGenerationInstruction):
     Класс инструкции для генерация текстового описания квестов.
     """
 
-    def get_prompts(self) -> list[Message]:
+    def get_prompts(self, adventure: AdventureInfo) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return deepcopy(prompts_template.quests_prompts_messages)
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        """
-        Получить конфиг, который будет подставлять значения в промпт. Например 'nameLocation' содержит название локации.
-
-        :param adventure - приключение на основе, которого генерится конфиг.
-        """
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        config.update(calc_npcs_answer_config(adventure))
-        return config
+        return create_prompts(adventure, ContextConfig(include_adventure_info=True, include_items=True, include_npcs=True, include_quests=True))
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: list[dict[str, Any]]
@@ -244,11 +274,7 @@ class QuestsInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        generated_answer = [QuestAnswer.model_validate(quest) for quest in result]
-        adventure.quests = [
-            Quest.model_validate(x, from_attributes=True)
-            for x in generated_answer
-        ]
+        adventure.quests = [Quest.model_validate(x) for x in result]
         for i in range(len(adventure.quests)):
             adventure.quests[i].id_quest = i
         return adventure
@@ -263,24 +289,14 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
     Класс инструкции для перегенерация текстового описания всех квестов.
     """
 
-    def get_prompts(self) -> list[Message]:
+    def get_prompts(self, adventure: AdventureInfo) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return deepcopy(prompts_template.quests_regenerate_prompts_messages)
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        """
-        Получить конфиг, который будет подставлять значения в промпт. Например 'nameLocation' содержит название локации.
-
-        :param adventure - приключение на основе, которого генерится конфиг.
-        """
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        config.update(calc_npcs_answer_config(adventure))
-        config.update(calc_quest_answer_config(adventure))
-        return config
+        return create_prompts(
+            adventure,
+            ContextConfig(include_adventure_info=True, include_items=True, include_npcs=True, include_quests=True, include_regeneration=RegenerationType.quest)
+        )
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: dict[str, Any]
@@ -291,11 +307,7 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        generated_answer = QuestsInstructionAnswer.model_validate(result)
-        adventure.quests = [
-            Quest.model_validate(x, from_attributes=True)
-            for x in generated_answer.quests
-        ]
+        adventure.quests = [Quest.model_validate(x) for x in result]
         for i in range(len(adventure.quests)):
             adventure.quests[i].id_quest = i
         return adventure
@@ -312,26 +324,21 @@ class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
     def __init__(self, index: int):
         self.index = index
 
-    def get_prompts(self) -> list[Message]:
+    def get_prompts(self, adventure: AdventureInfo) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return deepcopy(prompts_template.quests_concrete_regenerate_prompts_messages)
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        """
-        Получить конфиг, который будет подставлять значения в промпт. Например 'nameLocation' содержит название локации.
-
-        :param adventure - приключение на основе, которого генерится конфиг.
-        """
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        config.update(calc_npcs_answer_config(adventure))
-        config.update(calc_quest_answer_config(adventure))
-        quest = adventure.quests[self.index]
-        config.update(name_quest=quest.name)
-        return config
+        return create_prompts(
+            adventure,
+            ContextConfig(
+                include_adventure_info=True,
+                include_items=True,
+                include_npcs=True,
+                include_quests=True,
+                include_regeneration=RegenerationType.quest_concrete,
+                index_regeneration=self.index
+            )
+        )
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: dict[str, Any]
@@ -361,24 +368,14 @@ class NPCsRegenerateInstruction(TextGenerationInstruction):
     Класс инструкции для перегенерация текстового описания всех персонажей.
     """
 
-    def get_prompts(self) -> list[Message]:
+    def get_prompts(self, adventure: AdventureInfo) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return deepcopy(prompts_template.npcs_regenerate_prompts_messages)
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        """
-        Получить конфиг, который будет подставлять значения в промпт. Например 'nameLocation' содержит название локации.
-
-        :param adventure - приключение на основе, которого генерится конфиг.
-        """
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        config.update(calc_npcs_answer_config(adventure))
-        config.update(calc_quest_answer_config(adventure))
-        return config
+        return create_prompts(
+            adventure,
+            ContextConfig(include_adventure_info=True, include_items=True, include_npcs=True, include_quests=True, include_regeneration=RegenerationType.npc)
+        )
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: dict[str, Any]
@@ -409,26 +406,21 @@ class NPCsConcreteRegenerateInstruction(TextGenerationInstruction):
     def __init__(self, index: int):
         self.index = index
 
-    def get_prompts(self) -> list[Message]:
+    def get_prompts(self, adventure: AdventureInfo) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return deepcopy(prompts_template.npcs_concrete_regenerate_prompts_messages)
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        """
-        Получить конфиг, который будет подставлять значения в промпт. Например 'nameLocation' содержит название локации.
-
-        :param adventure - приключение на основе, которого генерится конфиг.
-        """
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        config.update(calc_npcs_answer_config(adventure))
-        config.update(calc_quest_answer_config(adventure))
-        npc = adventure.quests[self.index]
-        config.update(nameNPC=npc.name)
-        return config
+        return create_prompts(
+            adventure,
+            ContextConfig(
+                include_adventure_info=True,
+                include_items=True,
+                include_npcs=True,
+                include_quests=True,
+                include_regeneration=RegenerationType.npc_concrete,
+                index_regeneration=self.index
+            )
+        )
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: dict[str, Any]
@@ -458,24 +450,14 @@ class ItemsRegenerateInstruction(TextGenerationInstruction):
     Класс инструкции для перегенерация текстового описания всех предметов.
     """
 
-    def get_prompts(self) -> list[Message]:
+    def get_prompts(self, adventure: AdventureInfo) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return deepcopy(prompts_template.items_regenerate_prompts_messages)
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        """
-        Получить конфиг, который будет подставлять значения в промпт. Например 'nameLocation' содержит название локации.
-
-        :param adventure - приключение на основе, которого генерится конфиг.
-        """
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        config.update(calc_npcs_answer_config(adventure))
-        config.update(calc_quest_answer_config(adventure))
-        return config
+        return create_prompts(
+            adventure,
+            ContextConfig(include_adventure_info=True, include_items=True, include_npcs=True, include_quests=True, include_regeneration=RegenerationType.items)
+        )
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: dict[str, Any]
@@ -506,26 +488,21 @@ class ItemsConcreteRegenerateInstruction(TextGenerationInstruction):
     def __init__(self, index: int):
         self.index = index
 
-    def get_prompts(self) -> list[Message]:
+    def get_prompts(self, adventure: AdventureInfo) -> list[Message]:
         """
         Получает промпты, по которым будет производится генерация.
         """
-        return deepcopy(prompts_template.items_concrete_regenerate_prompts_messages)
-
-    def get_config(self, adventure: AdventureInfo) -> dict[str, str]:
-        """
-        Получить конфиг, который будет подставлять значения в промпт. Например 'nameLocation' содержит название локации.
-
-        :param adventure - приключение на основе, которого генерится конфиг.
-        """
-        config = calc_default_config(adventure)
-        config.update(calc_description_answer_config(adventure))
-        config.update(calc_items_answer_config(adventure))
-        config.update(calc_npcs_answer_config(adventure))
-        config.update(calc_quest_answer_config(adventure))
-        item = adventure.items[self.index]
-        config.update(nameItem=item.name)
-        return config
+        return create_prompts(
+            adventure,
+            ContextConfig(
+                include_adventure_info=True,
+                include_items=True,
+                include_npcs=True,
+                include_quests=True,
+                include_regeneration=RegenerationType.items_concrete,
+                index_regeneration=self.index
+            )
+        )
 
     def change_adventure_on_success(
         self, adventure: AdventureInfo, result: dict[str, Any]

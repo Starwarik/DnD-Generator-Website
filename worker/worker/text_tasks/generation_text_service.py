@@ -51,11 +51,8 @@ def generate_text_with_tries(
     spented_tokens_counts = SpentedTokensCounts()
 
     for instruction in instructions:
-        prompts = instruction.get_prompts()
-        config = instruction.get_config(adventure)
+        prompts = instruction.get_prompts(adventure)
 
-        for i in range(len(prompts)):
-            prompts[i].content = prompts[i].content.format(**config)
         print("===========CURRENT PROMPT:==============")
         print(prompts)
         print()

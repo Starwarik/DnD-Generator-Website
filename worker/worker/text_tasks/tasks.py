@@ -61,6 +61,7 @@ def generate_new_adventure(
         logger.error("Generation failed. "+repr(e))
         with Session(engine) as session:
             update_state_content_adventure(id_adventure, state=AdventureState.other_error, content=None, session=session)
+        raise e
         return
 
     with Session(engine) as session:
