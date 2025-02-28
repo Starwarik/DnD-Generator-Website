@@ -274,7 +274,7 @@ class QuestsInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        if isinstance(json_text, dict):
+        if isinstance(result, dict):
             result = result["quests"]
         adventure.quests = [Quest.model_validate(x) for x in result]
         for i in range(len(adventure.quests)):
@@ -301,7 +301,7 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
         )
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: dict[str, Any]
+        self, adventure: AdventureInfo, result: list[dict[str, Any]] | dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -309,7 +309,7 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
-        if isinstance(json_text, dict):
+        if isinstance(result, dict):
             result = result["quests"]
         adventure.quests = [Quest.model_validate(x) for x in result]
         for i in range(len(adventure.quests)):
