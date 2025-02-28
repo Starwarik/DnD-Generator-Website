@@ -8,15 +8,15 @@ adventure_info_answer = Message(type=MessageType.assistant, content="{descriptio
 
 items_prompt = Message(type=MessageType.user, content="""Сгенерируй в формате JSON до 4 сокровищ (по правилам D&D 5-e редации, и с учетом жанра "{nameSetting}"), описания локации которой, храниться в "description_location". Ответ должен содержать объект "items", без описания локации. Каждый предмет включает ключи: "name" — название; "description" — описание (до 250 символов); "values" — стоимость в золоте, серебре или бронзе; "type" — оружие, доспехи или сокровища; "damage" — урон (только для оружия); "armor_class" — класс брони (только для доспехов).""")
 
-items_answer = Message(type=MessageType.user, content="{items_json_answer}")
+items_answer = Message(type=MessageType.assistant, content="{items_json_answer}")
 
 npcs_prompt = Message(type=MessageType.user, content="""Сгенерируй до 4 NPC в формате JSON (по жанру "{nameSetting}"), описания локации которой, храниться в "description_location". Персонажи должны быть связаны с ключевыми точками из "description_places". Объект "npc" содержит: "name" — имя; "disc_costum" — описание внешности; "dic_life" — роль в локации, связанная с одной из точек (указан её номер). Описание каждого NPC не должно превышать 250 символов.""")
 
-npcs_answer = Message(type=MessageType.user, content="{characters_json_answer}")
+npcs_answer = Message(type=MessageType.assistant, content="{characters_json_answer}")
 
 quests_prompt = Message(type=MessageType.user, content="""Сгенерируй не менее {playerNumXthree} квестов в формате JSON, используя предыдущую информацию. Каждый квест включает: "name" — название; "description" — события, связанные с локацией и персонажами (до 250 символов); "goal" — цель квеста; "rewards" — объект с наградами (монеты: gold, silver, bronze). Все квесты должны быть сбалансированы по сложности и наградам.""")
 
-quests_answer = Message(type=MessageType.user, content="{quests_json_answer}")
+quests_answer = Message(type=MessageType.assistant, content="{quests_json_answer}")
 
 items_regeneration_prompt = Message(type=MessageType.user, content="""Сгенерируй {playerNum} - 4 новых предмета по описанию локации (жанр "{nameSetting}"). Структурируй в объект "items" с ключами: "name", "description", "values", "type", "damage" (только для оружия), "armor_class" (только для брони). Общее описание не должно превышать 500 символов""")
 
