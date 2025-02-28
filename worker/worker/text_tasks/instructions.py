@@ -297,7 +297,7 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
         """
         return create_prompts(
             adventure,
-            ContextConfig(include_adventure_info=True, include_items=True, include_npcs=True, include_quests=True, include_regeneration=RegenerationType.quest)
+            ContextConfig(include_adventure_info=True, include_items=True, include_npcs=True, include_regeneration=RegenerationType.quest)
         )
 
     def change_adventure_on_success(
@@ -338,7 +338,6 @@ class QuestsConcreteRegenerateInstruction(TextGenerationInstruction):
                 include_adventure_info=True,
                 include_items=True,
                 include_npcs=True,
-                include_quests=True,
                 include_regeneration=RegenerationType.quest_concrete,
                 index_regeneration=self.index
             )
@@ -378,7 +377,7 @@ class NPCsRegenerateInstruction(TextGenerationInstruction):
         """
         return create_prompts(
             adventure,
-            ContextConfig(include_adventure_info=True, include_items=True, include_npcs=True, include_quests=True, include_regeneration=RegenerationType.npc)
+            ContextConfig(include_adventure_info=True, include_items=True, include_quests=True, include_regeneration=RegenerationType.npc)
         )
 
     def change_adventure_on_success(
@@ -419,7 +418,6 @@ class NPCsConcreteRegenerateInstruction(TextGenerationInstruction):
             ContextConfig(
                 include_adventure_info=True,
                 include_items=True,
-                include_npcs=True,
                 include_quests=True,
                 include_regeneration=RegenerationType.npc_concrete,
                 index_regeneration=self.index
@@ -460,7 +458,7 @@ class ItemsRegenerateInstruction(TextGenerationInstruction):
         """
         return create_prompts(
             adventure,
-            ContextConfig(include_adventure_info=True, include_items=True, include_npcs=True, include_quests=True, include_regeneration=RegenerationType.items)
+            ContextConfig(include_adventure_info=True, include_npcs=True, include_quests=True, include_regeneration=RegenerationType.items)
         )
 
     def change_adventure_on_success(
@@ -500,7 +498,6 @@ class ItemsConcreteRegenerateInstruction(TextGenerationInstruction):
             adventure,
             ContextConfig(
                 include_adventure_info=True,
-                include_items=True,
                 include_npcs=True,
                 include_quests=True,
                 include_regeneration=RegenerationType.items_concrete,
