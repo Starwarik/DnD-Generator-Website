@@ -266,7 +266,7 @@ class QuestsInstruction(TextGenerationInstruction):
         return create_prompts(adventure, ContextConfig(include_adventure_info=True, include_items=True, include_npcs=True, include_quests=True))
 
     def change_adventure_on_success(
-        self, adventure: AdventureInfo, result: list[dict[str, Any]]
+        self, adventure: AdventureInfo, result: list[dict[str, Any]] | dict[str, Any]
     ) -> AdventureInfo:
         """
         Получает результат генерации и изменяет приключение.
@@ -274,6 +274,8 @@ class QuestsInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
+        if result is dict:
+            result = result["quests"]
         adventure.quests = [Quest.model_validate(x) for x in result]
         for i in range(len(adventure.quests)):
             adventure.quests[i].id_quest = i
@@ -307,6 +309,8 @@ class QuestsRegenerateInstruction(TextGenerationInstruction):
         :param adventure - информация о приключении
         :param result - результат генерации
         """
+        if result is dict:
+            result = result["quests"]
         adventure.quests = [Quest.model_validate(x) for x in result]
         for i in range(len(adventure.quests)):
             adventure.quests[i].id_quest = i
