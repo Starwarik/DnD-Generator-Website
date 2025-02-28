@@ -174,3 +174,5 @@ launch.json
 .vscode/
 start.bat
 *.sh
+frontend/letsencrypt
+frontend/nginx.conf

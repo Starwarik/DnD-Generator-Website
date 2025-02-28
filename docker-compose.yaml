@@ -20,11 +20,18 @@ services:
     restart: unless-stopped
     tty: true
     stdin_open: true
+    profiles:
+     - backend
+     - production
 
   redis:
     image: redis:7
     expose:
       - "6379:6379"
+    profiles:
+     - backend
+     - production
+
 
   web:
     build: ./backend
@@ -38,6 +45,10 @@ services:
     depends_on:
       - redis
       - db_postgres
+    profiles:
+     - backend
+     - production
+
 
   worker:
     build: ./worker
@@ -51,6 +62,21 @@ services:
       - web
       - redis
       - db_postgres
+    profiles:
+     - backend
+     - production
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - type: bind
+        source: frontend/letsencrypt/live/adventuregenerator.ru
+        target: /etc/letsencrypt/live/adventuregenerator.ru
+    profiles:
+     - frontend
+     - production
+    ports:
+      - 443:443
 
 volumes:
   pgdata:
