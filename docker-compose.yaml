@@ -1,83 +1,109 @@
-services:
+version: '3.8'
 
+services:
   db_postgres:
     image: postgres:latest
     container_name: postgres_db_container
     environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_DB: DB
-        PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: DB
+      PGDATA: /var/lib/postgresql/data/pgdata
     expose:
-      - "5432:5432"
+      - "5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data/pgdata  
+      - pgdata:/var/lib/postgresql/data/pgdata
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d DB" ]
       interval: 30s
       timeout: 10s
       retries: 5
     restart: unless-stopped
-    tty: true
-    stdin_open: true
+    networks:
+      - internal
     profiles:
-     - backend
-     - production
+      - backend
+      - production
 
   redis:
     image: redis:7
-    expose:
+    ports:
       - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - internal
     profiles:
-     - backend
-     - production
-
+      - backend
+      - production
 
   web:
-    build: ./backend
+    image: dianache777/dnd_generator:backend
     ports:
-      - 8004:8000
-    env_file: ".env"
+      - "8004:8004"
+    env_file: .env
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
-    restart: unless-stopped  
+    restart: unless-stopped
     depends_on:
-      - redis
-      - db_postgres
+      redis:
+        condition: service_healthy
+      db_postgres:
+        condition: service_healthy
+    networks:
+      - internal
     profiles:
-     - backend
-     - production
-
+      - backend
+      - production
 
   worker:
-    build: ./worker
-    env_file: ".env"
+    image: dianache777/dnd_generator:worker
+    env_file: .env
     command: celery -A worker.main:celery_app worker --loglevel=INFO
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     restart: unless-stopped
     depends_on:
-      - web
-      - redis
-      - db_postgres
+      redis:
+        condition: service_healthy
+      db_postgres:
+        condition: service_healthy
+    networks:
+      - internal
     profiles:
-     - backend
-     - production
+      - backend
+      - production
 
   frontend:
-    build: ./frontend
+    image: dianache777/dnd_generator:website
+    user: root  
     volumes:
       - type: bind
-        source: frontend/letsencrypt/live/adventuregenerator.ru
+        source: /etc/letsencrypt/live/adventuregenerator.ru
         target: /etc/letsencrypt/live/adventuregenerator.ru
-    profiles:
-     - frontend
-     - production
+      - type: bind
+        source: /etc/letsencrypt/archive/adventuregenerator.ru
+        target: /etc/letsencrypt/archive/adventuregenerator.ru
     ports:
-      - 443:443
+      - "80:80"  
+      - "443:443" 
+    networks:
+      - internal
+    restart: unless-stopped
+    profiles:
+      - frontend
+      - production
 
 volumes:
   pgdata:
     driver: local
+
+networks:
+  internal:
+    driver: bridge
