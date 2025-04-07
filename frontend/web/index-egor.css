@@ -481,6 +481,7 @@ form-submit:hover {
 
 .footer__contacts {
     grid-column: 1 / 5;
+    grid-row: 2 / 3;
     margin-top: 32px;
 }
 
@@ -720,6 +721,14 @@ form-submit:hover {
 .account-navbar-menu__info {
     font-weight: 500;
     color: black;
+}
+
+.footer__payment-banner {
+    grid-column: 7 / 12;
+}
+
+.footer__payment-banner__image-column {
+    display: none;
 }
 
 .account-navbar-menu__exit-menu {

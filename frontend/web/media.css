@@ -396,7 +396,14 @@
 		flex-wrap: wrap;
 	}
 
+	.footer__payment-banner {
+		margin-top: 10px;
+		grid-column: 1 / 5;
+		grid-row: 2 / 3;
+	}
+
 	.footer__contacts {
+		margin-top: 65px;
 		grid-column: 1 / 3;
 	}
 
