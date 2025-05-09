@@ -372,6 +372,7 @@
 
 	#download-2 {
 		width: 100%;
+		min-width: none;
 		justify-self: center;
 		margin-top: -100px;
 	}
