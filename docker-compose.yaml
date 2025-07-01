@@ -91,7 +91,6 @@ services:
         source: /etc/letsencrypt/archive/adventuregenerator.ru
         target: /etc/letsencrypt/archive/adventuregenerator.ru
     ports:
-      - "80:80"  
       - "443:443" 
     networks:
       - internal
