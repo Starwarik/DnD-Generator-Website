@@ -88,7 +88,6 @@ async def update_adventure(
 
 @adventure_router.delete(
     "/api/adventure/{adventure_id}",
-    response_model=AdventurePublic,
     responses={200: {"model": None}},
 )
 async def delete_adventure(
@@ -105,7 +104,7 @@ async def delete_adventure(
             status_code=403, detail="Not authorized to update this adventure"
         )
     
-    content = AdventureInfo.model_validate(adventure.content)
+    content = AdventureInfo.model_validate_json(adventure.content)
 
     images_ids: list[int] = []
     images_ids.append(content.adventure_image_id)
@@ -119,6 +118,6 @@ async def delete_adventure(
         await session.execute(command)
         await session.commit()
 
-    command = delete(Adventure).where(Adventure.id == id) # type: ignore
+    command = delete(Adventure).where(Adventure.id == adventure_id) # type: ignore
     await session.execute(command)
     await session.commit()

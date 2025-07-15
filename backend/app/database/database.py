@@ -22,4 +22,4 @@ async def get_session():
         async with async_session_maker() as session:
             yield session
     except SQLAlchemyError as e:
-        pass
+        raise
